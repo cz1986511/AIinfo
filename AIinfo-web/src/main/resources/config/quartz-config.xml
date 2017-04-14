@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tool="http://www.springframework.org/schema/tool"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	                    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	                    http://www.springframework.org/schema/context
+	                    http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	                    http://www.springframework.org/schema/tx
+	                    http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	                    http://www.springframework.org/schema/aop 
+	                    http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	                    http://www.springframework.org/schema/tool	                    
+	                    http://www.springframework.org/schema/tool/spring-tool-4.0.xsd">
+	                    
+	<!-- 时间程序  -->
+	
+	<bean name="schedulerSendMail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="scheduler" />
+		<property name="targetMethod" value="sendMail" />
+	</bean>
+	
+	<bean name="schedulerStatistics"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="scheduler" />
+		<property name="targetMethod" value="statisticsInfo" />
+	</bean>
+	
+	<!-- 抓取数据时间程序 -->
+	<bean name="schedulerArticle"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="crawler" />
+		<property name="targetMethod" value="crawlerInfo" />
+	</bean>
+
+	<bean name="cronTrigger1" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="name" value="schedulerSendMail"/>
+        <property name="group" value="DEFAULT"/>
+        <property name="jobDetail" ref="schedulerSendMail" />
+        <property name="cronExpression" value="0 5 10 * * ?" />
+    </bean>
+    
+    <bean name="cronTrigger2" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="name" value="schedulerStatistics"/>
+        <property name="group" value="DEFAULT"/>
+        <property name="jobDetail" ref="schedulerStatistics" />
+        <property name="cronExpression" value="0 5 0 * * ?" />
+    </bean>
+    
+    <bean name="cronTrigger3" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="name" value="schedulerArticle"/>
+        <property name="group" value="DEFAULT"/>
+        <property name="jobDetail" ref="schedulerArticle" />
+        <property name="cronExpression" value="0 5 0 * * ?" />
+    </bean>
+	
+	<bean name="schedulerFactoryBean"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="cronTrigger1" />
+				<ref bean="cronTrigger2" />
+				<ref bean="cronTrigger3" />
+			</list>
+		</property>
+	</bean>
+
+</beans>

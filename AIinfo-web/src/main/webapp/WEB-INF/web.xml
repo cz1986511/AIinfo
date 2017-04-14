@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
+	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+	<description>hello</description>
+	<display-name>chenzhuo.pub Java Deploy V1.1.0</display-name>
+
+	<context-param>
+		<param-name>webAppRootKey</param-name>
+		<param-value>AIinfo.root</param-value>
+	</context-param>
+	<context-param>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>WEB-INF/log4j.properties</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath*:config/spring-config.xml,classpath*:config/spring-mybatis.xml,classpath*:config/core-config.xml,classpath*:config/quartz-config.xml</param-value>
+	</context-param>
+	
+	<!-- 登录SessionFilter -->
+	<filter>
+        <filter-name>SessionFilter</filter-name>
+        <filter-class>com.danlu.web.filter.SessionFilter</filter-class>
+        <init-param>
+        <param-name>logonStrings</param-name><!-- 对登录页面不进行过滤 -->
+        <param-value>load.html;login.html;insure.html;websocket</param-value>
+	    </init-param>
+	    <init-param>
+	        <param-name>includeStrings</param-name><!-- 只对指定过滤参数后缀进行过滤 -->
+	        <param-value>.do;.html</param-value>
+	    </init-param>
+	    <init-param>
+	        <param-name>redirectPath</param-name><!-- 未通过跳转到登录界面 -->
+	        <param-value>/login.html</param-value>
+	    </init-param>
+	    <init-param>
+	        <param-name>disabletestfilter</param-name><!-- Y:过滤无效 -->
+	        <param-value>N</param-value>
+	    </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>SessionFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+	<!-- 编码 -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- 监听 -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
+
+	<!-- servlet -->
+	<servlet>
+		<servlet-name>springMvc</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>ContextConfigLocation</param-name>
+			<param-value>classpath:config/spring-config.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>dleye</servlet-name>
+		<servlet-class>com.danlu.dleye.servlet.DlServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>dleye</servlet-name>
+		<url-pattern>/aiinfo.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>springMvc</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+
+	<!-- session超时时间，单位分钟 -->
+	<session-config>
+		<session-timeout>15</session-timeout>
+	</session-config>
+
+</web-app>
