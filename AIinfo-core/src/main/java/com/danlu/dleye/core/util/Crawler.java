@@ -86,53 +86,12 @@ public class Crawler {
             HtmlPage page = webClient.getPage(urlString);
             List<HtmlDivision> list = (List<HtmlDivision>) page.getByXPath(xPath);
             Iterator<HtmlDivision> ite = list.iterator();
-            System.out.println(list.size());
+            //System.out.println(list.size());
             while (ite.hasNext()) {
                 ArticleInfo articleInfo = new ArticleInfo();
                 articleInfo.setSource(IFANR);
                 HtmlDivision division = ite.next();
-                List<HtmlAnchor> tagAnchorList = (List<HtmlAnchor>) division
-                    .getByXPath(".//a[@class='article-label']");
-                if (!CollectionUtils.isEmpty(tagAnchorList)) {
-                    articleInfo.setTag(tagAnchorList.get(0).asText());
-                }
-                List<HtmlAnchor> urlAnchorList = (List<HtmlAnchor>) division
-                    .getByXPath(".//a[@class!='article-label']");
-                if (!CollectionUtils.isEmpty(urlAnchorList)) {
-                    articleInfo.setLinkUrl(urlAnchorList.get(0).getAttribute("href"));
-                }
-                List<HtmlHeading3> titleH3List = (List<HtmlHeading3>) division.getByXPath(".//h3");
-                if (!CollectionUtils.isEmpty(titleH3List)) {
-                    articleInfo.setTitle(titleH3List.get(0).asText());
-                }
-                List<HtmlUnknownElement> timeSpanList = (List<HtmlUnknownElement>) division
-                    .getByXPath(".//time");
-                if (!CollectionUtils.isEmpty(timeSpanList)) {
-                    String time = timeSpanList.get(0).asText();
-                    String date = "";
-                    String day = (calendar.get(Calendar.MONTH) + 1) > 9 ? ("" + (calendar
-                        .get(Calendar.MONTH) + 1)) : ("0" + (calendar.get(Calendar.MONTH) + 1));
-                    if (time.contains("昨天")) {
-                        date = "" + calendar.get(Calendar.YEAR) + "-" + day + "-"
-                               + (calendar.get(Calendar.DAY_OF_MONTH) - 1);
-                    } else if (time.contains("前天")) {
-                        date = "" + calendar.get(Calendar.YEAR) + "-" + day + "-"
-                               + (calendar.get(Calendar.DAY_OF_MONTH) - 2);
-                    } else {
-                        date = "" + calendar.get(Calendar.YEAR) + "-" + day + "-"
-                               + calendar.get(Calendar.DAY_OF_MONTH);
-                    }
-                    articleInfo.setDate(date);
-                }
-                List<HtmlDivision> picDivisionList = (List<HtmlDivision>) division
-                    .getByXPath(".//div[@class='article-image cover-image']");
-                if (!CollectionUtils.isEmpty(picDivisionList)) {
-                    String picUrls = picDivisionList.get(0).getAttribute("style");
-                    String[] picUrlArray = picUrls.split("'");
-                    articleInfo.setPicUrl(picUrlArray[1]);
-                }
                 //System.out.println(picDivisionList.get(0).getAttribute("style"));
-
             }
         } catch (Exception e) {
             e.printStackTrace();

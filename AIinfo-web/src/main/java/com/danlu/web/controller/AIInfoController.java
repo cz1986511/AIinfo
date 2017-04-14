@@ -27,7 +27,7 @@ public class AIInfoController implements Serializable {
     @Autowired
     private ArticleInfoManager articleInfoManager;
 
-    @RequestMapping("art_list.html")
+    @RequestMapping("art_list")
     @ResponseBody
     public String getArticleList(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<String, Object>();
