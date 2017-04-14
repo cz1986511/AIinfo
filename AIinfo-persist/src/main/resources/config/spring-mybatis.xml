@@ -20,21 +20,20 @@
 	<!-- 配置數據源 -->
 	<bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
 		init-method="" destroy-method="close">
-		<property name="url" value="jdbc:mysql://192.168.100.62:3406/dleye" />
-		<property name="username" value="root" />
-		<property name="password" value="idanlu" />
+		<property name="url" value="${db.jdbc.url}" />
+		<property name="username" value="${db.jdbc.username}" />
+		<property name="password" value="${db.jdbc.password}" />
 
 		<!-- 初始化连接大小 -->
-		<property name="initialSize" value="0" />
+		<property name="initialSize" value="5" />
 		<!-- 连接池最大使用连接数量 -->
-		<property name="maxActive" value="20" />
+		<property name="maxActive" value="100" />
 		<!-- 连接池最大空间 -->
-		<property name="maxIdle" value="20" />
+		<property name="maxIdle" value="100" />
 		<!-- 连接池最小空间 -->
-		<property name="minIdle" value="0" />
+		<property name="minIdle" value="5" />
 		<!-- 获取连接最大等待时间 -->
 		<property name="maxWait" value="60000" />
-
 		<property name="validationQuery" value="SELECT 1" />
 		<property name="testOnBorrow" value="false" />
 		<property name="testOnReturn" value="false" />

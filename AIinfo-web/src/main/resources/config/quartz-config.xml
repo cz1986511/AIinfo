@@ -14,20 +14,6 @@
 	                    http://www.springframework.org/schema/tool	                    
 	                    http://www.springframework.org/schema/tool/spring-tool-4.0.xsd">
 	                    
-	<!-- 时间程序  -->
-	
-	<bean name="schedulerSendMail"
-		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject" ref="scheduler" />
-		<property name="targetMethod" value="sendMail" />
-	</bean>
-	
-	<bean name="schedulerStatistics"
-		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject" ref="scheduler" />
-		<property name="targetMethod" value="statisticsInfo" />
-	</bean>
-	
 	<!-- 抓取数据时间程序 -->
 	<bean name="schedulerArticle"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -35,21 +21,7 @@
 		<property name="targetMethod" value="crawlerInfo" />
 	</bean>
 
-	<bean name="cronTrigger1" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-	    <property name="name" value="schedulerSendMail"/>
-        <property name="group" value="DEFAULT"/>
-        <property name="jobDetail" ref="schedulerSendMail" />
-        <property name="cronExpression" value="0 5 10 * * ?" />
-    </bean>
-    
-    <bean name="cronTrigger2" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-	    <property name="name" value="schedulerStatistics"/>
-        <property name="group" value="DEFAULT"/>
-        <property name="jobDetail" ref="schedulerStatistics" />
-        <property name="cronExpression" value="0 5 0 * * ?" />
-    </bean>
-    
-    <bean name="cronTrigger3" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <bean name="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 	    <property name="name" value="schedulerArticle"/>
         <property name="group" value="DEFAULT"/>
         <property name="jobDetail" ref="schedulerArticle" />
@@ -60,9 +32,7 @@
 		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
-				<ref bean="cronTrigger1" />
-				<ref bean="cronTrigger2" />
-				<ref bean="cronTrigger3" />
+				<ref bean="cronTrigger" />
 			</list>
 		</property>
 	</bean>
