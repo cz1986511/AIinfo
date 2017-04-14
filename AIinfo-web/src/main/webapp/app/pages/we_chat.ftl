@@ -9,7 +9,7 @@
     <title>信息管理</title>
     <#include "/common/header.html"/>
 	<script>
-	  var ws = new WebSocket("ws://192.168.50.54:8080/dleye-web/websocket");
+	  var ws = new WebSocket("ws://192.168.50.54:8080/AIinfo/websocket");
 	  ws.onopen = function(){
 	  };
 	  ws.onmessage = function(message){

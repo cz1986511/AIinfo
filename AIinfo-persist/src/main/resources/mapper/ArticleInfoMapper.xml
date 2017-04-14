@@ -52,6 +52,7 @@
     <include refid="Base_Column_List" />
     from dleye_article_info
     <include refid="selectByParamsWhere" />
+      order by gmt_create desc
     <if test=" offset != null and limit != null">
 	  limit ${offset},${limit}
 	</if>

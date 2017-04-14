@@ -25,7 +25,7 @@
 	    <property name="name" value="schedulerArticle"/>
         <property name="group" value="DEFAULT"/>
         <property name="jobDetail" ref="schedulerArticle" />
-        <property name="cronExpression" value="0 5 0 * * ?" />
+        <property name="cronExpression" value="0 5 0/1 * * ? *" />
     </bean>
 	
 	<bean name="schedulerFactoryBean"

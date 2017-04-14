@@ -27,7 +27,7 @@
         <filter-class>com.danlu.web.filter.SessionFilter</filter-class>
         <init-param>
         <param-name>logonStrings</param-name><!-- 对登录页面不进行过滤 -->
-        <param-value>load.html;login.html;insure.html;websocket</param-value>
+        <param-value>load.html;login.html;insure.html;websocket;art_list.html</param-value>
 	    </init-param>
 	    <init-param>
 	        <param-name>includeStrings</param-name><!-- 只对指定过滤参数后缀进行过滤 -->
@@ -87,13 +87,13 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>
-		<servlet-name>dleye</servlet-name>
+		<servlet-name>aiinfo</servlet-name>
 		<servlet-class>com.danlu.dleye.servlet.DlServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	
 	<servlet-mapping>
-		<servlet-name>dleye</servlet-name>
+		<servlet-name>aiinfo</servlet-name>
 		<url-pattern>/aiinfo.do</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
