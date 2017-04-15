@@ -106,6 +106,12 @@ public class UserController implements Serializable {
                 if (status > 0) {
                     m.addObject("userType", user.getType());
                     m.setViewName("index");
+                    Long timeout = (dleyeSwith.getTimeout() * 60 * 1000)
+                                   + System.currentTimeMillis();
+                    request.getSession().setAttribute("userId", user.getUserId());
+                    request.getSession().setAttribute("userName", user.getUserName());
+                    request.getSession().setAttribute("type", user.getType());
+                    request.getSession().setAttribute("timeout", timeout);
                 } else {
                     m.addObject("errorMsg", "账号被锁定");
                     m.setViewName("login");

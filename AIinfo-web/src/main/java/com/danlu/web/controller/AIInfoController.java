@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +28,21 @@ public class AIInfoController implements Serializable {
     @Autowired
     private ArticleInfoManager articleInfoManager;
 
-    @RequestMapping("art_list")
+    @RequestMapping(value = "art_list", produces = "text/html;charset=UTF-8")
     @ResponseBody
     public String getArticleList(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<String, Object>();
         JSONObject json = new JSONObject(result);
+        String source = request.getParameter("source");
+        String tag = request.getParameter("tag");
         try {
             Map<String, Object> map = new HashMap<String, Object>();
+            if (!StringUtils.isBlank(source)) {
+                map.put("source", source);
+            }
+            if (!StringUtils.isBlank(tag)) {
+                map.put("tag", tag);
+            }
             map.put("offset", 0);
             map.put("limit", 50);
             List<ArticleInfo> articleInfoList = articleInfoManager.getArticleInfosByParams(map);
@@ -42,6 +51,7 @@ public class AIInfoController implements Serializable {
             }
         } catch (Exception e) {
             logger.error(e.toString());
+            result.put("msg", "程序小哥跟老板娘跑了");
         }
         return json.toJSONString();
     }

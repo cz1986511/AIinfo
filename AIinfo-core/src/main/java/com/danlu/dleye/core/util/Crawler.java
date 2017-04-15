@@ -372,7 +372,6 @@ public class Crawler {
             HtmlPage page = webClient.getPage(urlString);
             List<HtmlAnchor> list = (List<HtmlAnchor>) page.getByXPath(xPath);
             Iterator<HtmlAnchor> ite = list.iterator();
-            System.out.println(list.size());
             while (ite.hasNext()) {
                 ArticleInfo articleInfo = new ArticleInfo();
                 articleInfo.setSource(QDAILY);
