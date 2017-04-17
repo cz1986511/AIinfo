@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.danlu.dleye.core.ArticleInfoManager;
 import com.danlu.dleye.core.util.DleyeSwith;
+import com.danlu.dleye.core.util.RedisClient;
 import com.danlu.dleye.persist.base.ArticleInfo;
 
 @Controller
@@ -30,6 +32,8 @@ public class AIInfoController implements Serializable {
     private ArticleInfoManager articleInfoManager;
     @Autowired
     private DleyeSwith dleyeSwith;
+    @Autowired
+    private RedisClient redisClient;
 
     @RequestMapping(value = "art_list", produces = "text/html;charset=UTF-8")
     @ResponseBody
@@ -38,19 +42,31 @@ public class AIInfoController implements Serializable {
         JSONObject json = new JSONObject(result);
         String source = request.getParameter("source");
         String tag = request.getParameter("tag");
+        String defaultKey = "dKey";
         try {
             Map<String, Object> map = new HashMap<String, Object>();
             if (!StringUtils.isBlank(source)) {
                 map.put("source", source);
+                defaultKey += source;
             }
             if (!StringUtils.isBlank(tag)) {
                 map.put("tag", tag);
+                defaultKey += tag;
             }
             map.put("offset", 0);
             map.put("limit", dleyeSwith.getRequestSize());
-            List<ArticleInfo> articleInfoList = articleInfoManager.getArticleInfosByParams(map);
-            if (!CollectionUtils.isEmpty(articleInfoList)) {
-                result.put("data", articleInfoList);
+            List<ArticleInfo> resultList = (List<ArticleInfo>) redisClient.get(defaultKey,
+                new TypeReference<List<ArticleInfo>>() {
+                });
+            if (!CollectionUtils.isEmpty(resultList)) {
+                result.put("data", resultList);
+                logger.info("use redis key:" + defaultKey);
+            } else {
+                List<ArticleInfo> articleInfoList = articleInfoManager.getArticleInfosByParams(map);
+                if (!CollectionUtils.isEmpty(articleInfoList)) {
+                    result.put("data", articleInfoList);
+                    redisClient.set(defaultKey, articleInfoList, dleyeSwith.getEffectiveTime());
+                }
             }
         } catch (Exception e) {
             logger.error(e.toString());

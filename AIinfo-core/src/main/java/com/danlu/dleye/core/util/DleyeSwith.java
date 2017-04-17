@@ -13,6 +13,17 @@ public class DleyeSwith {
     @Switch(description = "每次请求返回条数", name = "requestSize")
     private int requestSize = 100;
 
+    @Switch(description = "redis缓存有效期", name = "effectiveTime")
+    private int effectiveTime = 3600;
+
+    public int getEffectiveTime() {
+        return effectiveTime;
+    }
+
+    public void setEffectiveTime(int effectiveTime) {
+        this.effectiveTime = effectiveTime;
+    }
+
     public int getRequestSize() {
         return requestSize;
     }
