@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.danlu.dleye.core.ArticleInfoManager;
+import com.danlu.dleye.core.util.DleyeSwith;
 import com.danlu.dleye.persist.base.ArticleInfo;
 
 @Controller
@@ -27,6 +28,8 @@ public class AIInfoController implements Serializable {
     private static Logger logger = LoggerFactory.getLogger(AIInfoController.class);
     @Autowired
     private ArticleInfoManager articleInfoManager;
+    @Autowired
+    private DleyeSwith dleyeSwith;
 
     @RequestMapping(value = "art_list", produces = "text/html;charset=UTF-8")
     @ResponseBody
@@ -44,7 +47,7 @@ public class AIInfoController implements Serializable {
                 map.put("tag", tag);
             }
             map.put("offset", 0);
-            map.put("limit", 50);
+            map.put("limit", dleyeSwith.getRequestSize());
             List<ArticleInfo> articleInfoList = articleInfoManager.getArticleInfosByParams(map);
             if (!CollectionUtils.isEmpty(articleInfoList)) {
                 result.put("data", articleInfoList);
