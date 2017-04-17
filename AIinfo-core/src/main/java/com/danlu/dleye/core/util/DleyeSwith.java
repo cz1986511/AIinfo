@@ -16,6 +16,17 @@ public class DleyeSwith {
     @Switch(description = "redis缓存有效期", name = "effectiveTime")
     private int effectiveTime = 3600;
 
+    @Switch(description = "线程池最大线程数", name = "maxPool")
+    private int maxPool = 5;
+
+    public int getMaxPool() {
+        return maxPool;
+    }
+
+    public void setMaxPool(int maxPool) {
+        this.maxPool = maxPool;
+    }
+
     public int getEffectiveTime() {
         return effectiveTime;
     }

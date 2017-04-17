@@ -60,7 +60,6 @@ public class AIInfoController implements Serializable {
                 });
             if (!CollectionUtils.isEmpty(resultList)) {
                 result.put("data", resultList);
-                logger.info("use redis key:" + defaultKey);
             } else {
                 List<ArticleInfo> articleInfoList = articleInfoManager.getArticleInfosByParams(map);
                 if (!CollectionUtils.isEmpty(articleInfoList)) {
