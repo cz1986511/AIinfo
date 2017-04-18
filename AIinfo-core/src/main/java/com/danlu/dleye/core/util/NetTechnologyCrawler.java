@@ -24,6 +24,7 @@ public class NetTechnologyCrawler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(NetTechnologyCrawler.class);
     private static final String NET_TECHNOLOGY = "网易科技";
     private static final String URL_STRING = "http://tech.163.com/internet";
+    private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
 
     private WebClient webClient;
     private ArticleInfoManager articleInfoManager;
@@ -57,6 +58,8 @@ public class NetTechnologyCrawler implements Runnable {
                         .getByXPath(".//div[@class='clearfix']/a/img");
                     if (!CollectionUtils.isEmpty(picImageList)) {
                         articleInfo.setPicUrl(picImageList.get(0).getAttribute("src"));
+                    } else {
+                        articleInfo.setPicUrl(DEFAULT_PIC);
                     }
                     List<HtmlParagraph> descParaList = (List<HtmlParagraph>) division
                         .getByXPath(".//div[@class='clearfix']/div[@class='newsDigest']/p");

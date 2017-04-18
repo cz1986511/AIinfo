@@ -24,6 +24,7 @@ public class PintuCrawler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(PintuCrawler.class);
     private static final String PINTU = "品途";
     private static final String URL_STRING = "http://www.pintu360.com";
+    private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
 
     private WebClient webClient;
     private ArticleInfoManager articleInfoManager;
@@ -65,6 +66,8 @@ public class PintuCrawler implements Runnable {
                         .getByXPath(".//a[@class='banner']/img");
                     if (!CollectionUtils.isEmpty(picImageList)) {
                         articleInfo.setPicUrl(picImageList.get(0).getAttribute("data-original"));
+                    } else {
+                        articleInfo.setPicUrl(DEFAULT_PIC);
                     }
                     saveArticle(articleInfo);
                 } catch (Exception e) {

@@ -25,6 +25,7 @@ public class TmtPostCrawler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(TmtPostCrawler.class);
     private static final String TMTPOST = "钛媒体";
     private static final String URL_STRING = "http://www.tmtpost.com";
+    private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
 
     private WebClient webClient;
     private ArticleInfoManager articleInfoManager;
@@ -52,6 +53,8 @@ public class TmtPostCrawler implements Runnable {
                         .getByXPath(".//a[@class='pic']/img");
                     if (!CollectionUtils.isEmpty(picImageList)) {
                         articleInfo.setPicUrl(picImageList.get(0).getAttribute("src"));
+                    } else {
+                        articleInfo.setPicUrl(DEFAULT_PIC);
                     }
                     List<HtmlAnchor> titleAnchorList = (List<HtmlAnchor>) listItem
                         .getByXPath(".//div[@class='cont']/h3/a[@class='title']");

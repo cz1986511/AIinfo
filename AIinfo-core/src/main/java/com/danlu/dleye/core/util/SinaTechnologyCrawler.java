@@ -23,6 +23,7 @@ public class SinaTechnologyCrawler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(SinaTechnologyCrawler.class);
     private static final String SINA_TECHNOLOGY = "新浪科技";
     private static final String URL_STRING = "http://tech.sina.com.cn";
+    private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
 
     private WebClient webClient;
     private ArticleInfoManager articleInfoManager;
@@ -51,6 +52,8 @@ public class SinaTechnologyCrawler implements Runnable {
                         .getByXPath(".//div[@class='feed-card-img']/a/img");
                     if (!CollectionUtils.isEmpty(picImageList)) {
                         articleInfo.setPicUrl(picImageList.get(0).getAttribute("data-src"));
+                    } else {
+                        articleInfo.setPicUrl(DEFAULT_PIC);
                     }
                     List<HtmlAnchor> titleAnchorList = (List<HtmlAnchor>) division
                         .getByXPath(".//div[@class='tech-feed-right']/h2/a");

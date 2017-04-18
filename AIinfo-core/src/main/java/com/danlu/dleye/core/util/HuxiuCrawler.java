@@ -24,6 +24,7 @@ public class HuxiuCrawler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(HuxiuCrawler.class);
     private static final String HUXIU = "虎嗅";
     private static final String URL_STRING = "http://www.huxiu.com";
+    private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
 
     private WebClient webClient;
     private ArticleInfoManager articleInfoManager;
@@ -64,6 +65,8 @@ public class HuxiuCrawler implements Runnable {
                         .getByXPath(".//div[@class='mod-thumb']/a/img");
                     if (!CollectionUtils.isEmpty(picImageList)) {
                         articleInfo.setPicUrl(picImageList.get(0).getAttribute("data-original"));
+                    } else {
+                        articleInfo.setPicUrl(DEFAULT_PIC);
                     }
                     List<HtmlSpan> authorSpanList = (List<HtmlSpan>) division
                         .getByXPath(".//div[@class='mob-ctt']/div[@class='mob-author']/a/span[@class='author-name ']");

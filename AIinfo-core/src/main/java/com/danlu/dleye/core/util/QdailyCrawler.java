@@ -23,6 +23,7 @@ public class QdailyCrawler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(QdailyCrawler.class);
     private static final String QDAILY = "好奇心日报";
     private static final String URL_STRING = "http://www.qdaily.com/tags/29.html";
+    private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
 
     private WebClient webClient;
     private ArticleInfoManager articleInfoManager;
@@ -51,6 +52,8 @@ public class QdailyCrawler implements Runnable {
                         .getByXPath(".//div[@class='grid-article-hd']/div[@class='pic imgcover']/img");
                     if (!CollectionUtils.isEmpty(picImageList)) {
                         articleInfo.setPicUrl(picImageList.get(0).getAttribute("data-src"));
+                    } else {
+                        articleInfo.setPicUrl(DEFAULT_PIC);
                     }
                     List<HtmlHeading3> h3TitleList = (List<HtmlHeading3>) anchor
                         .getByXPath(".//div[@class='grid-article-bd']/h3");

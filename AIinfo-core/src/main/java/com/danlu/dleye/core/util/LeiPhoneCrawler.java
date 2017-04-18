@@ -24,6 +24,7 @@ public class LeiPhoneCrawler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(LeiPhoneCrawler.class);
     private static final String LEIPHONE = "雷锋网";
     private static final String URL_STRING = "http://www.leiphone.com";
+    private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
 
     private WebClient webClient;
     private ArticleInfoManager articleInfoManager;
@@ -52,6 +53,8 @@ public class LeiPhoneCrawler implements Runnable {
                         .getByXPath(".//div[@class='img']/a/img[@class='lazy']");
                     if (!CollectionUtils.isEmpty(picImageList)) {
                         articleInfo.setPicUrl(picImageList.get(0).getAttribute("data-original"));
+                    } else {
+                        articleInfo.setPicUrl(DEFAULT_PIC);
                     }
                     List<HtmlAnchor> titleAnchorList = (List<HtmlAnchor>) item
                         .getByXPath(".//div[@class='box']/div[@class='word']/h3/a");

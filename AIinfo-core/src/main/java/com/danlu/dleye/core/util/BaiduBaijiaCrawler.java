@@ -25,6 +25,7 @@ public class BaiduBaijiaCrawler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(BaiduBaijiaCrawler.class);
     private static final String BAIDU_BAIJIA = "百度百家";
     private static final String URL_STRING = "http://baijia.baidu.com";
+    private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
 
     private WebClient webClient;
     private ArticleInfoManager articleInfoManager;
@@ -53,6 +54,8 @@ public class BaiduBaijiaCrawler implements Runnable {
                         .getByXPath(".//p[@class='feeds-item-pic']/a/img");
                     if (!CollectionUtils.isEmpty(iTitleList)) {
                         articleInfo.setPicUrl(iTitleList.get(0).getAttribute("src"));
+                    } else {
+                        articleInfo.setPicUrl(DEFAULT_PIC);
                     }
                     List<HtmlAnchor> aTitleList = (List<HtmlAnchor>) division.getByXPath(".//h3/a");
                     if (!CollectionUtils.isEmpty(aTitleList)) {

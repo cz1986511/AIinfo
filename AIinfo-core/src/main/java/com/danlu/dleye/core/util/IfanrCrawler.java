@@ -24,6 +24,7 @@ public class IfanrCrawler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(IfanrCrawler.class);
     private static final String IFANR = "爱范儿";
     private static final String URL_STRING = "http://www.ifanr.com";
+    private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
 
     private WebClient webClient;
     private ArticleInfoManager articleInfoManager;
@@ -88,6 +89,8 @@ public class IfanrCrawler implements Runnable {
                         String picUrls = picDivisionList.get(0).getAttribute("style");
                         String[] picUrlArray = picUrls.split("'");
                         articleInfo.setPicUrl(picUrlArray[1]);
+                    } else {
+                        articleInfo.setPicUrl(DEFAULT_PIC);
                     }
                     saveArticle(articleInfo);
                 } catch (Exception e) {
