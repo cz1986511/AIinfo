@@ -19,6 +19,17 @@ public class DleyeSwith {
     @Switch(description = "线程池最大线程数", name = "maxPool")
     private int maxPool = 5;
 
+    @Switch(description = "默认删除30天前数据", name = "defaultDate")
+    private int defaultDate = -30;
+
+    public int getDefaultDate() {
+        return defaultDate;
+    }
+
+    public void setDefaultDate(int defaultDate) {
+        this.defaultDate = defaultDate;
+    }
+
     public int getMaxPool() {
         return maxPool;
     }

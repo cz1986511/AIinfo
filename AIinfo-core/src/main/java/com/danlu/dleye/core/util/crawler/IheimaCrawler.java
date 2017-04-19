@@ -1,7 +1,5 @@
-package com.danlu.dleye.core.util;
+package com.danlu.dleye.core.util.crawler;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -18,18 +16,20 @@ import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlSpan;
+import com.gargoylesoftware.htmlunit.html.HtmlUnknownElement;
 
-public class PintuCrawler implements Runnable {
+public class IheimaCrawler implements Runnable {
 
-    private static final Logger logger = LoggerFactory.getLogger(PintuCrawler.class);
-    private static final String PINTU = "品途";
-    private static final String URL_STRING = "http://www.pintu360.com";
+    private static final Logger logger = LoggerFactory.getLogger(IheimaCrawler.class);
+    private static final String IHEIMA = "i黑马";
+    private static final String URL_STRING = "http://www.iheima.com";
     private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
 
     private WebClient webClient;
     private ArticleInfoManager articleInfoManager;
 
-    public PintuCrawler(ArticleInfoManager articleInfoManager) {
+    public IheimaCrawler(ArticleInfoManager articleInfoManager) {
         super();
         this.webClient = initWebClient();
         this.articleInfoManager = articleInfoManager;
@@ -39,43 +39,50 @@ public class PintuCrawler implements Runnable {
     @Override
     public void run() {
         try {
-            String xPath = "//div[@class='mixin-article-item big']";
+            String xPath = "//article[@class='item-wrap cf']";
             HtmlPage page = webClient.getPage(URL_STRING);
-            List<HtmlDivision> list = (List<HtmlDivision>) page.getByXPath(xPath);
-            Iterator<HtmlDivision> ite = list.iterator();
+            List<HtmlUnknownElement> list = (List<HtmlUnknownElement>) page.getByXPath(xPath);
+            Iterator<HtmlUnknownElement> ite = list.iterator();
             while (ite.hasNext()) {
                 try {
                     ArticleInfo articleInfo = new ArticleInfo();
-                    articleInfo.setSource(PINTU);
-                    HtmlDivision division = ite.next();
-                    Date dateTime = new Date(Long.valueOf(division.getAttribute("data-time")));
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    articleInfo.setDate(sdf.format(dateTime));
-                    List<HtmlAnchor> titleAnchorList = (List<HtmlAnchor>) division
-                        .getByXPath(".//h2[@class='title-wrap']/a[@class='title']");
+                    articleInfo.setSource(IHEIMA);
+                    HtmlUnknownElement listItem = ite.next();
+                    List<HtmlAnchor> titleAnchorList = (List<HtmlAnchor>) listItem
+                        .getByXPath(".//div[@class='desc']/div[@class='title-wrap']/a[@class='title']");
                     if (!CollectionUtils.isEmpty(titleAnchorList)) {
-                        articleInfo.setLinkUrl(titleAnchorList.get(0).getAttribute("href"));
                         articleInfo.setTitle(titleAnchorList.get(0).asText());
+                        articleInfo.setLinkUrl(titleAnchorList.get(0).getAttribute("href"));
                     }
-                    List<HtmlDivision> descDivisionList = (List<HtmlDivision>) division
-                        .getByXPath(".//div[@class='note']");
+                    List<HtmlDivision> descDivisionList = (List<HtmlDivision>) listItem
+                        .getByXPath(".//div[@class='desc']/div[@class='brief']");
                     if (!CollectionUtils.isEmpty(descDivisionList)) {
                         articleInfo.setIntroduction(descDivisionList.get(0).asText());
                     }
-                    List<HtmlImage> picImageList = (List<HtmlImage>) division
-                        .getByXPath(".//a[@class='banner']/img");
+                    List<HtmlSpan> dateSpanList = (List<HtmlSpan>) listItem
+                        .getByXPath(".//div[@class='desc']/div[@class='author']/span[@class='time-wrap fl']/span[@class='timeago']");
+                    if (!CollectionUtils.isEmpty(dateSpanList)) {
+                        articleInfo.setDate(dateSpanList.get(0).asText());
+                    }
+                    List<HtmlSpan> authorSpanList = (List<HtmlSpan>) listItem
+                        .getByXPath(".//div[@class='desc']/div[@class='author']/a[@class='fr']/span[@class='name']");
+                    if (!CollectionUtils.isEmpty(authorSpanList)) {
+                        articleInfo.setAuthor(authorSpanList.get(0).asText());
+                    }
+                    List<HtmlImage> picImageList = (List<HtmlImage>) listItem
+                        .getByXPath(".//div[@class='desc']/div[@class='brief hasimg']/a[@class='cf']/img");
                     if (!CollectionUtils.isEmpty(picImageList)) {
-                        articleInfo.setPicUrl(picImageList.get(0).getAttribute("data-original"));
+                        articleInfo.setPicUrl(picImageList.get(0).getAttribute("src"));
                     } else {
                         articleInfo.setPicUrl(DEFAULT_PIC);
                     }
                     saveArticle(articleInfo);
                 } catch (Exception e) {
-                    logger.error("pintuCrawler is exception:" + e.toString());
+                    logger.error("iheimaCrawler is exception:" + e.toString());
                 }
             }
         } catch (Exception e) {
-            logger.error("pintuCrawler is exception:" + e.toString());
+            logger.error("iheimaCrawler is exception:" + e.toString());
         }
         webClient.closeAllWindows();
     }

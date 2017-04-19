@@ -19,4 +19,6 @@ public interface ArticleInfoMapper {
     int updateByPrimaryKey(ArticleInfo record);
 
     List<ArticleInfo> selectArticlesByParams(Map<String, Object> map);
+
+    List<ArticleInfo> selectArticlesByGmtCreate(Map<String, Object> map);
 }

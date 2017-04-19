@@ -1,5 +1,6 @@
-package com.danlu.dleye.core.util;
+package com.danlu.dleye.core.util.crawler;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -16,20 +17,18 @@ import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlParagraph;
-import com.gargoylesoftware.htmlunit.html.HtmlSpan;
 
-public class TechWebCrawler implements Runnable {
+public class SinaTechnologyCrawler implements Runnable {
 
-    private static final Logger logger = LoggerFactory.getLogger(TechWebCrawler.class);
-    private static final String TECHWEB = "techweb";
-    private static final String URL_STRING = "http://mi.techweb.com.cn";
+    private static final Logger logger = LoggerFactory.getLogger(SinaTechnologyCrawler.class);
+    private static final String SINA_TECHNOLOGY = "新浪科技";
+    private static final String URL_STRING = "http://tech.sina.com.cn";
     private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
 
     private WebClient webClient;
     private ArticleInfoManager articleInfoManager;
 
-    public TechWebCrawler(ArticleInfoManager articleInfoManager) {
+    public SinaTechnologyCrawler(ArticleInfoManager articleInfoManager) {
         super();
         this.webClient = initWebClient();
         this.articleInfoManager = articleInfoManager;
@@ -39,50 +38,58 @@ public class TechWebCrawler implements Runnable {
     @Override
     public void run() {
         try {
-            String xPath = "//div[@class='con_one bg_grag']";
+            Calendar calendar = Calendar.getInstance();
+            String xPath = "//div[@class='feed-card-item']";
             HtmlPage page = webClient.getPage(URL_STRING);
             List<HtmlDivision> list = (List<HtmlDivision>) page.getByXPath(xPath);
             Iterator<HtmlDivision> ite = list.iterator();
             while (ite.hasNext()) {
                 try {
                     ArticleInfo articleInfo = new ArticleInfo();
-                    articleInfo.setSource(TECHWEB);
+                    articleInfo.setSource(SINA_TECHNOLOGY);
                     HtmlDivision division = ite.next();
-                    List<HtmlAnchor> titleAnchorList = (List<HtmlAnchor>) division
-                        .getByXPath(".//h2/a");
-                    if (!CollectionUtils.isEmpty(titleAnchorList)) {
-                        articleInfo.setTitle(titleAnchorList.get(0).asText());
-                        articleInfo.setLinkUrl(titleAnchorList.get(0).getAttribute("href"));
-                    }
                     List<HtmlImage> picImageList = (List<HtmlImage>) division
-                        .getByXPath(".//div[@class='con_img']/a/img");
+                        .getByXPath(".//div[@class='feed-card-img']/a/img");
                     if (!CollectionUtils.isEmpty(picImageList)) {
-                        articleInfo.setPicUrl(picImageList.get(0).getAttribute("src"));
+                        articleInfo.setPicUrl(picImageList.get(0).getAttribute("data-src"));
                     } else {
                         articleInfo.setPicUrl(DEFAULT_PIC);
                     }
-                    List<HtmlParagraph> descParagraphList = (List<HtmlParagraph>) division
-                        .getByXPath(".//div[@class='con_txt']/p");
-                    if (!CollectionUtils.isEmpty(descParagraphList)) {
-                        articleInfo.setIntroduction(descParagraphList.get(0).asText());
-                    }
-                    List<HtmlSpan> dateSpanList = (List<HtmlSpan>) division
-                        .getByXPath(".//div[@class='con_txt']/div[@class='time_tag']/span");
-                    if (!CollectionUtils.isEmpty(dateSpanList)) {
-                        articleInfo.setDate(dateSpanList.get(0).asText());
+                    List<HtmlAnchor> titleAnchorList = (List<HtmlAnchor>) division
+                        .getByXPath(".//div[@class='tech-feed-right']/h2/a");
+                    if (!CollectionUtils.isEmpty(titleAnchorList)) {
+                        articleInfo.setLinkUrl(titleAnchorList.get(0).getAttribute("href"));
+                        articleInfo.setTitle(titleAnchorList.get(0).asText());
                     }
                     List<HtmlAnchor> tagAnchorList = (List<HtmlAnchor>) division
-                        .getByXPath(".//div[@class='con_txt']/div[@class='time_tag']/span[@class='tag']/a");
+                        .getByXPath(".//div[@class='tech-feed-right']/div[@class='feed-card-tags tech-feed-card-tags']/span[@class='feed-card-tags-col']/a");
                     if (!CollectionUtils.isEmpty(tagAnchorList)) {
                         articleInfo.setTag(tagAnchorList.get(0).asText());
                     }
+                    List<HtmlDivision> timeDivisionList = (List<HtmlDivision>) division
+                        .getByXPath(".//div[@class='tech-feed-right']/div[@class='feed-card-a feed-card-clearfix']/div[@class='feed-card-time']");
+                    if (!CollectionUtils.isEmpty(timeDivisionList)) {
+                        String time = timeDivisionList.get(0).asText();
+                        String date = "";
+                        String[] timeArray = time.split(" ");
+                        if (timeArray.length == 1) {
+                            String day = (calendar.get(Calendar.MONTH) + 1) > 9 ? ("" + (calendar
+                                .get(Calendar.MONTH) + 1))
+                                : ("0" + (calendar.get(Calendar.MONTH) + 1));
+                            date = "" + calendar.get(Calendar.YEAR) + "-" + day + "-"
+                                   + calendar.get(Calendar.DAY_OF_MONTH);
+                        } else {
+                            date = "" + calendar.get(Calendar.YEAR) + "-" + time;
+                        }
+                        articleInfo.setDate(date);
+                    }
                     saveArticle(articleInfo);
                 } catch (Exception e) {
-                    logger.error("techwebCrawler is exception:" + e.toString());
+                    logger.error("sinaTechnologyCrawler is exception:" + e.toString());
                 }
             }
         } catch (Exception e) {
-            logger.error("techwebCrawler is exception:" + e.toString());
+            logger.error("sinaTechnologyCrawler is exception:" + e.toString());
         }
         webClient.closeAllWindows();
     }

@@ -13,4 +13,8 @@ public interface ArticleInfoManager {
 
     List<ArticleInfo> getArticleInfosByParams(Map<String, Object> map);
 
+    int deleteArticleInfoById(Long id);
+
+    List<ArticleInfo> getArticleInfosByGmtCreate(Map<String, Object> map);
+
 }

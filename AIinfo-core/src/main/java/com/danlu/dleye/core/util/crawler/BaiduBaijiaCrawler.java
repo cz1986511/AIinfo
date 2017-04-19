@@ -1,4 +1,4 @@
-package com.danlu.dleye.core.util;
+package com.danlu.dleye.core.util.crawler;
 
 import java.util.Calendar;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package com.danlu.dleye.core.util;
+package com.danlu.dleye.core.util.crawler;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -15,21 +15,21 @@ import com.danlu.dleye.persist.base.ArticleInfo;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
-import com.gargoylesoftware.htmlunit.html.HtmlImage;
+import com.gargoylesoftware.htmlunit.html.HtmlHeading3;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlSpan;
+import com.gargoylesoftware.htmlunit.html.HtmlUnknownElement;
 
-public class HuxiuCrawler implements Runnable {
+public class IfanrCrawler implements Runnable {
 
-    private static final Logger logger = LoggerFactory.getLogger(HuxiuCrawler.class);
-    private static final String HUXIU = "虎嗅";
-    private static final String URL_STRING = "http://www.huxiu.com";
+    private static final Logger logger = LoggerFactory.getLogger(IfanrCrawler.class);
+    private static final String IFANR = "爱范儿";
+    private static final String URL_STRING = "http://www.ifanr.com";
     private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
 
     private WebClient webClient;
     private ArticleInfoManager articleInfoManager;
 
-    public HuxiuCrawler(ArticleInfoManager articleInfoManager) {
+    public IfanrCrawler(ArticleInfoManager articleInfoManager) {
         super();
         this.webClient = initWebClient();
         this.articleInfoManager = articleInfoManager;
@@ -40,50 +40,41 @@ public class HuxiuCrawler implements Runnable {
     public void run() {
         try {
             Calendar calendar = Calendar.getInstance();
-            String xPath = "//div[@class='mod-b mod-art ']";
+            String xPath = "//div[@class='article-item article-item--card ']";
             HtmlPage page = webClient.getPage(URL_STRING);
             List<HtmlDivision> list = (List<HtmlDivision>) page.getByXPath(xPath);
             Iterator<HtmlDivision> ite = list.iterator();
             while (ite.hasNext()) {
                 try {
                     ArticleInfo articleInfo = new ArticleInfo();
-                    articleInfo.setSource(HUXIU);
+                    articleInfo.setSource(IFANR);
                     HtmlDivision division = ite.next();
                     List<HtmlAnchor> tagAnchorList = (List<HtmlAnchor>) division
-                        .getByXPath(".//div[@class='column-link-box']/a");
+                        .getByXPath(".//a[@class='article-label']");
                     if (!CollectionUtils.isEmpty(tagAnchorList)) {
                         articleInfo.setTag(tagAnchorList.get(0).asText());
                     }
-                    List<HtmlAnchor> titleAnchorList = (List<HtmlAnchor>) division
-                        .getByXPath(".//div[@class='mob-ctt']/h2/a");
-                    if (!CollectionUtils.isEmpty(titleAnchorList)) {
-                        articleInfo.setTitle(titleAnchorList.get(0).asText());
-                        articleInfo.setLinkUrl(URL_STRING
-                                               + titleAnchorList.get(0).getAttribute("href"));
+                    List<HtmlAnchor> urlAnchorList = (List<HtmlAnchor>) division
+                        .getByXPath(".//a[@class!='article-label']");
+                    if (!CollectionUtils.isEmpty(urlAnchorList)) {
+                        articleInfo.setLinkUrl(urlAnchorList.get(0).getAttribute("href"));
                     }
-                    List<HtmlImage> picImageList = (List<HtmlImage>) division
-                        .getByXPath(".//div[@class='mod-thumb']/a/img");
-                    if (!CollectionUtils.isEmpty(picImageList)) {
-                        articleInfo.setPicUrl(picImageList.get(0).getAttribute("data-original"));
-                    } else {
-                        articleInfo.setPicUrl(DEFAULT_PIC);
+                    List<HtmlHeading3> titleH3List = (List<HtmlHeading3>) division
+                        .getByXPath(".//h3");
+                    if (!CollectionUtils.isEmpty(titleH3List)) {
+                        articleInfo.setTitle(titleH3List.get(0).asText());
                     }
-                    List<HtmlSpan> authorSpanList = (List<HtmlSpan>) division
-                        .getByXPath(".//div[@class='mob-ctt']/div[@class='mob-author']/a/span[@class='author-name ']");
-                    if (!CollectionUtils.isEmpty(authorSpanList)) {
-                        articleInfo.setAuthor(authorSpanList.get(0).asText());
-                    }
-                    List<HtmlSpan> timeSpanList = (List<HtmlSpan>) division
-                        .getByXPath(".//div[@class='mob-ctt']/div[@class='mob-author']/span[@class='time']");
+                    List<HtmlUnknownElement> timeSpanList = (List<HtmlUnknownElement>) division
+                        .getByXPath(".//time");
                     if (!CollectionUtils.isEmpty(timeSpanList)) {
                         String time = timeSpanList.get(0).asText();
                         String date = "";
                         String day = (calendar.get(Calendar.MONTH) + 1) > 9 ? ("" + (calendar
                             .get(Calendar.MONTH) + 1)) : ("0" + (calendar.get(Calendar.MONTH) + 1));
-                        if ("1天前".equals(time)) {
+                        if (time.contains("昨天")) {
                             date = "" + calendar.get(Calendar.YEAR) + "-" + day + "-"
                                    + (calendar.get(Calendar.DAY_OF_MONTH) - 1);
-                        } else if ("2天前".equals(time)) {
+                        } else if (time.contains("前天")) {
                             date = "" + calendar.get(Calendar.YEAR) + "-" + day + "-"
                                    + (calendar.get(Calendar.DAY_OF_MONTH) - 2);
                         } else {
@@ -92,18 +83,22 @@ public class HuxiuCrawler implements Runnable {
                         }
                         articleInfo.setDate(date);
                     }
-                    List<HtmlDivision> descDivisionList = (List<HtmlDivision>) division
-                        .getByXPath(".//div[@class='mob-ctt']/div[@class='mob-sub']");
-                    if (!CollectionUtils.isEmpty(descDivisionList)) {
-                        articleInfo.setIntroduction(descDivisionList.get(0).asText());
+                    List<HtmlDivision> picDivisionList = (List<HtmlDivision>) division
+                        .getByXPath(".//div[@class='article-image cover-image']");
+                    if (!CollectionUtils.isEmpty(picDivisionList)) {
+                        String picUrls = picDivisionList.get(0).getAttribute("style");
+                        String[] picUrlArray = picUrls.split("'");
+                        articleInfo.setPicUrl(picUrlArray[1]);
+                    } else {
+                        articleInfo.setPicUrl(DEFAULT_PIC);
                     }
                     saveArticle(articleInfo);
                 } catch (Exception e) {
-                    logger.error("huxiuCrawler is exception:" + e.toString());
+                    logger.error("ifanrCrawler is exception:" + e.toString());
                 }
             }
         } catch (Exception e) {
-            logger.error("huxiuCrawler is exception:" + e.toString());
+            logger.error("ifanrCrawler is exception:" + e.toString());
         }
         webClient.closeAllWindows();
     }

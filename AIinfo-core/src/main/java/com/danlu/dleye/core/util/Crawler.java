@@ -9,6 +9,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.danlu.dleye.core.ArticleInfoManager;
+import com.danlu.dleye.core.util.crawler.BaiduBaijiaCrawler;
+import com.danlu.dleye.core.util.crawler.CheekerCrawler;
+import com.danlu.dleye.core.util.crawler.HuxiuCrawler;
+import com.danlu.dleye.core.util.crawler.IfanrCrawler;
+import com.danlu.dleye.core.util.crawler.IheimaCrawler;
+import com.danlu.dleye.core.util.crawler.LeiPhoneCrawler;
+import com.danlu.dleye.core.util.crawler.NetTechnologyCrawler;
+import com.danlu.dleye.core.util.crawler.PintuCrawler;
+import com.danlu.dleye.core.util.crawler.QdailyCrawler;
+import com.danlu.dleye.core.util.crawler.SinaTechnologyCrawler;
+import com.danlu.dleye.core.util.crawler.TechWebCrawler;
+import com.danlu.dleye.core.util.crawler.TmtPostCrawler;
 
 public class Crawler {
 
@@ -31,6 +43,21 @@ public class Crawler {
             if (null == executor) {
                 init();
             }
+            // i黑马数据抓取
+            IheimaCrawler iheimaCrawler = new IheimaCrawler(articleInfoManager);
+            executor.execute(iheimaCrawler);
+            // 粹客网数据抓取
+            CheekerCrawler cheekerCrawler = new CheekerCrawler(articleInfoManager);
+            executor.execute(cheekerCrawler);
+            // techweb数据抓取
+            TechWebCrawler techWebCrawler = new TechWebCrawler(articleInfoManager);
+            executor.execute(techWebCrawler);
+            // 百度百家数据抓取
+            BaiduBaijiaCrawler baiduBaijiaCrawler = new BaiduBaijiaCrawler(articleInfoManager);
+            executor.execute(baiduBaijiaCrawler);
+            // 网易科技数据抓取
+            NetTechnologyCrawler netTechnologyCrawler = new NetTechnologyCrawler(articleInfoManager);
+            executor.execute(netTechnologyCrawler);
             // 虎嗅数据抓取
             HuxiuCrawler huxiuCrawler = new HuxiuCrawler(articleInfoManager);
             executor.execute(huxiuCrawler);
@@ -53,21 +80,6 @@ public class Crawler {
             // 钛媒体数据抓取
             TmtPostCrawler tmtPostCrawler = new TmtPostCrawler(articleInfoManager);
             executor.execute(tmtPostCrawler);
-            // i黑马数据抓取
-            IheimaCrawler iheimaCrawler = new IheimaCrawler(articleInfoManager);
-            executor.execute(iheimaCrawler);
-            // 粹客网数据抓取
-            CheekerCrawler cheekerCrawler = new CheekerCrawler(articleInfoManager);
-            executor.execute(cheekerCrawler);
-            // techweb数据抓取
-            TechWebCrawler techWebCrawler = new TechWebCrawler(articleInfoManager);
-            executor.execute(techWebCrawler);
-            // 百度百家数据抓取
-            BaiduBaijiaCrawler baiduBaijiaCrawler = new BaiduBaijiaCrawler(articleInfoManager);
-            executor.execute(baiduBaijiaCrawler);
-            // 网易科技数据抓取
-            NetTechnologyCrawler netTechnologyCrawler = new NetTechnologyCrawler(articleInfoManager);
-            executor.execute(netTechnologyCrawler);
         } catch (Exception e) {
             logger.error("crawlerInfo is exception:" + e.toString());
         }

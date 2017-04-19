@@ -39,4 +39,20 @@ public class ArticleInfoManagerImpl implements ArticleInfoManager {
         return null;
     }
 
+    @Override
+    public int deleteArticleInfoById(Long id) {
+        if (null != id && id > 0) {
+            return articleInfoMapper.deleteByPrimaryKey(id);
+        }
+        return 0;
+    }
+
+    @Override
+    public List<ArticleInfo> getArticleInfosByGmtCreate(Map<String, Object> map) {
+        if (!CollectionUtils.isEmpty(map)) {
+            return articleInfoMapper.selectArticlesByGmtCreate(map);
+        }
+        return null;
+    }
+
 }

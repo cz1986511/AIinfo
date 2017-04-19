@@ -1,5 +1,7 @@
-package com.danlu.dleye.core.util;
+package com.danlu.dleye.core.util.crawler;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -16,20 +18,18 @@ import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlParagraph;
-import com.gargoylesoftware.htmlunit.html.HtmlSpan;
 
-public class CheekerCrawler implements Runnable {
+public class PintuCrawler implements Runnable {
 
-    private static final Logger logger = LoggerFactory.getLogger(CheekerCrawler.class);
-    private static final String CHEEKR = "粹客网";
-    private static final String URL_STRING = "http://www.cheekr.com";
+    private static final Logger logger = LoggerFactory.getLogger(PintuCrawler.class);
+    private static final String PINTU = "品途";
+    private static final String URL_STRING = "http://www.pintu360.com";
     private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
 
     private WebClient webClient;
     private ArticleInfoManager articleInfoManager;
 
-    public CheekerCrawler(ArticleInfoManager articleInfoManager) {
+    public PintuCrawler(ArticleInfoManager articleInfoManager) {
         super();
         this.webClient = initWebClient();
         this.articleInfoManager = articleInfoManager;
@@ -39,55 +39,43 @@ public class CheekerCrawler implements Runnable {
     @Override
     public void run() {
         try {
-            String xPath = "//div[@class='media']";
+            String xPath = "//div[@class='mixin-article-item big']";
             HtmlPage page = webClient.getPage(URL_STRING);
             List<HtmlDivision> list = (List<HtmlDivision>) page.getByXPath(xPath);
             Iterator<HtmlDivision> ite = list.iterator();
             while (ite.hasNext()) {
                 try {
                     ArticleInfo articleInfo = new ArticleInfo();
-                    articleInfo.setSource(CHEEKR);
+                    articleInfo.setSource(PINTU);
                     HtmlDivision division = ite.next();
+                    Date dateTime = new Date(Long.valueOf(division.getAttribute("data-time")));
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    articleInfo.setDate(sdf.format(dateTime));
                     List<HtmlAnchor> titleAnchorList = (List<HtmlAnchor>) division
-                        .getByXPath(".//div[@class='media_text']/h2[@class='indexmediatitle']/a");
+                        .getByXPath(".//h2[@class='title-wrap']/a[@class='title']");
                     if (!CollectionUtils.isEmpty(titleAnchorList)) {
                         articleInfo.setLinkUrl(titleAnchorList.get(0).getAttribute("href"));
                         articleInfo.setTitle(titleAnchorList.get(0).asText());
                     }
-                    List<HtmlParagraph> descParagraphList = (List<HtmlParagraph>) division
-                        .getByXPath(".//div[@class='media_text']/span[@class='abstract']/p");
-                    if (!CollectionUtils.isEmpty(descParagraphList)) {
-                        articleInfo.setIntroduction(descParagraphList.get(0).asText());
-                    }
-                    List<HtmlAnchor> authorAnchorList = (List<HtmlAnchor>) division
-                        .getByXPath(".//div[@class='media_text']/div[@class='author_and_time']/span[@class='author']/a");
-                    if (!CollectionUtils.isEmpty(authorAnchorList)) {
-                        articleInfo.setAuthor(authorAnchorList.get(0).asText());
-                    }
-                    List<HtmlSpan> tagSpanList = (List<HtmlSpan>) division
-                        .getByXPath(".//div[@class='media_text']/span[@class='tags']");
-                    if (!CollectionUtils.isEmpty(tagSpanList)) {
-                        String tags = "";
-                        Iterator<HtmlSpan> tagIterator = tagSpanList.iterator();
-                        while (tagIterator.hasNext()) {
-                            tags += tagIterator.next().asText() + " ";
-                        }
-                        articleInfo.setTag(tags);
+                    List<HtmlDivision> descDivisionList = (List<HtmlDivision>) division
+                        .getByXPath(".//div[@class='note']");
+                    if (!CollectionUtils.isEmpty(descDivisionList)) {
+                        articleInfo.setIntroduction(descDivisionList.get(0).asText());
                     }
                     List<HtmlImage> picImageList = (List<HtmlImage>) division
-                        .getByXPath(".//a[@class='mediaimg_a']/img");
+                        .getByXPath(".//a[@class='banner']/img");
                     if (!CollectionUtils.isEmpty(picImageList)) {
-                        articleInfo.setPicUrl(picImageList.get(0).getAttribute("src"));
+                        articleInfo.setPicUrl(picImageList.get(0).getAttribute("data-original"));
                     } else {
                         articleInfo.setPicUrl(DEFAULT_PIC);
                     }
                     saveArticle(articleInfo);
                 } catch (Exception e) {
-                    logger.error("cheekerCrawler is exception:" + e.toString());
+                    logger.error("pintuCrawler is exception:" + e.toString());
                 }
             }
         } catch (Exception e) {
-            logger.error("cheekerCrawler is exception:" + e.toString());
+            logger.error("pintuCrawler is exception:" + e.toString());
         }
         webClient.closeAllWindows();
     }

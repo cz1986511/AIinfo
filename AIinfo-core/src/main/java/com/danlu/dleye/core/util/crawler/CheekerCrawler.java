@@ -1,4 +1,4 @@
-package com.danlu.dleye.core.util;
+package com.danlu.dleye.core.util.crawler;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,20 +16,20 @@ import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlParagraph;
 import com.gargoylesoftware.htmlunit.html.HtmlSpan;
-import com.gargoylesoftware.htmlunit.html.HtmlUnknownElement;
 
-public class IheimaCrawler implements Runnable {
+public class CheekerCrawler implements Runnable {
 
-    private static final Logger logger = LoggerFactory.getLogger(IheimaCrawler.class);
-    private static final String IHEIMA = "i黑马";
-    private static final String URL_STRING = "http://www.iheima.com";
+    private static final Logger logger = LoggerFactory.getLogger(CheekerCrawler.class);
+    private static final String CHEEKR = "粹客网";
+    private static final String URL_STRING = "http://www.cheekr.com";
     private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
 
     private WebClient webClient;
     private ArticleInfoManager articleInfoManager;
 
-    public IheimaCrawler(ArticleInfoManager articleInfoManager) {
+    public CheekerCrawler(ArticleInfoManager articleInfoManager) {
         super();
         this.webClient = initWebClient();
         this.articleInfoManager = articleInfoManager;
@@ -39,38 +39,43 @@ public class IheimaCrawler implements Runnable {
     @Override
     public void run() {
         try {
-            String xPath = "//article[@class='item-wrap cf']";
+            String xPath = "//div[@class='media']";
             HtmlPage page = webClient.getPage(URL_STRING);
-            List<HtmlUnknownElement> list = (List<HtmlUnknownElement>) page.getByXPath(xPath);
-            Iterator<HtmlUnknownElement> ite = list.iterator();
+            List<HtmlDivision> list = (List<HtmlDivision>) page.getByXPath(xPath);
+            Iterator<HtmlDivision> ite = list.iterator();
             while (ite.hasNext()) {
                 try {
                     ArticleInfo articleInfo = new ArticleInfo();
-                    articleInfo.setSource(IHEIMA);
-                    HtmlUnknownElement listItem = ite.next();
-                    List<HtmlAnchor> titleAnchorList = (List<HtmlAnchor>) listItem
-                        .getByXPath(".//div[@class='desc']/div[@class='title-wrap']/a[@class='title']");
+                    articleInfo.setSource(CHEEKR);
+                    HtmlDivision division = ite.next();
+                    List<HtmlAnchor> titleAnchorList = (List<HtmlAnchor>) division
+                        .getByXPath(".//div[@class='media_text']/h2[@class='indexmediatitle']/a");
                     if (!CollectionUtils.isEmpty(titleAnchorList)) {
-                        articleInfo.setTitle(titleAnchorList.get(0).asText());
                         articleInfo.setLinkUrl(titleAnchorList.get(0).getAttribute("href"));
+                        articleInfo.setTitle(titleAnchorList.get(0).asText());
                     }
-                    List<HtmlDivision> descDivisionList = (List<HtmlDivision>) listItem
-                        .getByXPath(".//div[@class='desc']/div[@class='brief']");
-                    if (!CollectionUtils.isEmpty(descDivisionList)) {
-                        articleInfo.setIntroduction(descDivisionList.get(0).asText());
+                    List<HtmlParagraph> descParagraphList = (List<HtmlParagraph>) division
+                        .getByXPath(".//div[@class='media_text']/span[@class='abstract']/p");
+                    if (!CollectionUtils.isEmpty(descParagraphList)) {
+                        articleInfo.setIntroduction(descParagraphList.get(0).asText());
                     }
-                    List<HtmlSpan> dateSpanList = (List<HtmlSpan>) listItem
-                        .getByXPath(".//div[@class='desc']/div[@class='author']/span[@class='time-wrap fl']/span[@class='timeago']");
-                    if (!CollectionUtils.isEmpty(dateSpanList)) {
-                        articleInfo.setDate(dateSpanList.get(0).asText());
+                    List<HtmlAnchor> authorAnchorList = (List<HtmlAnchor>) division
+                        .getByXPath(".//div[@class='media_text']/div[@class='author_and_time']/span[@class='author']/a");
+                    if (!CollectionUtils.isEmpty(authorAnchorList)) {
+                        articleInfo.setAuthor(authorAnchorList.get(0).asText());
                     }
-                    List<HtmlSpan> authorSpanList = (List<HtmlSpan>) listItem
-                        .getByXPath(".//div[@class='desc']/div[@class='author']/a[@class='fr']/span[@class='name']");
-                    if (!CollectionUtils.isEmpty(authorSpanList)) {
-                        articleInfo.setAuthor(authorSpanList.get(0).asText());
+                    List<HtmlSpan> tagSpanList = (List<HtmlSpan>) division
+                        .getByXPath(".//div[@class='media_text']/span[@class='tags']");
+                    if (!CollectionUtils.isEmpty(tagSpanList)) {
+                        String tags = "";
+                        Iterator<HtmlSpan> tagIterator = tagSpanList.iterator();
+                        while (tagIterator.hasNext()) {
+                            tags += tagIterator.next().asText() + " ";
+                        }
+                        articleInfo.setTag(tags);
                     }
-                    List<HtmlImage> picImageList = (List<HtmlImage>) listItem
-                        .getByXPath(".//div[@class='desc']/div[@class='brief hasimg']/a[@class='cf']/img");
+                    List<HtmlImage> picImageList = (List<HtmlImage>) division
+                        .getByXPath(".//a[@class='mediaimg_a']/img");
                     if (!CollectionUtils.isEmpty(picImageList)) {
                         articleInfo.setPicUrl(picImageList.get(0).getAttribute("src"));
                     } else {
@@ -78,11 +83,11 @@ public class IheimaCrawler implements Runnable {
                     }
                     saveArticle(articleInfo);
                 } catch (Exception e) {
-                    logger.error("iheimaCrawler is exception:" + e.toString());
+                    logger.error("cheekerCrawler is exception:" + e.toString());
                 }
             }
         } catch (Exception e) {
-            logger.error("iheimaCrawler is exception:" + e.toString());
+            logger.error("cheekerCrawler is exception:" + e.toString());
         }
         webClient.closeAllWindows();
     }
