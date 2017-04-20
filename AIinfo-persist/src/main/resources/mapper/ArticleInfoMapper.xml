@@ -64,7 +64,7 @@
     from dleye_article_info
     where
     <![CDATA[
-	    gmt_create <= #{createTime,jdbcType=TIMESTAMP} and	
+	    gmt_create <= #{createTime,jdbcType=TIMESTAMP}	
 	]]> 
     <if test=" offset != null and limit != null">
 	  limit ${offset},${limit}

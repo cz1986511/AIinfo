@@ -47,10 +47,10 @@ public class CleanData {
                     articleInfoManager.deleteArticleInfoById(iterator.next().getId());
                 }
             }
-            updateUserAddressList();
         } catch (Exception e) {
             logger.error("cleanData is exception:" + e.toString());
         }
+        updateUserAddressList();
     }
 
     @SuppressWarnings("resource")
