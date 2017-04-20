@@ -22,6 +22,28 @@ public class DleyeSwith {
     @Switch(description = "默认删除30天前数据", name = "defaultDate")
     private int defaultDate = -30;
 
+    @Switch(description = "默认token", name = "defaultDate")
+    private String token = "6677";
+
+    @Switch(description = "默认文件路径", name = "filePath")
+    private String filePath = "/data/wwwroot/default/rd.xlsx";
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     public int getDefaultDate() {
         return defaultDate;
     }

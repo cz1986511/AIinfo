@@ -14,12 +14,11 @@
 	                    http://www.springframework.org/schema/tool	                    
 	                    http://www.springframework.org/schema/tool/spring-tool-4.0.xsd">
 	                    
+	<bean id="redisClient" class="com.danlu.dleye.core.util.RedisClient" init-method="init"/>
 	<bean id="infoManager" class="com.danlu.dleye.core.impl.InfoManagerImpl" />
 	<bean id="userInfoManager" class="com.danlu.dleye.core.impl.UserInfoManagerImpl" />
 	<bean id="articleInfoManager" class="com.danlu.dleye.core.impl.ArticleInfoManagerImpl" />
 	<bean id="dleyeSwith" class="com.danlu.dleye.core.util.DleyeSwith" />
 	<bean id="crawler" class="com.danlu.dleye.core.util.Crawler" />
 	<bean id="cleanData" class="com.danlu.dleye.core.util.CleanData" />
-	<bean id="redisClient" class="com.danlu.dleye.core.util.RedisClient" init-method="init"/>
-
 </beans>

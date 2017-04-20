@@ -67,8 +67,10 @@ public class AIInfoController implements Serializable {
                     redisClient.set(defaultKey, articleInfoList, dleyeSwith.getEffectiveTime());
                 }
             }
+            result.put("status", 0);
         } catch (Exception e) {
             logger.error(e.toString());
+            result.put("status", 1);
             result.put("msg", "程序小哥跟老板娘跑了");
         }
         return json.toJSONString();

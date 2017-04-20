@@ -9,7 +9,7 @@
     <title>信息管理</title>
     <#include "/common/header.html"/>
 	<script>
-	  var ws = new WebSocket("ws://192.168.50.54:8080/AIinfo/websocket");
+	  var ws = new WebSocket("ws://chenzhuo.pub/AIinfo/websocket");
 	  ws.onopen = function(){
 	  };
 	  ws.onmessage = function(message){
@@ -36,7 +36,6 @@
 						<textarea id="chatlog" readonly></textarea><br/>
 						<input id="msg" type="textarea" />
 						<button type="submit" id="sendButton" onClick="postToServer()">发送</button>
-						<!-- <button type="submit" id="sendButton" onClick="closeConnect()">End</button> -->
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>

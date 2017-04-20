@@ -19,8 +19,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.danlu.dleye.core.UserInfoManager;
 import com.danlu.dleye.core.util.DleyeSwith;
+import com.danlu.dleye.core.util.RedisClient;
+import com.danlu.dleye.core.util.UserBaseInfo;
 import com.danlu.dleye.persist.base.UserInfoEntity;
 import com.danlu.persist.util.CommonUtil;
 
@@ -36,6 +39,9 @@ public class UserController implements Serializable {
 
     @Autowired
     private DleyeSwith dleyeSwith;
+
+    @Autowired
+    private RedisClient redisClient;
 
     @RequestMapping("we_chat.html")
     public ModelAndView chat(HttpServletRequest request) {
@@ -215,6 +221,24 @@ public class UserController implements Serializable {
                 result.put("msg", "user is wrong");
             }
             result.put("status", res > 0 ? true : false);
+        }
+        return json.toJSONString();
+    }
+
+    @RequestMapping(value = "user_address_list", produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public String getUserAddressList(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        JSONObject json = new JSONObject(result);
+        String token = request.getParameter("token");
+        String defaultKey = "user_address_list";
+        if (!StringUtils.isBlank(token) && dleyeSwith.getToken().equals(token)) {
+            result.put("data", redisClient.get(defaultKey, new TypeReference<List<UserBaseInfo>>() {
+            }));
+            result.put("status", 0);
+        } else {
+            result.put("status", 1);
+            result.put("msg", "程序小哥跟老板娘跑了");
         }
         return json.toJSONString();
     }
