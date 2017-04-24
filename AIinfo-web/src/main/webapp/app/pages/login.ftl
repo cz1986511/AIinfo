@@ -21,7 +21,7 @@
                         <form name="form" action="load.html" method="post">
                             <fieldset>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="请输入手机号" id="tel" name="tel" type="text" autofocus><font color="red">${errorMsg}</font>
+                                    <input class="form-control" placeholder="请输入手机号" id="tel" name="tel" type="text" autofocus><font color="red">${msg}</font>
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control" placeholder="请输入密码" id="password" name="password" type="password" >

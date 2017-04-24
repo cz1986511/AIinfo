@@ -19,14 +19,14 @@ public class DleyeSwith {
     @Switch(description = "线程池最大线程数", name = "maxPool")
     private int maxPool = 5;
 
-    @Switch(description = "默认删除30天前数据", name = "defaultDate")
-    private int defaultDate = -30;
+    @Switch(description = "默认删除180天前数据", name = "defaultDate")
+    private int defaultDate = -180;
 
     @Switch(description = "默认token", name = "defaultDate")
     private String token = "6677";
 
     @Switch(description = "默认文件路径", name = "filePath")
-    private String filePath = "/data/wwwroot/default/rd.xlsx";
+    private String filePath = "/data/file/rd.xlsx";
 
     public String getFilePath() {
         return filePath;

@@ -119,11 +119,11 @@ public class UserController implements Serializable {
                     request.getSession().setAttribute("type", user.getType());
                     request.getSession().setAttribute("timeout", timeout);
                 } else {
-                    m.addObject("errorMsg", "账号被锁定");
+                    m.addObject("msg", "账号被锁定");
                     m.setViewName("login");
                 }
             } else {
-                m.addObject("errorMsg", "手机号或者密码错误");
+                m.addObject("msg", "手机号或者密码错误");
                 m.setViewName("login");
             }
         }
@@ -238,7 +238,7 @@ public class UserController implements Serializable {
             result.put("status", 0);
         } else {
             result.put("status", 1);
-            result.put("msg", "程序小哥跟老板娘跑了");
+            result.put("msg", "程序猿小哥跟老板娘跑了");
         }
         return json.toJSONString();
     }

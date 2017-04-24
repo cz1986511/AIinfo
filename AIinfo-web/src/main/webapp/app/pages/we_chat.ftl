@@ -9,7 +9,7 @@
     <title>信息管理</title>
     <#include "/common/header.html"/>
 	<script>
-	  var ws = new WebSocket("ws://chenzhuo.pub/AIinfo/websocket");
+	  var ws = new WebSocket("ws://chenzhuo.pub:8080/AIinfo/websocket");
 	  ws.onopen = function(){
 	  };
 	  ws.onmessage = function(message){
