@@ -90,7 +90,7 @@ public class AIInfoController implements Serializable {
         Map<String, Object> result = new HashMap<String, Object>();
         JSONObject json = new JSONObject(result);
         String weather = "weather";
-        List<JSONObject> list = new ArrayList<JSONObject>();
+        List<JSONObject> list = null;
         try {
             list = (List<JSONObject>) redisClient.get(weather,
                 new TypeReference<List<JSONObject>>() {
@@ -98,6 +98,7 @@ public class AIInfoController implements Serializable {
             if (!CollectionUtils.isEmpty(list)) {
                 result.put("data", list);
             } else {
+                list = new ArrayList<JSONObject>();
                 String citys = dleyeSwith.getCitys();
                 String[] cityStrings = citys.split(",");
                 for (int i = 0; i < cityStrings.length; i++) {
@@ -138,6 +139,7 @@ public class AIInfoController implements Serializable {
         } finally {
             httpClient.getConnectionManager().shutdown();
         }
+        logger.error("getSuggestion is null");
         return null;
     }
 
@@ -161,6 +163,7 @@ public class AIInfoController implements Serializable {
         } finally {
             httpClient.getConnectionManager().shutdown();
         }
+        logger.error("getSuggestion is null");
         return null;
     }
 
@@ -184,6 +187,7 @@ public class AIInfoController implements Serializable {
         } finally {
             httpClient.getConnectionManager().shutdown();
         }
+        logger.error("getSuggestion is null");
         return null;
     }
 }
