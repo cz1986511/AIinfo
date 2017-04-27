@@ -231,9 +231,9 @@ public class UserController implements Serializable {
         Map<String, Object> result = new HashMap<String, Object>();
         JSONObject json = new JSONObject(result);
         String token = request.getParameter("token");
-        String defaultKey = "user_address_list";
+        String key = "user_address_list";
         if (!StringUtils.isBlank(token) && dleyeSwith.getToken().equals(token)) {
-            result.put("data", redisClient.get(defaultKey, new TypeReference<List<UserBaseInfo>>() {
+            result.put("data", redisClient.get(key, new TypeReference<List<UserBaseInfo>>() {
             }));
             result.put("status", 0);
         } else {

@@ -28,6 +28,17 @@ public class DleyeSwith {
     @Switch(description = "默认文件路径", name = "filePath")
     private String filePath = "/data/file/rd.xlsx";
 
+    @Switch(description = "天气预报城市,支持多个城市以逗号隔开", name = "citys")
+    private String citys = "chengdu";
+
+    public String getCitys() {
+        return citys;
+    }
+
+    public void setCitys(String citys) {
+        this.citys = citys;
+    }
+
     public String getFilePath() {
         return filePath;
     }
