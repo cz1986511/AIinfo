@@ -233,9 +233,16 @@ public class UserController implements Serializable {
         String token = request.getParameter("token");
         String key = "user_address_list";
         if (!StringUtils.isBlank(token) && dleyeSwith.getToken().equals(token)) {
-            result.put("data", redisClient.get(key, new TypeReference<List<UserBaseInfo>>() {
-            }));
-            result.put("status", 0);
+            List<UserBaseInfo> list = (List<UserBaseInfo>) redisClient.get(key,
+                new TypeReference<List<UserBaseInfo>>() {
+                });
+            if (!CollectionUtils.isEmpty(list)) {
+                result.put("data", list);
+                result.put("status", 0);
+            } else {
+                result.put("status", 1);
+                result.put("msg", "缓存获取数据失败");
+            }
         } else {
             result.put("status", 1);
             result.put("msg", "程序猿小哥跟老板娘跑了");
