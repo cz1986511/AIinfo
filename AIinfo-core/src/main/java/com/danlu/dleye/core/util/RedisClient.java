@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
@@ -13,26 +15,34 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 public class RedisClient {
 
     private static Logger logger = LoggerFactory.getLogger(RedisClient.class);
-    private Jedis jedis = null;
+    private JedisPool jedisPool;
 
     public void init() {
-        if (null == this.jedis) {
-            this.jedis = new Jedis("localhost");
+        if (null == this.jedisPool) {
+            JedisPoolConfig config = new JedisPoolConfig();
+            config.setMaxIdle(5);
+            config.setMaxWaitMillis(1000 * 100);
+            config.setTestOnBorrow(true);
+            this.jedisPool = new JedisPool(config, "localhost", 6379);
         }
     }
 
     public <T> void set(String key, final T value, int time) {
-        String jsonString = JSON.toJSONString(value, SerializerFeature.WriteDateUseDateFormat,
-            SerializerFeature.DisableCircularReferenceDetect);
-        if (null != jedis) {
-            jedis.setex(key, time, jsonString);
-        } else {
-            init();
+        try (Jedis jedis = jedisPool.getResource()) {
+            String jsonString = JSON.toJSONString(value, SerializerFeature.WriteDateUseDateFormat,
+                SerializerFeature.DisableCircularReferenceDetect);
+            if (null != jedis) {
+                jedisPool.getResource().setex(key, time, jsonString);
+            } else {
+                init();
+            }
+        } catch (Exception e) {
+            logger.error("set key:" + key + " is exception:" + e.toString());
         }
     }
 
     public <T> T get(final String key, final TypeReference<T> type) {
-        try {
+        try (Jedis jedis = jedisPool.getResource()) {
             if (null != jedis) {
                 String value = jedis.get(key);
                 if (StringUtils.isEmpty(value)) {
