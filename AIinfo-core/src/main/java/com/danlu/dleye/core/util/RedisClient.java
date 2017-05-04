@@ -20,7 +20,8 @@ public class RedisClient {
     public void init() {
         if (null == this.jedisPool) {
             JedisPoolConfig config = new JedisPoolConfig();
-            config.setMaxIdle(5);
+            config.setMaxIdle(10);
+            config.setMaxTotal(1024);
             config.setMaxWaitMillis(1000 * 100);
             config.setTestOnBorrow(true);
             this.jedisPool = new JedisPool(config, "localhost", 6379);
@@ -32,7 +33,8 @@ public class RedisClient {
             String jsonString = JSON.toJSONString(value, SerializerFeature.WriteDateUseDateFormat,
                 SerializerFeature.DisableCircularReferenceDetect);
             if (null != jedis) {
-                jedisPool.getResource().setex(key, time, jsonString);
+                jedis.setex(key, time, jsonString);
+                jedis.close();
             } else {
                 init();
             }
@@ -45,6 +47,7 @@ public class RedisClient {
         try (Jedis jedis = jedisPool.getResource()) {
             if (null != jedis) {
                 String value = jedis.get(key);
+                jedis.close();
                 if (StringUtils.isEmpty(value)) {
                     return null;
                 } else {
