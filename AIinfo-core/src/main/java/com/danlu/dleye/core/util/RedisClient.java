@@ -20,7 +20,7 @@ public class RedisClient {
     public void init() {
         if (null == this.jedisPool) {
             JedisPoolConfig config = new JedisPoolConfig();
-            config.setMaxIdle(10);
+            config.setMaxIdle(200);
             config.setMaxTotal(1024);
             config.setMaxWaitMillis(1000 * 100);
             config.setTestOnBorrow(true);
@@ -28,26 +28,41 @@ public class RedisClient {
         }
     }
 
+    @SuppressWarnings("deprecation")
     public <T> void set(String key, final T value, int time) {
-        try (Jedis jedis = jedisPool.getResource()) {
+        Jedis jedis = null;
+        boolean isOK = true;
+        try {
+            jedis = jedisPool.getResource();
             String jsonString = JSON.toJSONString(value, SerializerFeature.WriteDateUseDateFormat,
                 SerializerFeature.DisableCircularReferenceDetect);
             if (null != jedis) {
                 jedis.setex(key, time, jsonString);
-                jedis.close();
             } else {
                 init();
             }
         } catch (Exception e) {
             logger.error("set key:" + key + " is exception:" + e.toString());
+            isOK = false;
+        } finally {
+            if (null != jedis) {
+                if (isOK) {
+                    jedisPool.returnResource(jedis);
+                } else {
+                    jedisPool.returnBrokenResource(jedis);
+                }
+            }
         }
     }
 
+    @SuppressWarnings("deprecation")
     public <T> T get(final String key, final TypeReference<T> type) {
-        try (Jedis jedis = jedisPool.getResource()) {
+        Jedis jedis = null;
+        boolean isOK = true;
+        try {
+            jedis = jedisPool.getResource();
             if (null != jedis) {
                 String value = jedis.get(key);
-                jedis.close();
                 if (StringUtils.isEmpty(value)) {
                     return null;
                 } else {
@@ -59,7 +74,16 @@ public class RedisClient {
             }
         } catch (Exception e) {
             logger.error("get key:" + key + " is exception:" + e.toString());
+            isOK = false;
             return null;
+        } finally {
+            if (null != jedis) {
+                if (isOK) {
+                    jedisPool.returnResource(jedis);
+                } else {
+                    jedisPool.returnBrokenResource(jedis);
+                }
+            }
         }
     }
 }
