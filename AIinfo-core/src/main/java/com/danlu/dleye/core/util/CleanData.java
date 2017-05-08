@@ -1,7 +1,9 @@
 package com.danlu.dleye.core.util;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -51,6 +53,7 @@ public class CleanData {
             logger.error("cleanData is exception:" + e.toString());
         }
         updateUserAddressList();
+        makeLunchInfo();
     }
 
     @SuppressWarnings("resource")
@@ -95,4 +98,21 @@ public class CleanData {
         }
     }
 
+    public void makeLunchInfo() {
+        File file = new File("/data/file/lunch.txt");
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(file));
+            String s = null;
+            int i = 0;
+            while ((s = br.readLine()) != null) {
+                String defaultKey = "lunch" + i;
+                redisClient.set(defaultKey, s, 86400);
+                i++;
+            }
+            br.close();
+        } catch (Exception e) {
+            logger.error("makeLunchInfo is exception:" + e.toString());
+        }
+    }
 }
