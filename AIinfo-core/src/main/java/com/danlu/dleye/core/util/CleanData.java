@@ -1,9 +1,7 @@
 package com.danlu.dleye.core.util;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -99,20 +98,17 @@ public class CleanData {
     }
 
     public void makeLunchInfo() {
-        File file = new File("/data/file/lunch.txt");
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new FileReader(file));
-            String s = null;
-            int i = 0;
-            while ((s = br.readLine()) != null) {
-                String defaultKey = "lunch" + i;
-                redisClient.set(defaultKey, s, 86400);
-                i++;
+        String lunchString = dleyeSwith.getLunchs();
+        if (!StringUtils.isBlank(lunchString)) {
+            String[] lunchs = lunchString.split(",");
+            for (int i = 0; i < lunchs.length; i++) {
+                try {
+                    String defaultKey = "lunch" + i;
+                    redisClient.set(defaultKey, lunchs[i], 86400);
+                } catch (Exception e) {
+                    logger.error("makeLunchInfo is exception:" + e.toString());
+                }
             }
-            br.close();
-        } catch (Exception e) {
-            logger.error("makeLunchInfo is exception:" + e.toString());
         }
     }
 }

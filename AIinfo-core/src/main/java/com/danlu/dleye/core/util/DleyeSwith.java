@@ -31,6 +31,17 @@ public class DleyeSwith {
     @Switch(description = "天气预报城市,支持多个城市以逗号隔开", name = "citys")
     private String citys = "chengdu";
 
+    @Switch(description = "中午菜单,以逗号隔开", name = "lunchs")
+    private String lunchs = "73°炜面,麦当劳,廖记棒棒鸡,全家,沈小福,三顾冒菜,阿san的饭,德克士,subway,关刀冒菜,必胜客,好吃得一哔bi,最小一家,甘食记,宜宾燃面,徐歪嘴,小乔砂锅,煎饼郎,三国炙烤肉,猪八戒烤肉饭,大盘鸡,有米海鲜粥,谢记家常菜,跷脚牛肉,花甲米线,香天下火锅,土碗香,成都一号,聚缘川菜馆,争鲜回转寿司";
+
+    public String getLunchs() {
+        return lunchs;
+    }
+
+    public void setLunchs(String lunchs) {
+        this.lunchs = lunchs;
+    }
+
     public String getCitys() {
         return citys;
     }
