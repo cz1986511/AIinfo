@@ -20,6 +20,7 @@
             <div class="col-lg-12">
 			  <h2>第${bookListDate}期书单</h2>
 			</div>
+			<div class="table-responsive">
 			  <table class="table">
 			    <tr>
 			      <th>姓名</th>
@@ -48,6 +49,7 @@
 			    </#list>
 			  </#if>
 			  </table>
+			</div>
 		  </div>
 	    </div>
 	  </div>
