@@ -11,13 +11,17 @@
 </head>
 <body>
     <div id="wrapper">
-		<#include "navigation.html"/>
-        <!-- Page Content -->
+	    <#if userType == 1>
+		  <#include "navigation1.html"/>
+		<#else>
+		  <#include "navigation.html"/>
+        </#if>
+		<!-- Page Content -->
         <div id="page-wrapper">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header">欢迎</h1>
+                        <h1 class="page-header">欢迎${userName}</h1>
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>

@@ -30,7 +30,7 @@ import com.danlu.persist.util.CommonUtil;
 @Controller
 public class UserController implements Serializable {
 
-    private static final long serialVersionUID = -908534251L;
+    private static final long serialVersionUID = -90654534251L;
 
     private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -75,9 +75,7 @@ public class UserController implements Serializable {
         request.getSession().setAttribute("userId", null);
         request.getSession().setAttribute("type", null);
         request.getSession().setAttribute("timeout", null);
-        request.getSession().setAttribute("employeeId", null);
-        request.getSession().setAttribute("departmentId", null);
-        request.getSession().setAttribute("postId", null);
+        request.getSession().setAttribute("userName", null);
         m.setViewName("login");
         return m;
     }
@@ -92,6 +90,7 @@ public class UserController implements Serializable {
         if (userId > 0) {
             m.addObject("userType", (int) request.getSession().getAttribute("type"));
             m.setViewName("index");
+            m.addObject("userName", (String) request.getSession().getAttribute("userName"));
         }
         return m;
     }
@@ -112,6 +111,7 @@ public class UserController implements Serializable {
                 if (status > 0) {
                     m.addObject("userType", user.getType());
                     m.setViewName("index");
+                    m.addObject("userName", request.getSession().getAttribute("userName"));
                     Long timeout = (dleyeSwith.getTimeout() * 60 * 1000)
                                    + System.currentTimeMillis();
                     request.getSession().setAttribute("userId", user.getUserId());

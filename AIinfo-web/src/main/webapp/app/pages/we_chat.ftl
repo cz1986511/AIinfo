@@ -33,8 +33,10 @@
                 <div class="row">
                     <div class="col-lg-12">
 						<h3 class="page-header">欢迎来到聊天室</h3>
-						<textarea id="chatlog" readonly></textarea><br/>
-						<input id="msg" type="textarea" />
+						<div>
+						  <textarea id="chatlog" style="width:300px;height:200px;" readonly></textarea><br/>
+						</div>
+						输入:<input id="msg" type="textarea" />
 						<button type="submit" id="sendButton" onClick="postToServer()">发送</button>
                     </div>
                     <!-- /.col-lg-12 -->

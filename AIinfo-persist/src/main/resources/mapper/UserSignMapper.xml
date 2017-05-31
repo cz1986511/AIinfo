@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.danlu.dleye.persist.mapper.UserSignMapper" >
+  <resultMap id="BaseResultMap" type="com.danlu.dleye.persist.base.UserSign" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="sign_info" property="signInfo" jdbcType="VARCHAR" />
+    <result column="date" property="date" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modify" property="gmtModify" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_name, sign_info, date, gmt_create, gmt_modify
+  </sql>
+  <sql id="selectByParamsWhere">
+    <where>
+	  <if test="date != null">
+	    date = #{date,jdbcType=VARCHAR} and
+	  </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR} and
+      </if>
+        1 = 1
+    </where>
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from dleye_user_sign
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectUserSignsByParams" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from dleye_user_sign
+    <include refid="selectByParamsWhere" />
+      order by gmt_create desc
+    <if test=" offset != null and limit != null">
+	  limit ${offset},${limit}
+	</if>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from dleye_user_sign
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.danlu.dleye.persist.base.UserSign" >
+    insert into dleye_user_sign (user_name, sign_info, 
+      date, gmt_create, gmt_modify)
+    values (#{userName,jdbcType=VARCHAR}, #{signInfo,jdbcType=VARCHAR}, 
+      #{date,jdbcType=VARCHAR}, NOW(), NOW())
+  </insert>
+  <insert id="insertSelective" parameterType="com.danlu.dleye.persist.base.UserSign" >
+    insert into dleye_user_sign
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="signInfo != null" >
+        sign_info,
+      </if>
+      <if test="date != null" >
+        date,
+      </if>
+        gmt_create,
+        gmt_modify
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="signInfo != null" >
+        #{signInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null" >
+        #{date,jdbcType=VARCHAR},
+      </if>
+        NOW(),
+        NOW()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.danlu.dleye.persist.base.UserSign" >
+    update dleye_user_sign
+    <set >
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="signInfo != null" >
+        sign_info = #{signInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null" >
+        date = #{date,jdbcType=VARCHAR},
+      </if>
+        gmt_modify = NOW()
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.danlu.dleye.persist.base.UserSign" >
+    update dleye_user_sign
+    set user_name = #{userName,jdbcType=VARCHAR},
+      sign_info = #{signInfo,jdbcType=VARCHAR},
+      date = #{date,jdbcType=VARCHAR},
+      gmt_modify = NOW()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

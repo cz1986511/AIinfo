@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.danlu.dleye.persist.mapper.BookListMapper" >
+  <resultMap id="BaseResultMap" type="com.danlu.dleye.persist.base.BookList" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="unread_list" property="unreadList" jdbcType="VARCHAR" />
+    <result column="read_list" property="readList" jdbcType="VARCHAR" />
+    <result column="date" property="date" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modify" property="gmtModify" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_name, unread_list, read_list, date, status, gmt_create, gmt_modify
+  </sql>
+  
+  <sql id="selectByParamsWhere">
+    <where>
+	  <if test="date != null">
+	    date = #{date,jdbcType=INTEGER} and
+	  </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR} and
+      </if>
+        1 = 1
+    </where>
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from dleye_book_list
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="selectBookListsByParams" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from dleye_book_list
+    <include refid="selectByParamsWhere" />
+      order by gmt_create desc
+    <if test=" offset != null and limit != null">
+	  limit ${offset},${limit}
+	</if>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from dleye_book_list
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.danlu.dleye.persist.base.BookList" >
+    insert into dleye_book_list (user_name, unread_list, 
+      read_list, date, status, 
+      gmt_create, gmt_modify)
+    values (#{userName,jdbcType=VARCHAR}, #{unreadList,jdbcType=VARCHAR}, 
+      #{readList,jdbcType=VARCHAR}, #{date,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, 
+      NOW(), NOW())
+  </insert>
+  <insert id="insertSelective" parameterType="com.danlu.dleye.persist.base.BookList" >
+    insert into dleye_book_list
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="unreadList != null" >
+        unread_list,
+      </if>
+      <if test="readList != null" >
+        read_list,
+      </if>
+      <if test="date != null" >
+        date,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+        gmt_create,
+        gmt_modify
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="unreadList != null" >
+        #{unreadList,jdbcType=VARCHAR},
+      </if>
+      <if test="readList != null" >
+        #{readList,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null" >
+        #{date,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+        NOW(),
+        NOW()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.danlu.dleye.persist.base.BookList" >
+    update dleye_book_list
+    <set >
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="unreadList != null" >
+        unread_list = #{unreadList,jdbcType=VARCHAR},
+      </if>
+      <if test="readList != null" >
+        read_list = #{readList,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null" >
+        date = #{date,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+        gmt_modify = NOW()
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.danlu.dleye.persist.base.BookList" >
+    update dleye_book_list
+    set user_name = #{userName,jdbcType=VARCHAR},
+      unread_list = #{unreadList,jdbcType=VARCHAR},
+      read_list = #{readList,jdbcType=VARCHAR},
+      date = #{date,jdbcType=INTEGER},
+      status = #{status,jdbcType=VARCHAR},
+      gmt_modify = NOW()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

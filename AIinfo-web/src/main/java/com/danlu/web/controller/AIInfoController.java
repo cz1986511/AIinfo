@@ -32,10 +32,11 @@ import com.danlu.dleye.core.util.DleyeSwith;
 import com.danlu.dleye.core.util.RedisClient;
 import com.danlu.dleye.persist.base.ArticleInfo;
 
+@SuppressWarnings("deprecation")
 @Controller
 public class AIInfoController implements Serializable {
 
-    private static final long serialVersionUID = -908534251L;
+    private static final long serialVersionUID = -90859094251L;
     private static Logger logger = LoggerFactory.getLogger(AIInfoController.class);
     @Autowired
     private ArticleInfoManager articleInfoManager;
@@ -149,7 +150,7 @@ public class AIInfoController implements Serializable {
         return json.toJSONString();
     }
 
-    @SuppressWarnings({ "resource", "deprecation" })
+    @SuppressWarnings({ "resource" })
     private JSONObject getSuggestion(String city) {
         HttpClient httpClient = new DefaultHttpClient();
         try {
@@ -173,7 +174,7 @@ public class AIInfoController implements Serializable {
         return null;
     }
 
-    @SuppressWarnings({ "deprecation", "resource" })
+    @SuppressWarnings({ "resource" })
     private JSONObject getWeatherNow(String city) {
         HttpClient httpClient = new DefaultHttpClient();
         try {
@@ -197,7 +198,7 @@ public class AIInfoController implements Serializable {
         return null;
     }
 
-    @SuppressWarnings({ "deprecation", "resource" })
+    @SuppressWarnings({ "resource" })
     private JSONObject getWeatherNext(String city) {
         HttpClient httpClient = new DefaultHttpClient();
         try {
