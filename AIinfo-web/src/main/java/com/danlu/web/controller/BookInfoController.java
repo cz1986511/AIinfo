@@ -47,7 +47,7 @@ public class BookInfoController implements Serializable {
         ModelAndView m = new ModelAndView();
         try {
             String userName = (String) request.getSession().getAttribute("userName");
-            int userType = (int) request.getSession().getAttribute("userType");
+            int userType = (int) request.getSession().getAttribute("type");
             int dateNum = dleyeSwith.getBookListDate();
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("date", dateNum);
@@ -112,7 +112,7 @@ public class BookInfoController implements Serializable {
         ModelAndView m = new ModelAndView();
         try {
             String dateString = getDateString();
-            int userType = (int) request.getSession().getAttribute("userType");
+            int userType = (int) request.getSession().getAttribute("type");
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("date", dateString);
             List<UserSign> list = userSignManager.getUserSignListByParams(map);
