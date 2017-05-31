@@ -40,6 +40,17 @@ public class DleyeSwith {
     @Switch(description = "当前书单期数", name = "bookListDate")
     private int bookListDate = 1;
 
+    @Switch(description = "是否生成当前书单", name = "isMakeBookList")
+    private boolean isMakeBookList = false;
+
+    public boolean getMakeBookList() {
+        return this.isMakeBookList;
+    }
+
+    public void setMakeBookList(boolean isMakeBookList) {
+        this.isMakeBookList = isMakeBookList;
+    }
+
     public int getBookListDate() {
         return bookListDate;
     }

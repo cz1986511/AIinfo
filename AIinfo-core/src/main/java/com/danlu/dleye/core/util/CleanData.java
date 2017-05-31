@@ -22,13 +22,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
 import com.danlu.dleye.core.ArticleInfoManager;
+import com.danlu.dleye.core.BookListManager;
 import com.danlu.dleye.persist.base.ArticleInfo;
+import com.danlu.dleye.persist.base.BookList;
 
 public class CleanData {
 
     private static Logger logger = LoggerFactory.getLogger(CleanData.class);
     @Autowired
     private ArticleInfoManager articleInfoManager;
+    @Autowired
+    private BookListManager bookListManager;
     @Autowired
     private DleyeSwith dleyeSwith;
     @Autowired
@@ -53,6 +57,7 @@ public class CleanData {
         }
         updateUserAddressList();
         makeLunchInfo();
+        makeBookList();
     }
 
     @SuppressWarnings("resource")
@@ -107,6 +112,34 @@ public class CleanData {
                     redisClient.set(defaultKey, lunchs[i], 86400);
                 } catch (Exception e) {
                     logger.error("makeLunchInfo is exception:" + e.toString());
+                }
+            }
+        }
+    }
+
+    private void makeBookList() {
+        if (dleyeSwith.getMakeBookList()) {
+            int bookListDate = dleyeSwith.getBookListDate();
+            String memberString = dleyeSwith.getMember();
+            if (null != memberString) {
+                String[] members = memberString.split(",");
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("date", bookListDate);
+                for (int i = 0; i < members.length; i++) {
+                    try {
+                        String userName = members[i];
+                        map.put("userName", userName);
+                        List<BookList> list = bookListManager.getBookListsByParams(map);
+                        if (CollectionUtils.isEmpty(list)) {
+                            BookList bookList = new BookList();
+                            bookList.setUserName(userName);
+                            bookList.setDate(bookListDate);
+                            bookList.setStatus("0");
+                            bookListManager.addBookList(bookList);
+                        }
+                    } catch (Exception e) {
+                        logger.error("makeBookList is exception:" + e.toString());
+                    }
                 }
             }
         }
