@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -23,8 +24,12 @@ import org.springframework.util.CollectionUtils;
 
 import com.danlu.dleye.core.ArticleInfoManager;
 import com.danlu.dleye.core.BookListManager;
+import com.danlu.dleye.core.UserSignManager;
+import com.danlu.dleye.core.UserSignStatisticsManager;
 import com.danlu.dleye.persist.base.ArticleInfo;
 import com.danlu.dleye.persist.base.BookList;
+import com.danlu.dleye.persist.base.UserSign;
+import com.danlu.dleye.persist.base.UserSignStatistics;
 
 public class CleanData {
 
@@ -33,6 +38,10 @@ public class CleanData {
     private ArticleInfoManager articleInfoManager;
     @Autowired
     private BookListManager bookListManager;
+    @Autowired
+    private UserSignManager userSignManager;
+    @Autowired
+    private UserSignStatisticsManager userSignStatisticsManager;
     @Autowired
     private DleyeSwith dleyeSwith;
     @Autowired
@@ -58,6 +67,7 @@ public class CleanData {
         updateUserAddressList();
         makeLunchInfo();
         makeBookList();
+        statisticsUserSign();
     }
 
     @SuppressWarnings("resource")
@@ -143,5 +153,74 @@ public class CleanData {
                 }
             }
         }
+    }
+
+    private void statisticsUserSign() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        Date createStartTime = null;
+        Date createEndTime = null;
+        if (calendar.get(Calendar.DAY_OF_MONTH) == 1) {
+            calendar.add(Calendar.MONTH, -1);
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            createStartTime = calendar.getTime();
+            calendar.add(Calendar.MONTH, 1);
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            createEndTime = calendar.getTime();
+        } else {
+            calendar.add(Calendar.MONTH, 0);
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            createEndTime = calendar.getTime();
+            calendar.add(Calendar.MONTH, 1);
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            createStartTime = calendar.getTime();
+        }
+        String type = calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.MONTH);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("createStartTime", createStartTime);
+        map.put("createEndTime", createEndTime);
+        map.put("type", type);
+        String memberString = dleyeSwith.getMember();
+        if (null != memberString) {
+            String[] members = memberString.split(",");
+            for (int i = 0; i < members.length; i++) {
+                try {
+                    String userName = members[i];
+                    map.put("userName", userName);
+                    List<UserSign> list = userSignManager.getUserSignListByParams(map);
+                    if (!CollectionUtils.isEmpty(list)) {
+                        int signNum = list.size();
+                        List<UserSignStatistics> list1 = userSignStatisticsManager
+                            .getUserSignStatisticsList(map);
+                        if (!CollectionUtils.isEmpty(list1)) {
+                            UserSignStatistics userSignStatistics = list1.get(0);
+                            if (signNum != userSignStatistics.getSignNum()) {
+                                userSignStatistics.setSignNum(signNum);
+                                userSignStatisticsManager
+                                    .updateUserSignStatistics(userSignStatistics);
+                            }
+                        } else {
+                            UserSignStatistics newUserSignStatistics = new UserSignStatistics();
+                            newUserSignStatistics.setUserName(userName);
+                            newUserSignStatistics.setType(type);
+                            newUserSignStatistics.setSignNum(signNum);
+                            userSignStatisticsManager.addUserSignStatistics(newUserSignStatistics);
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error("statisticsUserSign is exception:" + e.toString());
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Calendar calendar = Calendar.getInstance();
+        if (calendar.get(Calendar.DAY_OF_MONTH) != 1) {
+            calendar.add(Calendar.MONTH, 1);
+        }
+        System.out.println(calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.MONTH));
     }
 }

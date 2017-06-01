@@ -34,7 +34,7 @@
 			        <td name="status" value="${info.status}">${info.status}</td>
 			        <td name="infoDesc" value="${info.infoDesc}">${info.desc}</td>
 			        <td>
-			          <a href="/AIinfo/switch_list.html?ip=${info.ip}&name=${info.name}&port=${info.port}">详细列表</a>
+			          <a class="btn btn-default btn-lg active" href="/AIinfo/switch_list.html?ip=${info.ip}&name=${info.name}&port=${info.port}">详细列表</a>
 			          <input class="btn btn-delete" type="button" value="删除"></input>
 			        </td>
 			      </tr>

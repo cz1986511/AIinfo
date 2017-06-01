@@ -2,6 +2,7 @@ package com.danlu.web.controller;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -22,9 +23,11 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONObject;
 import com.danlu.dleye.core.BookListManager;
 import com.danlu.dleye.core.UserSignManager;
+import com.danlu.dleye.core.UserSignStatisticsManager;
 import com.danlu.dleye.core.util.DleyeSwith;
 import com.danlu.dleye.persist.base.BookList;
 import com.danlu.dleye.persist.base.UserSign;
+import com.danlu.dleye.persist.base.UserSignStatistics;
 
 @Controller
 public class BookInfoController implements Serializable {
@@ -35,10 +38,10 @@ public class BookInfoController implements Serializable {
 
     @Autowired
     private UserSignManager userSignManager;
-
     @Autowired
     private BookListManager bookListManager;
-
+    @Autowired
+    private UserSignStatisticsManager userSignStatisticsManager;
     @Autowired
     private DleyeSwith dleyeSwith;
 
@@ -124,6 +127,14 @@ public class BookInfoController implements Serializable {
             if (!CollectionUtils.isEmpty(list)) {
                 m.addObject("signList", list);
             }
+            String type = getMonthString();
+            m.addObject("month", type);
+            map.put("type", type);
+            List<UserSignStatistics> list1 = userSignStatisticsManager
+                .getUserSignStatisticsList(map);
+            if (!CollectionUtils.isEmpty(list1)) {
+                m.addObject("signStatistics", list1);
+            }
         } catch (Exception e) {
             logger.error("userSign is exception:" + e.toString());
         }
@@ -170,6 +181,14 @@ public class BookInfoController implements Serializable {
     private String getDateString() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         return formatter.format(new Date());
+    }
+
+    private String getMonthString() {
+        Calendar calendar = Calendar.getInstance();
+        if (calendar.get(Calendar.DAY_OF_MONTH) != 1) {
+            calendar.add(Calendar.MONTH, 1);
+        }
+        return calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.MONTH);
     }
 
 }

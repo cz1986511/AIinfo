@@ -20,6 +20,16 @@
       <if test="userName != null">
         user_name = #{userName,jdbcType=VARCHAR} and
       </if>
+      <if test="createStartTime != null">
+      <![CDATA[
+        gmt_create >= #{createStartTime,jdbcType=TIMESTAMP} and
+      ]]>
+      </if>
+      <if test="createEndTime != null">
+      <![CDATA[
+        gmt_create <= #{createEndTime,jdbcType=TIMESTAMP} and
+      ]]>
+      </if>
         1 = 1
     </where>
   </sql>

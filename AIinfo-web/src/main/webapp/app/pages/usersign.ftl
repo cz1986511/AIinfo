@@ -21,13 +21,20 @@
 					<#if signList??>
 					  <#list signList as sign>
 						<div class="alert alert-info" role="alert">
-							${sign.userName}:${sign.signInfo}--${(sign.gmtModify?string("yyyy-MM-dd HH:mm:ss"))!}
+							${sign.userName}:${sign.signInfo}-${(sign.gmtModify?string("yyyy-MM-dd HH:mm:ss"))!}
 						</div>
 					  </#list>
 					</#if>
 					<div class="">
-                        <h3 class="page-header">最近30日签到</h3>
+                        <h3 class="page-header">${month}月签到统计</h3>
                     </div>
+					<#if signStatistics??>
+					  <#list signStatistics as signStatistic>
+						<div class="alert alert-info" role="alert">
+							${signStatistic.userName}-总共签到:${signStatistic.signNum}
+						</div>
+					  </#list>
+					</#if>
             </div>
     </div>
     <!-- /#wrapper -->
@@ -36,6 +43,10 @@
 	       var signInfo = $('#signContent').val();
 		   if (!signInfo) {
 		     alert("签到内容不能为空");
+			 return false;
+		   }
+		   if (signInfo.length > 200) {
+		     alert("你废话太多了,少写点");
 			 return false;
 		   }
 	       $.ajax({
