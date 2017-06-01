@@ -1,13 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <#include "/common/header.html"/>
     <meta name="description" content="">
     <meta name="author" content="">
     <title>监控平台</title>
-    <#include "/common/header.html"/>
 </head>
 <body>
     <div class="container">

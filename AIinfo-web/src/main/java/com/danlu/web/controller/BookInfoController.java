@@ -47,7 +47,6 @@ public class BookInfoController implements Serializable {
         ModelAndView m = new ModelAndView();
         try {
             String userName = (String) request.getSession().getAttribute("userName");
-            int userType = (int) request.getSession().getAttribute("type");
             int dateNum = dleyeSwith.getBookListDate();
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("date", dateNum);
@@ -56,7 +55,6 @@ public class BookInfoController implements Serializable {
                 m.addObject("bookLists", list);
             }
             m.addObject("userName", userName);
-            m.addObject("userType", userType);
             m.addObject("bookListDate", dateNum);
         } catch (Exception e) {
             logger.info("getBookList is exception:" + e.toString());
@@ -81,16 +79,24 @@ public class BookInfoController implements Serializable {
             int flag = 0;
             if (!CollectionUtils.isEmpty(list)) {
                 BookList bookList = list.get(0);
-                bookList.setUnreadList(unreadString);
-                bookList.setReadList(readString);
+                if (!StringUtils.isBlank(unreadString)) {
+                    bookList.setUnreadList(unreadString);
+                }
+                if (!StringUtils.isBlank(readString)) {
+                    bookList.setReadList(readString);
+                }
                 flag = bookListManager.updateBookList(bookList);
             } else {
                 BookList bookList = new BookList();
                 bookList.setUserName(userName);
                 bookList.setDate(date);
-                bookList.setUnreadList(unreadString);
                 bookList.setStatus("0");
-                bookList.setReadList(readString);
+                if (!StringUtils.isBlank(unreadString)) {
+                    bookList.setUnreadList(unreadString);
+                }
+                if (!StringUtils.isBlank(readString)) {
+                    bookList.setReadList(readString);
+                }
                 flag = bookListManager.addBookList(bookList);
             }
             if (flag != 0) {
@@ -112,14 +118,12 @@ public class BookInfoController implements Serializable {
         ModelAndView m = new ModelAndView();
         try {
             String dateString = getDateString();
-            int userType = (int) request.getSession().getAttribute("type");
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("date", dateString);
             List<UserSign> list = userSignManager.getUserSignListByParams(map);
             if (!CollectionUtils.isEmpty(list)) {
                 m.addObject("signList", list);
             }
-            m.addObject("userType", userType);
         } catch (Exception e) {
             logger.error("userSign is exception:" + e.toString());
         }

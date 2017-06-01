@@ -1,68 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>书单列表页</title>
     <#include "/common/header.html"/>
+    <title>书单列表页</title>
 </head>
 <body>
     <div id="wrapper">
-	  <#if userType == 1>
-		  <#include "navigation1.html"/>
-		<#else>
-		  <#include "navigation.html"/>
-        </#if>
-      <div id="page-wrapper">
+		<#include "navigation.html"/>
         <div class="container-fluid">
-          <div class="row">
-            <div class="col-lg-12">
-			  <h2>第${bookListDate}期书单</h2>
-			</div>
-			<div class="table-responsive">
-			  <table class="table">
-			    <tr>
-			      <th>姓名</th>
-			      <th>想读</th>
-			      <th>已读</th>
-			      <th>更新时间</th>
-				  <th>操作</th>
-			    </tr>
-			    <#if bookLists??>
+			<h2>第${bookListDate}期书单</h2>
+			<h3>想读</h3>
+			<#if bookLists??>
 			    <#list bookLists as info>
-			      <tr>
 				    <#if userName == info.userName>
-					  <td>${info.userName}</td>
-			          <td><input class="td-unread" type="text" value="${info.unreadList}" /></td>
-			          <td><input class="td-read" type="text" value="${info.readList}" /></td>
-			          <td>${(info.gmtModify?string("yyyy-MM-dd HH:mm:ss"))!}</td>
-			          <td><input class="btn btn-lg btn-success btn-block" type="submit" id="btnModify" name="btnModify" value="保存"></input></td>
+					  <div class="alert alert-success" role="alert">
+						me<strong>想读:</strong>
+						<div class="input-group">
+						  <input class="form-control" type="text" id="me-unread" value="${info.unreadList}"/>
+						  <div class="input-group-btn">
+						    <input class="btn btn-default" type="submit" id="btn-unread" name="btn-unread" value="保存">
+						  </div>
+						</div>
+					  </div>
 					<#else>
-					  <td>${info.userName}</td>
-			          <td>${info.unreadList}</td>
-			          <td>${info.readList}</td>
-			          <td>${(info.gmtModify?string("yyyy-MM-dd HH:mm:ss"))!}</td>
-			          <td></td>
+					  <div class="alert alert-info" role="alert">
+					    ${info.userName}<strong>想读:</strong>${info.unreadList}
+					  </div>
 					</#if>
-			      </tr>
 			    </#list>
-			  </#if>
-			  </table>
-			</div>
-		  </div>
+			</#if>
+			<h3>已读</h3>
+			<#if bookLists??>
+			    <#list bookLists as info>
+				    <#if userName == info.userName>
+					  <div class="alert alert-success" role="alert">
+						me<strong>已读:</strong>
+						<div class="input-group">
+						  <input class="form-control" type="text" id="me-read" value="${info.readList}"/>
+						  <div class="input-group-btn">
+						    <input class="btn btn-default" type="submit" id="btn-read" name="btn-read" value="保存">
+						  </div>
+						</div>
+					  </div>
+					<#else>
+					  <div class="alert alert-info" role="alert">
+					    ${info.userName}<strong>已读:</strong>${info.readList}
+					  </div>
+					</#if>
+			    </#list>
+			</#if>
 	    </div>
-	  </div>
 	</div>
 	<script type="text/javascript">
-	  $('#btnModify').click(function(){
-	       var bothoers = $(this).parent().parent();
-	       var unread = bothoers.find(".td-unread").val();
-		   var read = bothoers.find(".td-read").val();
+	  $('#btn-unread').click(function(){
+	       var unread = document.getElementById("me-unread").value;
 	       $.ajax({
 	           type: "POST",
                url: "modify_book.action",
-               data: {unread:unread,read:read},
+               data: {unread:unread},
+               dataType: "json",
+               success: function(data){
+                 if(data.status){
+                     location.reload(true);
+                     alert("修改成功！");
+                 } else {
+                     location.reload(true);
+                     alert(data.msg);
+                 }
+               }
+	       });
+	    });
+		
+		$('#btn-read').click(function(){
+	       var read = document.getElementById("me-read").value;
+	       $.ajax({
+	           type: "POST",
+               url: "modify_book.action",
+               data: {read:read},
                dataType: "json",
                success: function(data){
                  if(data.status){

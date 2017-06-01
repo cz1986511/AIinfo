@@ -1,15 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>机器列表页</title>
     <#include "/common/header.html"/>
+    <title>机器列表页</title>
 </head>
 <body>
     <div id="wrapper">
-    <#include "navigation.html"/>
+    <#include "navigation1.html"/>
       <div id="page-wrapper">
         <div class="container-fluid">
           <div class="row">
@@ -21,7 +18,7 @@
 			  <p>开关列表</p>
 			</div>
 			  <form name="switch" action="scheduleAction.html" method="get">
-			  <table border=1>
+			  <table class="table table-striped">
 			  <thead>
 			    <tr>
 			      <th width=200>BeanName</th>
@@ -40,7 +37,7 @@
 			  <p>时间程序列表</p>
 			</div>
 			  <form name="schedule" action="scheduleAction.html" method="get">
-			  <table border=1>
+			  <table class="table">
 			  <thead>
 			    <tr>
 			      <th width=200>BeanName</th>

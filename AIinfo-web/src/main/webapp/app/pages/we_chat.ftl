@@ -1,13 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <meta charset=UTF-8>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <#include "/common/header.html"/>
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>信息管理</title>
-    <#include "/common/header.html"/>
+    <title>吐槽池</title>
 	<script>
 	  var ws = new WebSocket("ws://chenzhuo.pub:8080/AIinfo/websocket");
 	  ws.onopen = function(){
@@ -28,23 +25,18 @@
     <div id="wrapper">
 		<#include "navigation.html"/>
         <!-- Page Content -->
-        <div id="page-wrapper">
             <div class="container-fluid">
-                <div class="row">
                     <div class="col-lg-12">
 						<h3 class="page-header">欢迎来到聊天室</h3>
 						<div>
 						  <textarea id="chatlog" style="width:300px;height:200px;" readonly></textarea><br/>
 						</div>
 						输入:<input id="msg" type="textarea" />
-						<button type="submit" id="sendButton" onClick="postToServer()">发送</button>
+						<button class="btn btn-success" type="submit" id="sendButton" onClick="postToServer()">发送</button>
                     </div>
                     <!-- /.col-lg-12 -->
-                </div>
             </div>
             <!-- /.container-fluid -->
-        </div>
-        <!-- /#page-wrapper -->
     </div>
     <!-- /#wrapper -->
     <#include "/common/footer.html" />
