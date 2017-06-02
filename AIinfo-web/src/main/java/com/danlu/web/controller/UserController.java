@@ -77,6 +77,7 @@ public class UserController implements Serializable {
         request.getSession().setAttribute("type", null);
         request.getSession().setAttribute("timeout", null);
         request.getSession().setAttribute("userName", null);
+        m.addObject("wisdom", dleyeSwith.getWisdom());
         m.setViewName("login");
         return m;
     }

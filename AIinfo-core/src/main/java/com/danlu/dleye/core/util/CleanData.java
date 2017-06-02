@@ -3,8 +3,8 @@ package com.danlu.dleye.core.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -133,11 +133,13 @@ public class CleanData {
     private void makeWisdom() {
         try {
             File file = new File("/data/file/wisdom.txt");
-            BufferedReader br = new BufferedReader(new FileReader(file));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file),
+                "UTF-8"));
             String s = null;
             String key = "wisdom-";
             int i = 0;
             while ((s = br.readLine()) != null) {
+                logger.info("=====" + s);
                 redisClient.set(key + i, s, 86400);
                 i++;
             }
