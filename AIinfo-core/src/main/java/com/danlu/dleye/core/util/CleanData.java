@@ -172,10 +172,10 @@ public class CleanData {
         } else {
             calendar.add(Calendar.MONTH, 0);
             calendar.set(Calendar.DAY_OF_MONTH, 1);
-            createEndTime = calendar.getTime();
+            createStartTime = calendar.getTime();
             calendar.add(Calendar.MONTH, 1);
             calendar.set(Calendar.DAY_OF_MONTH, 1);
-            createStartTime = calendar.getTime();
+            createEndTime = calendar.getTime();
         }
         String type = calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.MONTH);
         Map<String, Object> map = new HashMap<String, Object>();
