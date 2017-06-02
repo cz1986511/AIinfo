@@ -136,8 +136,8 @@ public class CleanData {
             BufferedReader br = new BufferedReader(new FileReader(file));
             String s = null;
             String key = "wisdom-";
+            int i = 0;
             while ((s = br.readLine()) != null) {
-                int i = 0;
                 redisClient.set(key + i, s, 86400);
                 i++;
             }
