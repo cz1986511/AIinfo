@@ -10,7 +10,7 @@
     <div id="wrapper">
 		<#include "navigation.html"/>
             <div class="container-fluid">
-                    <h2 class="page-header">每日读书签到</h2>
+                    <h2><span class="glyphicon glyphicon-star-empty"></span> 每日读书签到 <span class="glyphicon glyphicon-star-empty"></span></h2>
 					    <div class="alert alert-warning" role="alert">
 						  <span class="glyphicon glyphicon-heart"></span> ${wisdom}
 						</div>
@@ -19,7 +19,7 @@
 		     		</div>
                     <input class="btn btn-success" type="submit" id="btnSign" name="btnSign" value="签到"></input>	    
 					<div class="">
-                        <h3 class="page-header">今日签到统计</h3>
+                        <h3><span class="glyphicon glyphicon-leaf"></span> 今日签到统计</h3>
                     </div>
 					<#if signList??>
 					  <#list signList as sign>
@@ -29,7 +29,7 @@
 					  </#list>
 					</#if>
 					<div class="">
-                        <h3 class="page-header">${month}月签到统计</h3>
+                        <h3><span class="glyphicon glyphicon-stats"></span> ${month}月签到统计</h3>
                     </div>
 					<#if signStatistics??>
 					  <#list signStatistics as signStatistic>

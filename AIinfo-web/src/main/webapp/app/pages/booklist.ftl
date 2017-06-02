@@ -8,8 +8,8 @@
     <div id="wrapper">
 		<#include "navigation.html"/>
         <div class="container-fluid">
-			<h2>第${bookListDate}期书单</h2>
-			<span class="glyphicon glyphicon-folder-open"></span> <h3>想读</h3>
+			<h2><span class="glyphicon glyphicon-heart-empty"></span> 第${bookListDate}期书单 <span class="glyphicon glyphicon-heart-empty"></span></h2>
+			<h3><span class="glyphicon glyphicon-folder-open"></span> 想读</h3>
 			<#if bookLists??>
 			    <#list bookLists as info>
 				    <#if userName == info.userName>
@@ -29,7 +29,7 @@
 					</#if>
 			    </#list>
 			</#if>
-			<span class="glyphicon glyphicon-level-up"></span> <h3>已读</h3>
+			<h3><span class="glyphicon glyphicon-level-up"></span> 已读</h3>
 			<#if bookLists??>
 			    <#list bookLists as info>
 				    <#if userName == info.userName>
