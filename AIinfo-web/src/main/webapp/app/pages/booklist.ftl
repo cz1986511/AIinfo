@@ -9,7 +9,7 @@
 		<#include "navigation.html"/>
         <div class="container-fluid">
 			<h2>第${bookListDate}期书单</h2>
-			<h3>想读</h3>
+			<span class="glyphicon glyphicon-folder-open"></span> <h3>想读</h3>
 			<#if bookLists??>
 			    <#list bookLists as info>
 				    <#if userName == info.userName>
@@ -24,12 +24,12 @@
 					  </div>
 					<#else>
 					  <div class="alert alert-info" role="alert">
-					    ${info.userName}<strong>想读:</strong>${info.unreadList}
+					    <span class="glyphicon glyphicon-book"></span> ${info.userName}<strong>想读:</strong>${info.unreadList}
 					  </div>
 					</#if>
 			    </#list>
 			</#if>
-			<h3>已读</h3>
+			<span class="glyphicon glyphicon-level-up"></span> <h3>已读</h3>
 			<#if bookLists??>
 			    <#list bookLists as info>
 				    <#if userName == info.userName>
@@ -44,7 +44,7 @@
 					  </div>
 					<#else>
 					  <div class="alert alert-info" role="alert">
-					    ${info.userName}<strong>已读:</strong>${info.readList}
+					    <span class="glyphicon glyphicon-book"></span> ${info.userName}<strong>已读:</strong>${info.readList}
 					  </div>
 					</#if>
 			    </#list>

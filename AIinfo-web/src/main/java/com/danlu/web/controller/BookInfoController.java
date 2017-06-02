@@ -62,6 +62,7 @@ public class BookInfoController implements Serializable {
         } catch (Exception e) {
             logger.info("getBookList is exception:" + e.toString());
         }
+        m.addObject("wisdom", dleyeSwith.getWisdom());
         return m;
     }
 
@@ -138,6 +139,7 @@ public class BookInfoController implements Serializable {
         } catch (Exception e) {
             logger.error("userSign is exception:" + e.toString());
         }
+        m.addObject("wisdom", dleyeSwith.getWisdom());
         return m;
     }
 
@@ -149,7 +151,6 @@ public class BookInfoController implements Serializable {
         String signInfo = request.getParameter("signInfo");
         if (StringUtils.isBlank(signInfo)) {
             result.put("status", false);
-            result.put("msg", "signInfo is null");
         } else {
             try {
                 String userName = (String) request.getSession().getAttribute("userName");
@@ -160,7 +161,6 @@ public class BookInfoController implements Serializable {
                 List<UserSign> list = userSignManager.getUserSignListByParams(map);
                 if (!CollectionUtils.isEmpty(list)) {
                     result.put("status", false);
-                    result.put("msg", "您今天已经签过到了!");
                 } else {
                     UserSign userSign = new UserSign();
                     userSign.setSignInfo(signInfo);
@@ -172,9 +172,9 @@ public class BookInfoController implements Serializable {
             } catch (Exception e) {
                 logger.error("signAction is exception:" + e.toString());
                 result.put("status", false);
-                result.put("msg", "sign exception!");
             }
         }
+        result.put("msg", dleyeSwith.getWisdom());
         return json.toJSONString();
     }
 

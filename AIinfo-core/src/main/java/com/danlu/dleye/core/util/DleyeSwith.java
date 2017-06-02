@@ -1,8 +1,18 @@
 package com.danlu.dleye.core.util;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.alibaba.fastjson.TypeReference;
 import com.danlu.dleye.annotation.Switch;
 
 public class DleyeSwith {
+
+    @Autowired
+    private RedisClient redisClient;
 
     @Switch(description = "session过期时间,单位分钟", name = "30")
     private Long timeout = 30l;
@@ -145,6 +155,32 @@ public class DleyeSwith {
 
     public void setTimeout(Long timeout) {
         this.timeout = timeout;
+    }
+
+    public String getWisdom() {
+        try {
+            int k = (int) (Math.random() * 201);
+            String key = "wisdom-" + k;
+            return redisClient.get(key, new TypeReference<String>() {
+            });
+        } catch (Exception e) {
+            e.toString();
+        }
+        return "书中自有黄金屋，书中自有颜如玉。";
+    }
+
+    public static void main(String[] args) {
+        try {
+            File file = new File("/data/file/wisdom.txt");//Text文件
+            BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
+            String s = null;
+            while ((s = br.readLine()) != null) {//使用readLine方法，一次读一行
+                System.out.println(s);
+            }
+            br.close();
+        } catch (Exception e) {
+            e.toString();
+        }
     }
 
 }

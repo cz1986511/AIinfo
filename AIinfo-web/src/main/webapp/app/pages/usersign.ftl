@@ -4,13 +4,16 @@
     <#include "/common/header.html"/>
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>读书签到</title>
+    <title>Sign</title>
 </head>
 <body>
     <div id="wrapper">
 		<#include "navigation.html"/>
             <div class="container-fluid">
                     <h2 class="page-header">每日读书签到</h2>
+					    <div class="alert alert-warning" role="alert">
+						  <span class="glyphicon glyphicon-heart"></span> ${wisdom}
+						</div>
                     <div class="form-group">
                         <input class="form-control" placeholder="输入签到内容" id="signContent" name="signContent" type="text" autofocus>
 		     		</div>
@@ -21,7 +24,7 @@
 					<#if signList??>
 					  <#list signList as sign>
 						<div class="alert alert-info" role="alert">
-							${sign.userName}:${sign.signInfo}-${(sign.gmtModify?string("yyyy-MM-dd HH:mm:ss"))!}
+							<span class="glyphicon glyphicon-pencil"></span> ${sign.userName}:${sign.signInfo}-${(sign.gmtModify?string("yyyy-MM-dd HH:mm:ss"))!}
 						</div>
 					  </#list>
 					</#if>
@@ -31,7 +34,7 @@
 					<#if signStatistics??>
 					  <#list signStatistics as signStatistic>
 						<div class="alert alert-info" role="alert">
-							${signStatistic.userName}-总共签到:${signStatistic.signNum}
+							<span class="glyphicon glyphicon-tags"></span> ${signStatistic.userName}-总共签到:${signStatistic.signNum}
 						</div>
 					  </#list>
 					</#if>
@@ -42,10 +45,10 @@
         $('#btnSign').click(function(){
 	       var signInfo = $('#signContent').val();
 		   if (!signInfo) {
-		     alert("签到内容不能为空");
+		     alert("亲,写点什么吧");
 			 return false;
 		   }
-		   if (signInfo.length > 200) {
+		   if (signInfo.length > 220) {
 		     alert("你废话太多了,少写点");
 			 return false;
 		   }
@@ -57,7 +60,7 @@
                success: function(data){
                  if(data.status == true){
                      location.reload(true);
-                     alert("签到成功！");
+                     alert(data.msg);
                  } else {
                      location.reload(true);
                      alert(data.msg);

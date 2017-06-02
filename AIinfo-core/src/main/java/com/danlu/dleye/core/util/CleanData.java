@@ -1,7 +1,9 @@
 package com.danlu.dleye.core.util;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -68,6 +70,7 @@ public class CleanData {
         makeLunchInfo();
         makeBookList();
         statisticsUserSign();
+        makeWisdom();
     }
 
     @SuppressWarnings("resource")
@@ -124,6 +127,23 @@ public class CleanData {
                     logger.error("makeLunchInfo is exception:" + e.toString());
                 }
             }
+        }
+    }
+
+    private void makeWisdom() {
+        try {
+            File file = new File("/data/file/wisdom.txt");
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String s = null;
+            String key = "wisdom-";
+            while ((s = br.readLine()) != null) {
+                int i = 0;
+                redisClient.set(key + i, s, 86400);
+                i++;
+            }
+            br.close();
+        } catch (Exception e) {
+            logger.error("makeWisdom is exception:" + e.toString());
         }
     }
 

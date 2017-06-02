@@ -4,10 +4,13 @@
     <#include "/common/header.html"/>
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>监控平台</title>
+    <title>Loading</title>
 </head>
 <body>
     <div class="container">
+	    <div class="alert alert-info" role="alert">
+		    <span class="glyphicon glyphicon-heart"></span> ${wisdom}
+		</div>
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
                 <div class="login-panel panel panel-default">

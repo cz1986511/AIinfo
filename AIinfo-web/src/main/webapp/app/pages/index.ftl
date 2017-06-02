@@ -4,7 +4,7 @@
     <#include "/common/header.html"/>
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>信息管理</title>
+    <title>AIinfo</title>
 </head>
 <body>
     <div id="wrapper">
@@ -13,19 +13,12 @@
 		<#else>
 		  <#include "navigation.html"/>
         </#if>
-		<!-- Page Content -->
-        <div id="page-wrapper">
             <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">欢迎${userName}</h1>
-                    </div>
-                    <!-- /.col-lg-12 -->
-                </div>
+				<div class="alert alert-info" role="alert">
+					<h3 class="page-header">欢迎${userName}</h3>
+					<span class="glyphicon glyphicon-heart"></span> ${wisdom}
+				</div>
             </div>
-            <!-- /.container-fluid -->
-        </div>
-        <!-- /#page-wrapper -->
     </div>
     <!-- /#wrapper -->
     <#include "/common/footer.html" />

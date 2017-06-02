@@ -62,6 +62,7 @@ public class UserController implements Serializable {
         if (null != request.getSession().getAttribute("type")) {
             int userType = (int) request.getSession().getAttribute("type");
             m.addObject("userType", userType);
+            m.addObject("wisdom", dleyeSwith.getWisdom());
         } else {
             m.setViewName("login");
             return m;
@@ -92,6 +93,7 @@ public class UserController implements Serializable {
             m.setViewName("index");
             m.addObject("userName", (String) request.getSession().getAttribute("userName"));
         }
+        m.addObject("wisdom", dleyeSwith.getWisdom());
         return m;
     }
 
@@ -127,6 +129,7 @@ public class UserController implements Serializable {
                 m.setViewName("login");
             }
         }
+        m.addObject("wisdom", dleyeSwith.getWisdom());
         return m;
     }
 
