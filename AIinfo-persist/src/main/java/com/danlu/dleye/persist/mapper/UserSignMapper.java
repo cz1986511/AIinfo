@@ -8,15 +8,15 @@ import com.danlu.dleye.persist.base.UserSign;
 public interface UserSignMapper {
     int deleteByPrimaryKey(Long id);
 
-    int insert(UserSign record);
+    int insert(UserSign userSign);
 
-    int insertSelective(UserSign record);
+    int insertSelective(UserSign userSign);
 
     UserSign selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(UserSign record);
+    int updateByPrimaryKeySelective(UserSign userSign);
 
-    int updateByPrimaryKey(UserSign record);
+    int updateByPrimaryKey(UserSign userSign);
 
     List<UserSign> selectUserSignsByParams(Map<String, Object> map);
 }

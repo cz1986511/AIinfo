@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.danlu.dleye.persist.mapper.BookBorrowMapper" >
+  <resultMap id="BaseResultMap" type="com.danlu.dleye.persist.base.BookBorrow" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="book_id" property="bookId" jdbcType="BIGINT" />
+    <result column="book_name" property="bookName" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modify" property="gmtModify" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, book_id, book_name, user_name, start_time, end_time, status, gmt_create, gmt_modify
+  </sql>
+  <sql id="selectByParamsWhere">
+    <where>
+	  <if test="bookId != null">
+	    book_id = #{bookId,jdbcType=BIGINT} and
+	  </if>
+	  <if test="bookName != null">
+        book_name like CONCAT(CONCAT('%', #{bookName,jdbcType=VARCHAR}), '%') and
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR} and
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR} and
+      </if>
+        1 = 1
+    </where>
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from dleye_book_borrow
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="selectBookBorrowsByParams" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from dleye_book_borrow
+    <include refid="selectByParamsWhere" />
+      order by gmt_create desc
+    <if test=" offset != null and limit != null">
+	  limit ${offset},${limit}
+	</if>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from dleye_book_borrow
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.danlu.dleye.persist.base.BookBorrow" >
+    insert into dleye_book_borrow (book_id, book_name, 
+      user_name, start_time, end_time, 
+      status, gmt_create, gmt_modify
+      )
+    values (#{bookId,jdbcType=BIGINT}, #{bookName,jdbcType=VARCHAR}, 
+      #{userName,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=VARCHAR}, NOW(), NOW()
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.danlu.dleye.persist.base.BookBorrow" >
+    insert into dleye_book_borrow
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bookId != null" >
+        book_id,
+      </if>
+      <if test="bookName != null" >
+        book_name,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+        gmt_create,
+        gmt_modify
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bookId != null" >
+        #{bookId,jdbcType=BIGINT},
+      </if>
+      <if test="bookName != null" >
+        #{bookName,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+        NOW(),
+        NOW()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.danlu.dleye.persist.base.BookBorrow" >
+    update dleye_book_borrow
+    <set >
+      <if test="bookId != null" >
+        book_id = #{bookId,jdbcType=BIGINT},
+      </if>
+      <if test="bookName != null" >
+        book_name = #{bookName,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+        gmt_modify = NOW()
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.danlu.dleye.persist.base.BookBorrow" >
+    update dleye_book_borrow
+    set book_id = #{bookId,jdbcType=BIGINT},
+      book_name = #{bookName,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=VARCHAR},
+      gmt_modify = NOW()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -8,15 +8,15 @@ import com.danlu.dleye.persist.base.UserSignStatistics;
 public interface UserSignStatisticsMapper {
     int deleteByPrimaryKey(Long id);
 
-    int insert(UserSignStatistics record);
+    int insert(UserSignStatistics userSignStatistics);
 
-    int insertSelective(UserSignStatistics record);
+    int insertSelective(UserSignStatistics userSignStatistics);
 
     UserSignStatistics selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(UserSignStatistics record);
+    int updateByPrimaryKeySelective(UserSignStatistics userSignStatistics);
 
-    int updateByPrimaryKey(UserSignStatistics record);
+    int updateByPrimaryKey(UserSignStatistics userSignStatistics);
 
     List<UserSignStatistics> selectUserSignStatisticsByParams(Map<String, Object> map);
 }

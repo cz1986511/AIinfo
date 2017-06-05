@@ -34,7 +34,7 @@
     where id = #{id,jdbcType=BIGINT}
   </select>
   
-  <select id="selectBookListsByParams" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectBookListsByParams" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select 
     <include refid="Base_Column_List" />
     from dleye_book_list

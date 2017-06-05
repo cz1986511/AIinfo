@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.danlu.dleye.persist.mapper.BookInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.danlu.dleye.persist.base.BookInfo" >
+    <id column="book_id" property="bookId" jdbcType="BIGINT" />
+    <result column="book_name" property="bookName" jdbcType="VARCHAR" />
+    <result column="book_author" property="bookAuthor" jdbcType="VARCHAR" />
+    <result column="book_status" property="bookStatus" jdbcType="VARCHAR" />
+    <result column="book_type" property="bookType" jdbcType="VARCHAR" />
+    <result column="book_source" property="bookSource" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modify" property="gmtModify" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    book_id, book_name, book_author, book_status, book_type, book_source, gmt_create, 
+    gmt_modify
+  </sql>
+  <sql id="selectByParamsWhere">
+    <where>
+      <if test="bookName != null">
+        book_name like CONCAT(CONCAT('%', #{bookName,jdbcType=VARCHAR}), '%') and
+      </if>
+	  <if test="bookAuthor != null">
+	    book_author = #{bookAuthor,jdbcType=VARCHAR} and
+	  </if>
+      <if test="bookStatus != null">
+        book_status = #{bookStatus,jdbcType=VARCHAR} and
+      </if>
+      <if test="bookType != null">
+        book_type = #{bookType,jdbcType=VARCHAR} and
+      </if>
+      <if test="bookSource != null">
+        book_source = #{bookSource,jdbcType=VARCHAR} and
+      </if>
+        1 = 1
+    </where>
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from dleye_book_info
+    where book_id = #{bookId,jdbcType=BIGINT}
+  </select>
+  
+  <select id="selectBookInfosByParams" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from dleye_book_info
+    <include refid="selectByParamsWhere" />
+      order by gmt_create desc
+    <if test=" offset != null and limit != null">
+	  limit ${offset},${limit}
+	</if>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from dleye_book_info
+    where book_id = #{bookId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.danlu.dleye.persist.base.BookInfo" >
+    insert into dleye_book_info (book_name, book_author, 
+      book_status, book_type, book_source, 
+      gmt_create, gmt_modify)
+    values (#{bookName,jdbcType=VARCHAR}, #{bookAuthor,jdbcType=VARCHAR}, 
+      #{bookStatus,jdbcType=VARCHAR}, #{bookType,jdbcType=VARCHAR}, #{bookSource,jdbcType=VARCHAR}, 
+      NOW(), NOW())
+  </insert>
+  <insert id="insertSelective" parameterType="com.danlu.dleye.persist.base.BookInfo" >
+    insert into dleye_book_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bookName != null" >
+        book_name,
+      </if>
+      <if test="bookAuthor != null" >
+        book_author,
+      </if>
+      <if test="bookStatus != null" >
+        book_status,
+      </if>
+      <if test="bookType != null" >
+        book_type,
+      </if>
+      <if test="bookSource != null" >
+        book_source,
+      </if>
+        gmt_create,
+        gmt_modify
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bookName != null" >
+        #{bookName,jdbcType=VARCHAR},
+      </if>
+      <if test="bookAuthor != null" >
+        #{bookAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="bookStatus != null" >
+        #{bookStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="bookType != null" >
+        #{bookType,jdbcType=VARCHAR},
+      </if>
+      <if test="bookSource != null" >
+        #{bookSource,jdbcType=VARCHAR},
+      </if>
+        NOW(),
+        NOW()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.danlu.dleye.persist.base.BookInfo" >
+    update dleye_book_info
+    <set >
+      <if test="bookName != null" >
+        book_name = #{bookName,jdbcType=VARCHAR},
+      </if>
+      <if test="bookAuthor != null" >
+        book_author = #{bookAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="bookStatus != null" >
+        book_status = #{bookStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="bookType != null" >
+        book_type = #{bookType,jdbcType=VARCHAR},
+      </if>
+      <if test="bookSource != null" >
+        book_source = #{bookSource,jdbcType=VARCHAR},
+      </if>
+        gmt_modify = NOW()
+    </set>
+    where book_id = #{bookId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.danlu.dleye.persist.base.BookInfo" >
+    update dleye_book_info
+    set book_name = #{bookName,jdbcType=VARCHAR},
+      book_author = #{bookAuthor,jdbcType=VARCHAR},
+      book_status = #{bookStatus,jdbcType=VARCHAR},
+      book_type = #{bookType,jdbcType=VARCHAR},
+      book_source = #{bookSource,jdbcType=VARCHAR},
+      gmt_modify = NOW()
+    where book_id = #{bookId,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -19,6 +19,8 @@
 	<bean id="userInfoManager" class="com.danlu.dleye.core.impl.UserInfoManagerImpl" />
 	<bean id="articleInfoManager" class="com.danlu.dleye.core.impl.ArticleInfoManagerImpl" />
 	<bean id="bookListManager" class="com.danlu.dleye.core.impl.BookListManagerImpl" />
+	<bean id="booInfoManager" class="com.danlu.dleye.core.impl.BookInfoManagerImpl" />
+	<bean id="bookBorrowManager" class="com.danlu.dleye.core.impl.BookBorrowManagerImpl" />
 	<bean id="userSignManager" class="com.danlu.dleye.core.impl.UserSignManagerImpl" />
 	<bean id="userSignStatisticsManager" class="com.danlu.dleye.core.impl.UserSignStatisticsManagerImpl" />
 	<bean id="dleyeSwith" class="com.danlu.dleye.core.util.DleyeSwith" />
