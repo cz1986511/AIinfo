@@ -171,6 +171,10 @@ public class BookInfoController implements Serializable {
                                 redisClient.set(defaultKey, remainder - 1, 60 * 24 * 60 * 60);
                                 result.put("status", true);
                                 result.put("msg", dleyeSwith.getWisdom());
+                                BookInfo nBookInfo = new BookInfo();
+                                nBookInfo.setBookId(book.getBookId());
+                                nBookInfo.setBookStatus("02");
+                                bookInfoManager.updateBookInfo(nBookInfo);
                             } else {
                                 result.put("status", false);
                                 result.put("msg", "borrow book faild");
@@ -216,6 +220,55 @@ public class BookInfoController implements Serializable {
         }
         m.addObject("wisdom", dleyeSwith.getWisdom());
         return m;
+    }
+
+    @RequestMapping("modifyborrow.action")
+    @ResponseBody
+    public String modifyBorrow(HttpServletRequest request) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        JSONObject json = new JSONObject(result);
+        String id = request.getParameter("id");
+        String status = request.getParameter("status");
+        if (StringUtils.isBlank(id) || StringUtils.isBlank(status)) {
+            result.put("status", false);
+            result.put("msg", "id or status is null");
+        } else {
+            try {
+                String userName = (String) request.getSession().getAttribute("userName");
+                int userType = (int) request.getSession().getAttribute("type");
+                if (!StringUtils.isBlank(userName) && userType == 1) {
+                    BookBorrow bookBorrow = new BookBorrow();
+                    bookBorrow.setId(Long.valueOf(id));
+                    bookBorrow.setStatus(status);
+                    int temp = bookBorrowManager.updateBookBorrow(bookBorrow);
+                    if (temp > 0) {
+                        BookBorrow nBookBorrow = bookBorrowManager.getBookBorrowById(Long
+                            .valueOf(id));
+                        BookInfo bookInfo = new BookInfo();
+                        bookInfo.setBookId(nBookBorrow.getBookId());
+                        if ("02".equals(status)) {
+                            bookInfo.setBookStatus("03");
+                        } else {
+                            bookInfo.setBookStatus("01");
+                        }
+                        bookInfoManager.updateBookInfo(bookInfo);
+                        result.put("status", true);
+                        result.put("msg", dleyeSwith.getWisdom());
+                    } else {
+                        result.put("status", false);
+                        result.put("msg", "modifyBorrow is faild");
+                    }
+                } else {
+                    result.put("status", false);
+                    result.put("msg", "no promit to do");
+                }
+            } catch (Exception e) {
+                logger.error("modifyBorrow is exception:" + e.toString());
+                result.put("status", false);
+                result.put("msg", "modifyBorrow is exception");
+            }
+        }
+        return json.toJSONString();
     }
 
     @RequestMapping("booklist.html")

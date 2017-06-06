@@ -15,46 +15,37 @@
 			<#if bookBorrows??>
 			    <#list bookBorrows as bookBorrow>
 					<div class="alert alert-info" role="alert">
-					    <span class="glyphicon glyphicon-book"></span> ${bookBorrow.bookName}--${bookBorrow.userName}<#if bookBorrow.status == "01"><button type="button" class="btn btn-link" id="btn-bookBorrow" value="${book.bookId}"><strong>同意</strong></button><button type="button" class="btn btn-link" id="btn-bookBorrow" value="${book.bookId}"><strong>驳回</strong></button><#elseif bookborrow.status == "02"><button type="button" class="btn btn-link" id="btn-bookBorrow" value="${book.bookId}"><strong>还书</strong></button></#if>
+					    <span class="glyphicon glyphicon-book"></span> ${bookBorrow.bookName}--${bookBorrow.userName}<#if bookBorrow.status == "01"><button type="button" class="btn btn-link" value="${bookBorrow.id}"><strong>同意</strong></button><button type="button" class="btn btn-link" value="${bookBorrow.id}"><strong>驳回</strong></button><#elseif bookBorrow.status == "02"><button type="button" class="btn btn-link" value="${bookBorrow.id}"><strong>还书</strong></button></#if>
 					</div>
 			    </#list>
 			</#if>
 	    </div>
 	</div>
 	<script type="text/javascript">
-	  $('#btn-unread').click(function(){
-	       var unread = document.getElementById("me-unread").value;
+	  $("button").click(function(){
+	       var action = $(this).text();
+		   var id = $(this).val();
+		   if(action == "同意"){
+		       var status = "02";
+		   }
+		   if(action == "驳回"){
+		       var status = "04";
+		   }
+		   if(action == "还书"){
+		       var status = "03";
+		   }
 	       $.ajax({
 	           type: "POST",
-               url: "modify_book.action",
-               data: {unread:unread},
+               url: "modifyborrow.action",
+               data: {id:id, status:status},
                dataType: "json",
                success: function(data){
                  if(data.status){
                      location.reload(true);
-                     alert("修改成功！");
+                     alert("修改成功:" + data.msg);
                  } else {
                      location.reload(true);
-                     alert(data.msg);
-                 }
-               }
-	       });
-	    });
-		
-		$('#btn-read').click(function(){
-	       var read = document.getElementById("me-read").value;
-	       $.ajax({
-	           type: "POST",
-               url: "modify_book.action",
-               data: {read:read},
-               dataType: "json",
-               success: function(data){
-                 if(data.status){
-                     location.reload(true);
-                     alert("修改成功！");
-                 } else {
-                     location.reload(true);
-                     alert(data.msg);
+                     alert("修改失败:" + data.msg);
                  }
                }
 	       });

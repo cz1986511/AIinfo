@@ -77,10 +77,10 @@
                success: function(data){
                  if(data.status == true){
                      location.reload(true);
-                     alert("sucess:" + data.msg);
+                     alert("成功:" + data.msg);
                  } else {
                      location.reload(true);
-                     alert("false:" + data.msg);
+                     alert("失败:" + data.msg);
                  }
                }
 	       });
@@ -96,10 +96,10 @@
                success: function(data){
                  if(data.status == true){
                      location.reload(true);
-                     alert(data.msg);
+                     alert("成功:" + data.msg);
                  } else {
                      location.reload(true);
-                     alert(data.msg);
+                     alert("失败:" + data.msg);
                  }
                }
 	       });
