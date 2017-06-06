@@ -114,13 +114,21 @@ public class UserController implements Serializable {
                 if (status > 0) {
                     m.addObject("userType", user.getType());
                     m.setViewName("index");
-                    m.addObject("userName", request.getSession().getAttribute("userName"));
+                    m.addObject("userName", user.getUserName());
                     Long timeout = (dleyeSwith.getTimeout() * 60 * 1000)
                                    + System.currentTimeMillis();
                     request.getSession().setAttribute("userId", user.getUserId());
                     request.getSession().setAttribute("userName", user.getUserName());
                     request.getSession().setAttribute("type", user.getType());
                     request.getSession().setAttribute("timeout", timeout);
+                    String keyString = "borrow-" + user.getUserName();
+                    Integer remainNum = (Integer) redisClient.get(keyString,
+                        new TypeReference<Integer>() {
+                        });
+                    if (remainNum == null) {
+                        remainNum = 1;
+                        redisClient.set(keyString, remainNum, 60 * 24 * 60 * 60);
+                    }
                 } else {
                     m.addObject("msg", "账号被锁定");
                     m.setViewName("login");

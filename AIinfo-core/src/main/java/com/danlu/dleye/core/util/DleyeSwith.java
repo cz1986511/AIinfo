@@ -14,8 +14,8 @@ public class DleyeSwith {
     @Autowired
     private RedisClient redisClient;
 
-    @Switch(description = "session过期时间,单位分钟", name = "30")
-    private Long timeout = 30l;
+    @Switch(description = "session过期时间,单位分钟", name = "timeout")
+    private Long timeout = 60l;
 
     @Switch(description = "每页展示条数", name = "pageSize")
     private int pageSize = 10;
@@ -32,7 +32,10 @@ public class DleyeSwith {
     @Switch(description = "默认删除180天前数据", name = "defaultDate")
     private int defaultDate = -180;
 
-    @Switch(description = "默认token", name = "defaultDate")
+    @Switch(description = "借书周期", name = "borrowDate")
+    private int borrowDate = 30;
+
+    @Switch(description = "默认token", name = "token")
     private String token = "6677";
 
     @Switch(description = "默认文件路径", name = "filePath")
@@ -55,6 +58,14 @@ public class DleyeSwith {
 
     @Switch(description = "随机数长度", name = "wisdomNum")
     private int wisdomNum = 201;
+
+    public int getBorrowDate() {
+        return borrowDate;
+    }
+
+    public void setBorrowDate(int borrowDate) {
+        this.borrowDate = borrowDate;
+    }
 
     public int getWisdomNum() {
         return wisdomNum;

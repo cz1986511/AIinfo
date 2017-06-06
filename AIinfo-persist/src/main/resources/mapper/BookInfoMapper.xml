@@ -18,7 +18,10 @@
   <sql id="selectByParamsWhere">
     <where>
       <if test="bookName != null">
-        book_name like CONCAT(CONCAT('%', #{bookName,jdbcType=VARCHAR}), '%') and
+        book_name = #{bookName,jdbcType=VARCHAR} and
+      </if>
+      <if test="bookNameLike != null">
+        book_name like CONCAT(CONCAT('%', #{bookNameLike,jdbcType=VARCHAR}), '%') and
       </if>
 	  <if test="bookAuthor != null">
 	    book_author = #{bookAuthor,jdbcType=VARCHAR} and
