@@ -12,7 +12,6 @@
 		    <#include "navigation.html"/>
 		</#if>
         <div class="container-fluid" id="addBook" style="display:none">
-		    <span class="glyphicon glyphicon-heart"></span> ${wisdom}
 			<h2><span class="glyphicon glyphicon-heart-empty"></span> 新增图书 <span class="glyphicon glyphicon-heart-empty"></span></h2>
 			<div class="input-group">
 				<span class="input-group-addon" id="sizing-addon1">书名</span>
@@ -34,7 +33,9 @@
 			<button type="button" class="btn btn-default" id="btn-cancel">取消</button>
 	    </div>
 		<div class="container-fluid" id="booksList">
-		    <span class="glyphicon glyphicon-heart"></span> ${wisdom}
+		    <div class="alert alert-warning" role="alert">
+				<span class="glyphicon glyphicon-heart"></span> ${wisdom}
+			</div>
 			<h2><span class="glyphicon glyphicon-heart-empty"></span> 图书池 <span class="glyphicon glyphicon-heart-empty"></span></h2>
 			<#if userType == 1>
 				<button type="button" class="btn btn-link" id="btn-addBook">+新增图书</button>
