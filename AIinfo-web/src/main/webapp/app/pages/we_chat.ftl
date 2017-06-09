@@ -4,7 +4,7 @@
     <#include "/common/header.html"/>
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>吐槽池</title>
+    <title>AIinfo - 吐槽池</title>
 	<script>
 	  var ws = new WebSocket("ws://chenzhuo.pub:8080/AIinfo/websocket");
 	  ws.onopen = function(){
@@ -23,8 +23,11 @@
 </head>
 <body>
     <div id="wrapper">
-		<#include "navigation.html"/>
-        <!-- Page Content -->
+		<#if userType == 1>
+		  <#include "navigation1.html"/>
+		<#else>
+		  <#include "navigation.html"/>
+        </#if>
             <div class="container-fluid">
                     <div class="col-lg-12">
 						<h3 class="page-header">欢迎来到聊天室</h3>

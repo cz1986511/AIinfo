@@ -8,8 +8,11 @@
 </head>
 <body>
     <div id="wrapper">
-		<#include "navigation.html"/>
-        <!-- Page Content -->
+		<#if userType == 1>
+		  <#include "navigation1.html"/>
+		<#else>
+		  <#include "navigation.html"/>
+        </#if>
         <div id="page-wrapper">
             <div class="container-fluid">
                 <div class="row">
