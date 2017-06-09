@@ -273,7 +273,11 @@ public class UserController implements Serializable {
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("userName", userName);
             List<BookBorrow> resultList = bookBorrowManager.getBookBorrowsByParams(map);
-            m.addObject("bookBorrows", resultList);
+            if (!CollectionUtils.isEmpty(resultList)) {
+                int count = resultList.size();
+                m.addObject("bookCount", count);
+                m.addObject("bookBorrows", resultList);
+            }
             m.addObject("userName", userName);
             m.addObject("userTpye", userTpye);
         } catch (Exception e) {

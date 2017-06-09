@@ -15,11 +15,12 @@
 		    <div class="alert alert-warning" role="alert">
 				<span class="glyphicon glyphicon-heart"></span> ${wisdom}
 			</div>
-			<h2><span class="glyphicon glyphicon-heart-empty"></span> 图书借阅记录 <span class="glyphicon glyphicon-heart-empty"></span></h2>
+			<h2><span class="glyphicon glyphicon-heart-empty"></span> 我的图书借阅记录 <span class="glyphicon glyphicon-heart-empty"></span></h2>
+			<h5>总申请借阅次数<span class="badge">${count}</span></h5>
 			<#if bookBorrows??>
 			    <#list bookBorrows as bookBorrow>
 					<div class="alert alert-info" role="alert">
-					    <span class="glyphicon glyphicon-book"></span> ${bookBorrow.bookName}--${bookBorrow.userName}<#if bookBorrow.status == "01">--待审批<#elseif bookBorrow.status == "02">--已通过<#elseif bookBorrow.status == "03">--已还书<#elseif bookBorrow.status == "04">--已驳回</#if>
+					    <span class="glyphicon glyphicon-book"></span> ${bookBorrow.bookName}(还书时间:${(bookBorrow.endTime?string("yyyy-MM-dd"))!})<#if bookBorrow.status == "01">--待审批<#elseif bookBorrow.status == "02">--已通过<#elseif bookBorrow.status == "03">--已还书<#elseif bookBorrow.status == "04">--已驳回</#if>
 					</div>
 			    </#list>
 			</#if>
