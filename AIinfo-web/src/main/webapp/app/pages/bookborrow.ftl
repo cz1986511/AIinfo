@@ -15,7 +15,7 @@
 			<#if bookBorrows??>
 			    <#list bookBorrows as bookBorrow>
 					<div class="alert alert-info" role="alert">
-					    <span class="glyphicon glyphicon-book"></span> ${bookBorrow.bookName}--${bookBorrow.userName}<#if bookBorrow.status == "01"><button type="button" class="btn btn-link" value="${bookBorrow.id}"><strong>同意</strong></button><button type="button" class="btn btn-link" value="${bookBorrow.id}"><strong>驳回</strong></button><#elseif bookBorrow.status == "02"><button type="button" class="btn btn-link" value="${bookBorrow.id}"><strong>还书</strong></button></#if>
+					    <span class="glyphicon glyphicon-book"></span> ${bookBorrow.bookName}--${bookBorrow.userName}<#if bookBorrow.status == "01"><button type="button" class="btn btn-link" value="${bookBorrow.id}"><strong>同意</strong></button><button type="button" class="btn btn-link" value="${bookBorrow.id}"><strong>驳回</strong></button><#elseif bookBorrow.status == "02"><button type="button" class="btn btn-link" value="${bookBorrow.id}"><strong>还书</strong></button><#elseif bookBorrow.status == "03">--已还书<#elseif bookBorrow.status == "04">--已驳回</#if>
 					</div>
 			    </#list>
 			</#if>

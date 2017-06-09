@@ -20,10 +20,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.danlu.dleye.core.BookBorrowManager;
 import com.danlu.dleye.core.UserInfoManager;
 import com.danlu.dleye.core.util.DleyeSwith;
 import com.danlu.dleye.core.util.RedisClient;
 import com.danlu.dleye.core.util.UserBaseInfo;
+import com.danlu.dleye.persist.base.BookBorrow;
 import com.danlu.dleye.persist.base.UserInfoEntity;
 import com.danlu.persist.util.CommonUtil;
 
@@ -36,10 +38,10 @@ public class UserController implements Serializable {
 
     @Autowired
     private UserInfoManager userManager;
-
+    @Autowired
+    private BookBorrowManager bookBorrowManager;
     @Autowired
     private DleyeSwith dleyeSwith;
-
     @Autowired
     private RedisClient redisClient;
 
@@ -260,6 +262,25 @@ public class UserController implements Serializable {
             result.put("msg", "程序猿小哥跟老板娘跑了");
         }
         return json.toJSONString();
+    }
+
+    @RequestMapping("userborrow.html")
+    public ModelAndView getUserBorrows(HttpServletRequest request) {
+        ModelAndView m = new ModelAndView();
+        try {
+            String userName = (String) request.getSession().getAttribute("userName");
+            int userTpye = (int) request.getSession().getAttribute("type");
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("userName", userName);
+            List<BookBorrow> resultList = bookBorrowManager.getBookBorrowsByParams(map);
+            m.addObject("bookBorrows", resultList);
+            m.addObject("userName", userName);
+            m.addObject("userTpye", userTpye);
+        } catch (Exception e) {
+            logger.info("getUserBorrows is exception:" + e.toString());
+        }
+        m.addObject("wisdom", dleyeSwith.getWisdom());
+        return m;
     }
 
 }

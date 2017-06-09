@@ -2,7 +2,6 @@ package com.danlu.web.controller;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -206,13 +205,8 @@ public class BookInfoController implements Serializable {
         try {
             String userName = (String) request.getSession().getAttribute("userName");
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put("status", "01");
-            List<BookBorrow> resultList = new ArrayList<BookBorrow>();
-            List<BookBorrow> list1 = bookBorrowManager.getBookBorrowsByParams(map);
-            map.put("status", "02");
-            List<BookBorrow> list2 = bookBorrowManager.getBookBorrowsByParams(map);
-            resultList.addAll(list1);
-            resultList.addAll(list2);
+            map.put("type", "01");
+            List<BookBorrow> resultList = bookBorrowManager.getBookBorrowsByParams(map);
             m.addObject("bookBorrows", resultList);
             m.addObject("userName", userName);
         } catch (Exception e) {
@@ -249,6 +243,11 @@ public class BookInfoController implements Serializable {
                         if ("02".equals(status)) {
                             bookInfo.setBookStatus("03");
                         } else {
+                            String defaultKey = "borrow-" + nBookBorrow.getUserName();
+                            Integer remainder = (Integer) redisClient.get(defaultKey,
+                                new TypeReference<Integer>() {
+                                });
+                            redisClient.set(defaultKey, remainder + 1, 60 * 24 * 60 * 60);
                             bookInfo.setBookStatus("01");
                         }
                         bookInfoManager.updateBookInfo(bookInfo);

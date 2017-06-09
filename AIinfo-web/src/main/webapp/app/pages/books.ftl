@@ -86,8 +86,8 @@
 	       });
         })
 		
-		$("#btn-bookBorrow").click(function(){
-          var id = $("#btn-bookBorrow").val();
+		$("button").click(function(){
+          var id = $(this).val();
 		  $.ajax({
 	           type: "POST",
                url: "bookborrow.action",
