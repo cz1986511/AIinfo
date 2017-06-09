@@ -29,8 +29,8 @@
 				<span class="input-group-addon" id="sizing-addon4">来源</span>
 				<input type="text" id="source" class="form-control" placeholder="Source" aria-describedby="sizing-addon2">
 			</div>
-			<button type="button" class="btn btn-success" id="btn-save">保存</button>
-			<button type="button" class="btn btn-default" id="btn-cancel">取消</button>
+			<input class="btn btn-success" type="button" id="btn-save" value="保存" />
+			<input class="btn btn-default" type="button" id="btn-cancel" value="取消" />
 	    </div>
 		<div class="container-fluid" id="booksList">
 		    <div class="alert alert-warning" role="alert">
@@ -38,7 +38,7 @@
 			</div>
 			<h2><span class="glyphicon glyphicon-heart-empty"></span> 图书池 <span class="glyphicon glyphicon-heart-empty"></span></h2>
 			<#if userType == 1>
-				<button type="button" class="btn btn-link" id="btn-addBook">+新增图书</button>
+				<input class="btn btn-default" type="button" id="btn-addBook" value="新增图书" />
 			</#if>
 			<#if books??>
 			    <#list books as book>
