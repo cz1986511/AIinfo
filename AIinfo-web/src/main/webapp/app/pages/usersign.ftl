@@ -8,7 +8,11 @@
 </head>
 <body>
     <div id="wrapper">
-		<#include "navigation.html"/>
+		<#if userType == 1>
+			<#include "navigation1.html"/>
+		<#else>
+		    <#include "navigation.html"/>
+		</#if>
             <div class="container-fluid">
                     <h2><span class="glyphicon glyphicon-star-empty"></span> 每日读书签到 <span class="glyphicon glyphicon-star-empty"></span></h2>
 					    <div class="alert alert-warning" role="alert">

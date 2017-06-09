@@ -6,7 +6,11 @@
 </head>
 <body>
     <div id="wrapper">
-		<#include "navigation.html"/>
+		<#if userType == 1>
+			<#include "navigation1.html"/>
+		<#else>
+		    <#include "navigation.html"/>
+		</#if>
         <div class="container-fluid">
 			<h2><span class="glyphicon glyphicon-heart-empty"></span> 第${bookListDate}期书单 <span class="glyphicon glyphicon-heart-empty"></span></h2>
 			<h3><span class="glyphicon glyphicon-folder-open"></span> 想读</h3>

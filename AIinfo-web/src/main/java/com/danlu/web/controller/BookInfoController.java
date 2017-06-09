@@ -275,6 +275,7 @@ public class BookInfoController implements Serializable {
         ModelAndView m = new ModelAndView();
         try {
             String userName = (String) request.getSession().getAttribute("userName");
+            int userType = (int) request.getSession().getAttribute("type");
             int dateNum = dleyeSwith.getBookListDate();
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("date", dateNum);
@@ -284,6 +285,7 @@ public class BookInfoController implements Serializable {
             }
             m.addObject("userName", userName);
             m.addObject("bookListDate", dateNum);
+            m.addObject("userType", userType);
         } catch (Exception e) {
             logger.info("getBookList is exception:" + e.toString());
         }
@@ -351,6 +353,7 @@ public class BookInfoController implements Serializable {
     public ModelAndView userSign(HttpServletRequest request) {
         ModelAndView m = new ModelAndView();
         try {
+            int userType = (int) request.getSession().getAttribute("type");
             String dateString = getDateString();
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("date", dateString);
@@ -366,6 +369,7 @@ public class BookInfoController implements Serializable {
             if (!CollectionUtils.isEmpty(list1)) {
                 m.addObject("signStatistics", list1);
             }
+            m.addObject("userType", userType);
         } catch (Exception e) {
             logger.error("userSign is exception:" + e.toString());
         }
