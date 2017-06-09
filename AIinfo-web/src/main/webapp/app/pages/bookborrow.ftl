@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <#include "/common/header.html"/>
-    <title>bookborrow</title>
+    <title>AIinfo - 图书借阅记录管理</title>
 </head>
 <body>
     <div id="wrapper">

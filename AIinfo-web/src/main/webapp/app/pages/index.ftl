@@ -4,7 +4,7 @@
     <#include "/common/header.html"/>
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>AIinfo</title>
+    <title>AIinfo - 首页</title>
 </head>
 <body>
     <div id="wrapper">

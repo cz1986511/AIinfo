@@ -4,7 +4,7 @@
     <#include "/common/header.html"/>
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Loading</title>
+    <title>AIinfo - 登陆</title>
 </head>
 <body>
     <div class="container">

@@ -4,7 +4,7 @@
     <#include "/common/header.html"/>
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>修改登陆信息</title>
+    <title>AIinfo - 修改登陆信息</title>
 </head>
 <body>
     <div id="wrapper">
@@ -16,7 +16,6 @@
                     <div class="col-lg-12">
                         <h1 class="page-header">修改登陆密码</h1>
                     </div>
-                    <!-- /.col-lg-12 -->
                     <form id="updatePassword" method="post">
                       <div class="form-group">
 						<label for="oldPassword">旧密码</label>
@@ -26,14 +25,13 @@
 						<label for="newPassword">新密码</label>
 						<input type="password" class="form-control" id="newPassword" placeholder="New Password">
 					  </div>
-					  <button type="button" id="btnUpdateP" class="btn btn-default">提交</button>
+					  <button type="button" id="btnUpdateP" class="btn btn-success">提交</button>
                     </form>
                 </div>
 				<div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">修改登陆手机号</h1>
                     </div>
-                    <!-- /.col-lg-12 -->
                     <form id="updateTelphone" method="post">
                       <div class="form-group">
 						<label for="oldTelphone">旧手机号</label>
@@ -43,7 +41,7 @@
 						<label for="newTelphone">新手机号</label>
 						<input type="text" class="form-control" id="newTelphone" placeholder="New Telphone">
 					  </div>
-					  <button type="button" id="btnUpdateT" class="btn btn-default">提交</button>
+					  <button type="button" id="btnUpdateT" class="btn btn-success">提交</button>
                     </form>
                 </div>
                 <!-- /.row -->

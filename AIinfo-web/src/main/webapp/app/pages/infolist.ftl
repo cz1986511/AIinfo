@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <#include "/common/header.html"/>
-    <title>机器列表页</title>
+    <title>AIinfo - 机器列表页</title>
 </head>
 <body>
     <div id="wrapper">

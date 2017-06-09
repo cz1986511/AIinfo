@@ -279,7 +279,7 @@ public class UserController implements Serializable {
                 m.addObject("bookBorrows", resultList);
             }
             m.addObject("userName", userName);
-            m.addObject("userTpye", userTpye);
+            m.addObject("userType", userTpye);
         } catch (Exception e) {
             logger.info("getUserBorrows is exception:" + e.toString());
         }

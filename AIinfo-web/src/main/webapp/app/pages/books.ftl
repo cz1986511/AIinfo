@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <#include "/common/header.html"/>
-    <title>books</title>
+    <title>AIinfo - 图书池</title>
 </head>
 <body>
     <div id="wrapper">
@@ -38,7 +38,7 @@
 			</div>
 			<h2><span class="glyphicon glyphicon-heart-empty"></span> 图书池 <span class="glyphicon glyphicon-heart-empty"></span></h2>
 			<#if userType == 1>
-				<input class="btn btn-default" type="button" id="btn-addBook" value="新增图书" />
+				<input class="btn btn-info" type="button" id="btn-addBook" value="新增图书" />
 			</#if>
 			<#if books??>
 			    <#list books as book>

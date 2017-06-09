@@ -2,21 +2,21 @@
 <html lang="zh-CN">
 <head>
     <#include "/common/header.html"/>
-    <title>我的 - 图书借阅记录</title>
+    <title>AIinfo - 我的图书借阅记录</title>
 </head>
 <body>
     <div id="wrapper">
 		<#if userType == 1>
-		  <#include "navigation1.html"/>
+			<#include "navigation1.html"/>
 		<#else>
-		  <#include "navigation.html"/>
-        </#if>
+		    <#include "navigation.html"/>
+		</#if>
         <div class="container-fluid">
 		    <div class="alert alert-warning" role="alert">
 				<span class="glyphicon glyphicon-heart"></span> ${wisdom}
 			</div>
 			<h2><span class="glyphicon glyphicon-heart-empty"></span> 我的图书借阅记录 <span class="glyphicon glyphicon-heart-empty"></span></h2>
-			<h5>总申请借阅次数<span class="badge">${count}</span></h5>
+			<h5>总申请借阅次数<span class="badge">${bookCount}</span></h5>
 			<#if bookBorrows??>
 			    <#list bookBorrows as bookBorrow>
 					<div class="alert alert-info" role="alert">

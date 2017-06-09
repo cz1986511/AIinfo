@@ -4,7 +4,7 @@
     <#include "/common/header.html"/>
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Sign</title>
+    <title>AIinfo - 读书签到</title>
 </head>
 <body>
     <div id="wrapper">
