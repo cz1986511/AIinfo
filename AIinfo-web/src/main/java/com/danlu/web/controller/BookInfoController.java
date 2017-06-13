@@ -349,6 +349,25 @@ public class BookInfoController implements Serializable {
         return json.toJSONString();
     }
 
+    @RequestMapping("userbooknum.html")
+    public ModelAndView getUserBookNum(HttpServletRequest request) {
+        ModelAndView m = new ModelAndView();
+        try {
+            int userType = (int) request.getSession().getAttribute("type");
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("date", "date");
+            List<Map<String, Object>> list = bookInfoManager.getBookSourceNumList(map);
+            if (!CollectionUtils.isEmpty(list)) {
+                m.addObject("userBooks", list);
+            }
+            m.addObject("userType", userType);
+        } catch (Exception e) {
+            logger.error("getUserBookNum is exception:" + e.toString());
+        }
+        m.addObject("wisdom", dleyeSwith.getWisdom());
+        return m;
+    }
+
     @RequestMapping("usersign.html")
     public ModelAndView userSign(HttpServletRequest request) {
         ModelAndView m = new ModelAndView();

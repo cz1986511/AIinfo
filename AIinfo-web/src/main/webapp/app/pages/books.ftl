@@ -87,8 +87,10 @@
         })
 		
 		$("button").click(function(){
-          var id = $(this).val();
-		  $.ajax({
+		  var text = $(this).text();
+		  if ("借阅" == text) {
+		      var id = $(this).val();
+		      $.ajax({
 	           type: "POST",
                url: "bookborrow.action",
                data: {id:id},
@@ -102,7 +104,8 @@
                      alert("失败:" + data.msg);
                  }
                }
-	       });
+	          });
+		  }
         })
 	</script>
 	<#include "/common/footer.html" />

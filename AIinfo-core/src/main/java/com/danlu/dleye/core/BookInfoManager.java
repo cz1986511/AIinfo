@@ -17,4 +17,6 @@ public interface BookInfoManager {
 
     List<BookInfo> getBookInfoList(Map<String, Object> map);
 
+    List<Map<String, Object>> getBookSourceNumList(Map<String, Object> map);
+
 }

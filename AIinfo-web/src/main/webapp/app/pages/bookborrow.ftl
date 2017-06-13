@@ -25,16 +25,21 @@
 	  $("button").click(function(){
 	       var action = $(this).text();
 		   var id = $(this).val();
+		   var falge = false;
 		   if(action == "同意"){
 		       var status = "02";
+			   falge = true;
 		   }
 		   if(action == "驳回"){
 		       var status = "04";
+			   falge = true;
 		   }
 		   if(action == "还书"){
 		       var status = "03";
+			   falge = true;
 		   }
-	       $.ajax({
+		   if (falge) {
+		     $.ajax({
 	           type: "POST",
                url: "modifyborrow.action",
                data: {id:id, status:status},
@@ -48,7 +53,8 @@
                      alert("修改失败:" + data.msg);
                  }
                }
-	       });
+	         });
+		   }
 	    });
 	</script>
 	<#include "/common/footer.html" />

@@ -11,6 +11,12 @@
     <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
     <result column="gmt_modify" property="gmtModify" jdbcType="TIMESTAMP" />
   </resultMap>
+  
+  <resultMap id="BookSourceNum" type="java.util.Map" >
+    <id column="book_num" property="bookNum" jdbcType="BIGINT" />
+    <result column="book_source" property="bookSource" jdbcType="VARCHAR" />
+  </resultMap>
+  
   <sql id="Base_Column_List" >
     book_id, book_name, book_author, book_status, book_type, book_source, gmt_create, 
     gmt_modify
@@ -55,6 +61,14 @@
     <if test=" offset != null and limit != null">
 	  limit ${offset},${limit}
 	</if>
+  </select>
+  
+  <select id="selectBookSourceNum" resultMap="BookSourceNum" parameterType="java.util.Map" >
+    select book_source, count(book_id) as book_num
+    from dleye_book_info
+    <include refid="selectByParamsWhere" />
+    group by book_source
+    order by book_num desc
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >

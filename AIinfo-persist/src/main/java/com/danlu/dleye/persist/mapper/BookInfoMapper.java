@@ -19,4 +19,6 @@ public interface BookInfoMapper {
     int updateByPrimaryKey(BookInfo bookInfo);
 
     List<BookInfo> selectBookInfosByParams(Map<String, Object> map);
+
+    List<Map<String, Object>> selectBookSourceNum(Map<String, Object> map);
 }

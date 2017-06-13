@@ -60,4 +60,13 @@ public class BookInfoManagerImpl implements BookInfoManager {
         }
     }
 
+    @Override
+    public List<Map<String, Object>> getBookSourceNumList(Map<String, Object> map) {
+        if (!CollectionUtils.isEmpty(map)) {
+            return bookInfoMapper.selectBookSourceNum(map);
+        } else {
+            return null;
+        }
+    }
+
 }
