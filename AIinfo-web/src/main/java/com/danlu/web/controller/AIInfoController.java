@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -86,35 +85,6 @@ public class AIInfoController implements Serializable {
         return json.toJSONString();
     }
 
-    @RequestMapping(value = "lunch_info", produces = "text/html;charset=UTF-8")
-    @ResponseBody
-    public String getLunchInfo(HttpServletRequest request) {
-        Map<String, Object> result = new HashMap<String, Object>();
-        JSONObject json = new JSONObject(result);
-        String number = request.getParameter("number");
-        if (!StringUtils.isBlank(number)) {
-            Long numberLong = Long.valueOf(number);
-
-            if (numberLong > 100L) {
-                result.put("msg", "这么多人中午不要一起吃饭了吧！");
-            } else {
-                String lunchInfo = "";
-                try {
-                    Random random = new Random();
-                    String defaultKey = "lunch" + random.nextInt(30);
-                    lunchInfo = redisClient.get(defaultKey, new TypeReference<String>() {
-                    });
-                } catch (Exception e) {
-                    logger.error("getLunchInfo is exception:" + e.toString());
-                }
-                result.put("msg", numberLong + "位吃货,中午吃" + lunchInfo + "吧");
-            }
-        } else {
-            result.put("msg", "请输入正确的人数");
-        }
-        return json.toJSONString();
-    }
-
     @RequestMapping(value = "weather", produces = "text/html;charset=UTF-8")
     @ResponseBody
     public String getWeather(HttpServletRequest request) {
@@ -146,6 +116,31 @@ public class AIInfoController implements Serializable {
             result.put("status", 1);
             result.put("msg", "程序小哥跟老板娘跑了");
             logger.error("getWeather is exception:" + e.toString());
+        }
+        return json.toJSONString();
+    }
+
+    @RequestMapping(value = "oilinfo", produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public String getOilInfo(HttpServletRequest request) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        JSONObject json = new JSONObject(result);
+        String oilKey = "oilKey";
+        JSONObject oilJson = null;
+        try {
+            oilJson = (JSONObject) redisClient.get(oilKey, new TypeReference<JSONObject>() {
+            });
+            if (!CollectionUtils.isEmpty(oilJson)) {
+                result.put("data", oilJson);
+            } else {
+                result.put("status", 1);
+                result.put("msg", "程序小哥跟老板娘跑了");
+            }
+            result.put("status", 0);
+        } catch (Exception e) {
+            result.put("status", 1);
+            result.put("msg", "程序小哥跟老板娘跑了");
+            logger.error("getOilInfo is exception:" + e.toString());
         }
         return json.toJSONString();
     }

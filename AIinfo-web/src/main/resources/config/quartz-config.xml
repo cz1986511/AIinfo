@@ -40,6 +40,19 @@
         <property name="jobDetail" ref="schedulerCleanArticle" />
         <property name="cronExpression" value="0 20 0 * * ? *" />
     </bean>
+    
+    <bean name="schedulerGetOilInfo"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="oilInfoUtil" />
+		<property name="targetMethod" value="getTodayOilInfo" />
+	</bean>
+
+    <bean name="cronTrigger2" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="name" value="schedulerGetOilInfo"/>
+        <property name="group" value="DEFAULT"/>
+        <property name="jobDetail" ref="schedulerGetOilInfo" />
+        <property name="cronExpression" value="0 20 6 * * ? *" />
+    </bean>
 	
 	<bean name="schedulerFactoryBean"
 		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
@@ -47,6 +60,7 @@
 			<list>
 				<ref bean="cronTrigger" />
 				<ref bean="cronTrigger1" />
+				<ref bean="cronTrigger2" />
 			</list>
 		</property>
 	</bean>

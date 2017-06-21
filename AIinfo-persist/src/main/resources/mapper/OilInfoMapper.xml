@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.danlu.dleye.persist.mapper.OilInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.danlu.dleye.persist.base.OilInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="oil89" property="oil89" jdbcType="VARCHAR" />
+    <result column="oil92" property="oil92" jdbcType="VARCHAR" />
+    <result column="oil95" property="oil95" jdbcType="VARCHAR" />
+    <result column="oil0" property="oil0" jdbcType="VARCHAR" />
+    <result column="oil90" property="oil90" jdbcType="VARCHAR" />
+    <result column="oil93" property="oil93" jdbcType="VARCHAR" />
+    <result column="oil97" property="oil97" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modify" property="gmtModify" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, province, oil89, oil92, oil95, oil0, oil90, oil93, oil97, update_time, gmt_create, 
+    gmt_modify
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from dleye_oil_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from dleye_oil_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.danlu.dleye.persist.base.OilInfo" >
+    insert into dleye_oil_info (province, oil89, 
+      oil92, oil95, oil0, 
+      oil90, oil93, oil97, 
+      update_time, gmt_create, gmt_modify
+      )
+    values (#{province,jdbcType=VARCHAR}, #{oil89,jdbcType=VARCHAR}, 
+      #{oil92,jdbcType=VARCHAR}, #{oil95,jdbcType=VARCHAR}, #{oil0,jdbcType=VARCHAR}, 
+      #{oil90,jdbcType=VARCHAR}, #{oil93,jdbcType=VARCHAR}, #{oil97,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, NOW(), NOW()
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.danlu.dleye.persist.base.OilInfo" >
+    insert into dleye_oil_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="oil89 != null" >
+        oil89,
+      </if>
+      <if test="oil92 != null" >
+        oil92,
+      </if>
+      <if test="oil95 != null" >
+        oil95,
+      </if>
+      <if test="oil0 != null" >
+        oil0,
+      </if>
+      <if test="oil90 != null" >
+        oil90,
+      </if>
+      <if test="oil93 != null" >
+        oil93,
+      </if>
+      <if test="oil97 != null" >
+        oil97,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+        gmt_create,
+        gmt_modify
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="oil89 != null" >
+        #{oil89,jdbcType=VARCHAR},
+      </if>
+      <if test="oil92 != null" >
+        #{oil92,jdbcType=VARCHAR},
+      </if>
+      <if test="oil95 != null" >
+        #{oil95,jdbcType=VARCHAR},
+      </if>
+      <if test="oil0 != null" >
+        #{oil0,jdbcType=VARCHAR},
+      </if>
+      <if test="oil90 != null" >
+        #{oil90,jdbcType=VARCHAR},
+      </if>
+      <if test="oil93 != null" >
+        #{oil93,jdbcType=VARCHAR},
+      </if>
+      <if test="oil97 != null" >
+        #{oil97,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+        NOW(),
+        NOW()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.danlu.dleye.persist.base.OilInfo" >
+    update dleye_oil_info
+    <set >
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="oil89 != null" >
+        oil89 = #{oil89,jdbcType=VARCHAR},
+      </if>
+      <if test="oil92 != null" >
+        oil92 = #{oil92,jdbcType=VARCHAR},
+      </if>
+      <if test="oil95 != null" >
+        oil95 = #{oil95,jdbcType=VARCHAR},
+      </if>
+      <if test="oil0 != null" >
+        oil0 = #{oil0,jdbcType=VARCHAR},
+      </if>
+      <if test="oil90 != null" >
+        oil90 = #{oil90,jdbcType=VARCHAR},
+      </if>
+      <if test="oil93 != null" >
+        oil93 = #{oil93,jdbcType=VARCHAR},
+      </if>
+      <if test="oil97 != null" >
+        oil97 = #{oil97,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+        gmt_modify = NOW()
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.danlu.dleye.persist.base.OilInfo" >
+    update dleye_oil_info
+    set province = #{province,jdbcType=VARCHAR},
+      oil89 = #{oil89,jdbcType=VARCHAR},
+      oil92 = #{oil92,jdbcType=VARCHAR},
+      oil95 = #{oil95,jdbcType=VARCHAR},
+      oil0 = #{oil0,jdbcType=VARCHAR},
+      oil90 = #{oil90,jdbcType=VARCHAR},
+      oil93 = #{oil93,jdbcType=VARCHAR},
+      oil97 = #{oil97,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      gmt_modify = NOW()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
