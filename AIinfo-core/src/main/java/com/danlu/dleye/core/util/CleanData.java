@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -67,7 +66,6 @@ public class CleanData {
             logger.error("cleanData is exception:" + e.toString());
         }
         updateUserAddressList();
-        makeLunchInfo();
         makeBookList();
         statisticsUserSign();
         makeWisdom();
@@ -84,27 +82,24 @@ public class CleanData {
             int sheetRows = sheet.getPhysicalNumberOfRows();
             if (sheetRows > 3) {
                 List<UserBaseInfo> resultList = new ArrayList<UserBaseInfo>();
-                for (int r = 2; r < sheetRows; r++) {
+                for (int r = 10; r < sheetRows; r++) {
                     Row row = sheet.getRow(r);
                     if (null != row) {
                         try {
                             UserBaseInfo userBaseInfo = new UserBaseInfo();
+                            userBaseInfo.setId((long) r);
                             Cell cell0 = row.getCell(0);
-                            userBaseInfo.setId(Long.valueOf((long) cell0.getNumericCellValue()));
-                            Cell cell1 = row.getCell(1);
-                            userBaseInfo.setUserName(cell1.getStringCellValue());
-                            Cell cell2 = row.getCell(2);
-                            userBaseInfo.setSexy(cell2.getStringCellValue());
+                            userBaseInfo.setUserId(cell0.getStringCellValue());
                             Cell cell3 = row.getCell(3);
-                            userBaseInfo.setBirthday(cell3.getDateCellValue().toString());
+                            userBaseInfo.setUserName(cell3.getStringCellValue());
                             Cell cell4 = row.getCell(4);
-                            userBaseInfo.setTelPhone(String.valueOf((long) cell4
-                                .getNumericCellValue()));
+                            userBaseInfo.setPost(cell4.getStringCellValue());
                             Cell cell5 = row.getCell(5);
-                            userBaseInfo.setPost(cell5.getStringCellValue());
+                            userBaseInfo.setTelPhone(String.valueOf((long) cell5
+                                .getNumericCellValue()));
                             resultList.add(userBaseInfo);
                         } catch (Exception e) {
-                            logger.error("updateUserAddressList is exception:" + e.toString());
+                            logger.error("updateUserAddressList is exception:" + r);
                         }
                     }
                 }
@@ -112,21 +107,6 @@ public class CleanData {
             }
         } catch (Exception e) {
             logger.error("updateUserAddressList is exception:" + e.toString());
-        }
-    }
-
-    public void makeLunchInfo() {
-        String lunchString = dleyeSwith.getLunchs();
-        if (!StringUtils.isBlank(lunchString)) {
-            String[] lunchs = lunchString.split(",");
-            for (int i = 0; i < lunchs.length; i++) {
-                try {
-                    String defaultKey = "lunch" + i;
-                    redisClient.set(defaultKey, lunchs[i], 86400);
-                } catch (Exception e) {
-                    logger.error("makeLunchInfo is exception:" + e.toString());
-                }
-            }
         }
     }
 
@@ -239,10 +219,5 @@ public class CleanData {
     }
 
     public static void main(String[] args) {
-        Calendar calendar = Calendar.getInstance();
-        if (calendar.get(Calendar.DAY_OF_MONTH) != 1) {
-            calendar.add(Calendar.MONTH, 1);
-        }
-        System.out.println(calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.MONTH));
     }
 }

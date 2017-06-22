@@ -6,6 +6,7 @@ public class UserBaseInfo implements Serializable {
     private static final long serialVersionUID = -47381650457389120L;
 
     private Long id;
+    private String userId;
     private String userName;
     private String sexy;
     private String birthday;
@@ -19,6 +20,14 @@ public class UserBaseInfo implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getUserName() {
