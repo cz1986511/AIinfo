@@ -56,6 +56,33 @@ public class RedisClient {
     }
 
     @SuppressWarnings("deprecation")
+    public <T> void set(String key, final T value) {
+        Jedis jedis = null;
+        boolean isOK = true;
+        try {
+            jedis = jedisPool.getResource();
+            String jsonString = JSON.toJSONString(value, SerializerFeature.WriteDateUseDateFormat,
+                SerializerFeature.DisableCircularReferenceDetect);
+            if (null != jedis) {
+                jedis.set(key, jsonString);
+            } else {
+                init();
+            }
+        } catch (Exception e) {
+            logger.error("set key:" + key + " is exception:" + e.toString());
+            isOK = false;
+        } finally {
+            if (null != jedis) {
+                if (isOK) {
+                    jedisPool.returnResource(jedis);
+                } else {
+                    jedisPool.returnBrokenResource(jedis);
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("deprecation")
     public <T> T get(final String key, final TypeReference<T> type) {
         Jedis jedis = null;
         boolean isOK = true;
