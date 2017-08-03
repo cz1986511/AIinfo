@@ -173,8 +173,6 @@ public class AIInfoController implements Serializable {
         try {
             String toUser = null;
             String fromUser = null;
-            String createTime = null;
-            String msgType = null;
             String content = null;
             BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream(),
                 "UTF-8"));
@@ -195,9 +193,6 @@ public class AIInfoController implements Serializable {
                 }
                 if ("FromUserName".equals(nodeElement.getName())) {
                     fromUser = nodeElement.getText();
-                }
-                if ("CreateTime".equals(nodeElement.getName())) {
-                    createTime = nodeElement.getText();
                 }
                 if ("Content".equals(nodeElement.getName())) {
                     content = nodeElement.getText();
