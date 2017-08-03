@@ -210,7 +210,7 @@ public class AIInfoController implements Serializable {
             }
             if ("text".equals(msgType) && null != content) {
                 Map<String, Object> map = new HashMap<String, Object>();
-                map.put("open_id", fromUser);
+                map.put("openId", fromUser);
                 List<UserInfoEntity> list = userManager.getUserListByParams(map);
                 if (CollectionUtils.isEmpty(list)) {
                     Map<String, Object> map1 = new HashMap<String, Object>();
