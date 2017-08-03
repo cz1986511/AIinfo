@@ -23,6 +23,16 @@ public class UserInfoEntity {
 
     private Date gmtUpdate;
 
+    private String openId;
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
     public Long getUserId() {
         return userId;
     }

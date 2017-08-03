@@ -12,9 +12,10 @@
     <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
     <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
     <result column="gmt_update" property="gmtUpdate" jdbcType="TIMESTAMP" />
+    <result column="open_id" property="openId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    user_id, user_name, password, email, tel, type, status, del_flag, gmt_create, gmt_update
+    user_id, user_name, password, email, tel, type, status, del_flag, gmt_create, gmt_update, open_id
   </sql>
   <sql id="selectByParamsWhere">
     <where>
@@ -32,6 +33,9 @@
       </if>
       <if test="status != null">
         status = #{status,jdbcType=TINYINT} and
+      </if>
+      <if test="openId != null">
+        open_id = #{openId,jdbcType=TINYINT} and
       </if>
         1 = 1
     </where>
@@ -68,11 +72,11 @@
     </selectKey>
     insert into dleye_user_info (user_name, password, 
       email, tel, type, status, 
-      del_flag, gmt_create, gmt_update
+      del_flag, open_id, gmt_create, gmt_update
       )
     values (#{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, #{type,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, 
-      #{delFlag,jdbcType=TINYINT}, NOW(), NOW()
+      #{delFlag,jdbcType=TINYINT}, #{openId,jdbcType=VARCHAR}, NOW(), NOW()
       )
   </insert>
   <insert id="insertSelective" parameterType="com.danlu.dleye.persist.base.UserInfoEntity" useGeneratedKeys="true" keyProperty="userId">
@@ -102,6 +106,9 @@
       <if test="delFlag != null" >
         del_flag,
       </if>
+      <if test="openId != null" >
+        open_id,
+      </if>
         gmt_create,
         gmt_update
     </trim>
@@ -129,6 +136,9 @@
       </if>
       <if test="delFlag != null" >
         #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="openId != null" >
+        #{openId,jdbcType=VARCHAR},
       </if>
         NOW(),
         NOW()
@@ -158,6 +168,9 @@
       <if test="delFlag != null" >
         del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
+      <if test="openId != null" >
+        open_id = #{openId,jdbcType=VARCHAR},
+      </if>
         gmt_update = NOW()
     </set>
     where user_id = #{userId,jdbcType=BIGINT}
@@ -171,6 +184,7 @@
       type = #{type,jdbcType=TINYINT},
       status = #{status,jdbcType=TINYINT},
       del_flag = #{delFlag,jdbcType=TINYINT},
+      open_id = #{openId,jdbcType=VARCHAR},
       gmt_update = NOW()
     where user_id = #{userId,jdbcType=BIGINT}
   </update>
