@@ -176,8 +176,6 @@ public class AIInfoController implements Serializable {
             String createTime = null;
             String msgType = null;
             String content = null;
-            String eventKey = null;
-            boolean isEvent = false;
             BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream(),
                 "UTF-8"));
             String buffer = null;
@@ -201,18 +199,12 @@ public class AIInfoController implements Serializable {
                 if ("CreateTime".equals(nodeElement.getName())) {
                     createTime = nodeElement.getText();
                 }
-                if ("MsgType".equals(nodeElement.getName())) {
-                    msgType = nodeElement.getText();
-                }
                 if ("Content".equals(nodeElement.getName())) {
                     content = nodeElement.getText();
                 }
-                if ("EventKey".equals(nodeElement.getName())) {
-                    eventKey = nodeElement.getText();
-                }
                 System.out.println(nodeElement.getName() + ":" + nodeElement.getText());
             }
-            if ("text".equals(msgType) && null != content) {
+            if (null != content && content.length() == 11) {
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("openId", fromUser);
                 List<UserInfoEntity> list = userManager.getUserListByParams(map);
@@ -232,8 +224,7 @@ public class AIInfoController implements Serializable {
                 } else {
                     content = "请勿重复绑定";
                 }
-            } else if ("event".equals(msgType)) {
-                isEvent = true;
+            } else if ("读书签到".equals(content)) {
                 Map<String, Object> map2 = new HashMap<String, Object>();
                 map2.put("openId", fromUser);
                 List<UserInfoEntity> list2 = userManager.getUserListByParams(map2);
@@ -248,7 +239,7 @@ public class AIInfoController implements Serializable {
                         content = "请勿重复签到";
                     } else {
                         UserSign userSign = new UserSign();
-                        userSign.setSignInfo("微信签到");
+                        userSign.setSignInfo(userName + ":微信签到");
                         userSign.setUserName(userName);
                         userSign.setDate(getDateString());
                         userSignManager.addUserSign(userSign);
@@ -258,6 +249,10 @@ public class AIInfoController implements Serializable {
                 } else {
                     content = "请先绑定手机号";
                 }
+            } else if ("1".equals(content)) {
+                content = "http://xiaozhuo.info";
+            } else {
+                content = "输入错误";
             }
             for (Iterator<Element> j = parenetElement.elementIterator(); j.hasNext();) {
                 Element nodeElement = j.next();
@@ -267,18 +262,8 @@ public class AIInfoController implements Serializable {
                 if ("FromUserName".equals(nodeElement.getName())) {
                     nodeElement.setText(toUser);
                 }
-                if ("MsgType".equals(nodeElement.getName())) {
-                    nodeElement.setText("text");
-                }
                 if ("Content".equals(nodeElement.getName())) {
                     nodeElement.setText(content);
-                }
-                if ("Event".equals(nodeElement.getName())) {
-                    nodeElement.setName("Content");
-                    nodeElement.setText(content);
-                }
-                if ("EventKey".equals(nodeElement.getName())) {
-                    j.remove();
                 }
                 System.out.println(nodeElement.getName() + ":" + nodeElement.getText());
             }
