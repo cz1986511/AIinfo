@@ -218,7 +218,7 @@ public class AIInfoController implements Serializable {
                 List<UserInfoEntity> list = userManager.getUserListByParams(map);
                 if (CollectionUtils.isEmpty(list)) {
                     Map<String, Object> map1 = new HashMap<String, Object>();
-                    map.put("tel", content);
+                    map1.put("tel", content);
                     List<UserInfoEntity> list1 = userManager.getUserListByParams(map1);
                     if (!CollectionUtils.isEmpty(list1)) {
                         UserInfoEntity newUserInfoEntity = new UserInfoEntity();
