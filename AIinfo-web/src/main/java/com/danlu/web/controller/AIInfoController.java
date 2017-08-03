@@ -162,6 +162,13 @@ public class AIInfoController implements Serializable {
         return json.toJSONString();
     }
 
+    @RequestMapping(value = "wx_token", produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public String siginToken(HttpServletRequest request) {
+        String echostr = request.getParameter("echostr");
+        return echostr;
+    }
+
     @RequestMapping(value = "wx_action", produces = "text/html;charset=UTF-8")
     @ResponseBody
     public String wxAction(HttpServletRequest request) {
