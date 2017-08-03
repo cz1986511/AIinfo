@@ -197,7 +197,7 @@ public class AIInfoController implements Serializable {
                 if ("Content".equals(nodeElement.getName())) {
                     content = nodeElement.getText();
                 }
-                System.out.println(nodeElement.getName() + ":" + nodeElement.getText());
+                logger.info(nodeElement.getName() + ":" + nodeElement.getText());
             }
             if (null != content && content.length() == 11) {
                 Map<String, Object> map = new HashMap<String, Object>();
@@ -234,7 +234,7 @@ public class AIInfoController implements Serializable {
                         content = "请勿重复签到";
                     } else {
                         UserSign userSign = new UserSign();
-                        userSign.setSignInfo(userName + ":微信签到");
+                        userSign.setSignInfo("微信签到");
                         userSign.setUserName(userName);
                         userSign.setDate(getDateString());
                         userSignManager.addUserSign(userSign);
@@ -260,7 +260,7 @@ public class AIInfoController implements Serializable {
                 if ("Content".equals(nodeElement.getName())) {
                     nodeElement.setText(content);
                 }
-                System.out.println(nodeElement.getName() + ":" + nodeElement.getText());
+                logger.info(nodeElement.getName() + ":" + nodeElement.getText());
             }
         } catch (Exception e) {
             logger.error(e.toString());
