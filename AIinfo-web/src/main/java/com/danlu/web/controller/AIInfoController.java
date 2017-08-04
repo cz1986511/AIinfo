@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -38,6 +36,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.danlu.dleye.core.ArticleInfoManager;
 import com.danlu.dleye.core.UserInfoManager;
 import com.danlu.dleye.core.UserSignManager;
+import com.danlu.dleye.core.util.CommonTools;
 import com.danlu.dleye.core.util.DleyeSwith;
 import com.danlu.dleye.core.util.RedisClient;
 import com.danlu.dleye.persist.base.ArticleInfo;
@@ -200,50 +199,11 @@ public class AIInfoController implements Serializable {
                 logger.info(nodeElement.getName() + ":" + nodeElement.getText());
             }
             if (null != content && content.length() == 11) {
-                Map<String, Object> map = new HashMap<String, Object>();
-                map.put("openId", fromUser);
-                List<UserInfoEntity> list = userManager.getUserListByParams(map);
-                if (CollectionUtils.isEmpty(list)) {
-                    Map<String, Object> map1 = new HashMap<String, Object>();
-                    map1.put("tel", content);
-                    List<UserInfoEntity> list1 = userManager.getUserListByParams(map1);
-                    if (!CollectionUtils.isEmpty(list1)) {
-                        UserInfoEntity newUserInfoEntity = new UserInfoEntity();
-                        newUserInfoEntity.setUserId(list1.get(0).getUserId());
-                        newUserInfoEntity.setOpenId(fromUser);
-                        userManager.updateUserInfo(newUserInfoEntity);
-                        content = "绑定成功";
-                    } else {
-                        content = "手机号输入错误";
-                    }
-                } else {
-                    content = "请勿重复绑定";
-                }
+                //绑定手机号
+                bindTel(content, fromUser);
             } else if ("读书签到".equals(content)) {
-                Map<String, Object> map2 = new HashMap<String, Object>();
-                map2.put("openId", fromUser);
-                List<UserInfoEntity> list2 = userManager.getUserListByParams(map2);
-                if (!CollectionUtils.isEmpty(list2)) {
-                    String userName = list2.get(0).getUserName();
-                    String dateString = getDateString();
-                    Map<String, Object> map3 = new HashMap<String, Object>();
-                    map3.put("userName", userName);
-                    map3.put("date", dateString);
-                    List<UserSign> list = userSignManager.getUserSignListByParams(map3);
-                    if (!CollectionUtils.isEmpty(list)) {
-                        content = "请勿重复签到";
-                    } else {
-                        UserSign userSign = new UserSign();
-                        userSign.setSignInfo("微信签到");
-                        userSign.setUserName(userName);
-                        userSign.setDate(getDateString());
-                        userSignManager.addUserSign(userSign);
-                        logger.info("user:" + userName + "|sign:微信签到");
-                        content = "签到成功";
-                    }
-                } else {
-                    content = "请先绑定手机号";
-                }
+                //读书签到
+                readSigin(content, fromUser);
             } else if ("1".equals(content)) {
                 content = "http://xiaozhuo.info";
             } else {
@@ -347,8 +307,53 @@ public class AIInfoController implements Serializable {
         return null;
     }
 
-    private String getDateString() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        return formatter.format(new Date());
+    private void readSigin(String content, String fromUser) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("openId", fromUser);
+        List<UserInfoEntity> list = userManager.getUserListByParams(map);
+        if (!CollectionUtils.isEmpty(list)) {
+            String userName = list.get(0).getUserName();
+            String dateString = CommonTools.getDateString();
+            Map<String, Object> map1 = new HashMap<String, Object>();
+            map1.put("userName", userName);
+            map1.put("date", dateString);
+            List<UserSign> list1 = userSignManager.getUserSignListByParams(map1);
+            if (!CollectionUtils.isEmpty(list1)) {
+                content = "请勿重复签到";
+            } else {
+                UserSign userSign = new UserSign();
+                userSign.setSignInfo("微信签到");
+                userSign.setUserName(userName);
+                userSign.setDate(CommonTools.getDateString());
+                userSignManager.addUserSign(userSign);
+                logger.info("user:" + userName + "|sign:微信签到");
+                content = "签到成功";
+            }
+        } else {
+            content = "请先绑定手机号";
+        }
     }
+
+    private void bindTel(String content, String fromUser) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("openId", fromUser);
+        List<UserInfoEntity> list = userManager.getUserListByParams(map);
+        if (CollectionUtils.isEmpty(list)) {
+            Map<String, Object> map1 = new HashMap<String, Object>();
+            map1.put("tel", content);
+            List<UserInfoEntity> list1 = userManager.getUserListByParams(map1);
+            if (!CollectionUtils.isEmpty(list1)) {
+                UserInfoEntity newUserInfoEntity = new UserInfoEntity();
+                newUserInfoEntity.setUserId(list1.get(0).getUserId());
+                newUserInfoEntity.setOpenId(fromUser);
+                userManager.updateUserInfo(newUserInfoEntity);
+                content = "绑定成功";
+            } else {
+                content = "手机号输入错误";
+            }
+        } else {
+            content = "请勿重复绑定";
+        }
+    }
+
 }
