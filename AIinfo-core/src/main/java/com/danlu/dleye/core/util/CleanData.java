@@ -98,6 +98,8 @@ public class CleanData {
                             userBaseInfo.setTelPhone(String.valueOf((long) cell5
                                 .getNumericCellValue()));
                             resultList.add(userBaseInfo);
+                            String telName = "tel-" + userBaseInfo.getUserName();
+                            redisClient.set(telName, userBaseInfo.getTelPhone(), 86400);
                         } catch (Exception e) {
                             logger.error("updateUserAddressList is exception:" + r);
                         }

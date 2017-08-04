@@ -247,7 +247,14 @@ public class AIInfoController implements Serializable {
             } else if ("1".equals(content)) {
                 content = "http://xiaozhuo.info";
             } else {
-                content = "输入错误";
+                String telName = "tel-" + content;
+                String result = redisClient.get(telName, new TypeReference<String>() {
+                });
+                if (null != result) {
+                    content = result;
+                } else {
+                    content = "输入错误";
+                }
             }
             for (Iterator<Element> j = parenetElement.elementIterator(); j.hasNext();) {
                 Element nodeElement = j.next();
