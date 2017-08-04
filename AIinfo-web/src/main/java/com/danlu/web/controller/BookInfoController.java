@@ -1,7 +1,6 @@
 package com.danlu.web.controller;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,6 +26,7 @@ import com.danlu.dleye.core.BookInfoManager;
 import com.danlu.dleye.core.BookListManager;
 import com.danlu.dleye.core.UserSignManager;
 import com.danlu.dleye.core.UserSignStatisticsManager;
+import com.danlu.dleye.core.util.CommonTools;
 import com.danlu.dleye.core.util.DleyeSwith;
 import com.danlu.dleye.core.util.RedisClient;
 import com.danlu.dleye.persist.base.BookBorrow;
@@ -373,14 +373,14 @@ public class BookInfoController implements Serializable {
         ModelAndView m = new ModelAndView();
         try {
             int userType = (int) request.getSession().getAttribute("type");
-            String dateString = getDateString();
+            String dateString = CommonTools.getDateString();
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("date", dateString);
             List<UserSign> list = userSignManager.getUserSignListByParams(map);
             if (!CollectionUtils.isEmpty(list)) {
                 m.addObject("signList", list);
             }
-            String type = getMonthString();
+            String type = CommonTools.getMonthString();
             m.addObject("month", type);
             map.put("type", type);
             List<UserSignStatistics> list1 = userSignStatisticsManager
@@ -408,7 +408,7 @@ public class BookInfoController implements Serializable {
             try {
                 String userName = (String) request.getSession().getAttribute("userName");
                 if (!StringUtils.isBlank(userName)) {
-                    String dateString = getDateString();
+                    String dateString = CommonTools.getDateString();
                     Map<String, Object> map = new HashMap<String, Object>();
                     map.put("userName", userName);
                     map.put("date", dateString);
@@ -419,7 +419,7 @@ public class BookInfoController implements Serializable {
                         UserSign userSign = new UserSign();
                         userSign.setSignInfo(signInfo);
                         userSign.setUserName(userName);
-                        userSign.setDate(getDateString());
+                        userSign.setDate(CommonTools.getDateString());
                         userSignManager.addUserSign(userSign);
                         result.put("status", true);
                         logger.info("user:" + userName + "|sign:" + signInfo);
@@ -432,19 +432,6 @@ public class BookInfoController implements Serializable {
         }
         result.put("msg", dleyeSwith.getWisdom());
         return json.toJSONString();
-    }
-
-    private String getDateString() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        return formatter.format(new Date());
-    }
-
-    private String getMonthString() {
-        Calendar calendar = Calendar.getInstance();
-        if (calendar.get(Calendar.DAY_OF_MONTH) != 1) {
-            calendar.add(Calendar.MONTH, 1);
-        }
-        return calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.MONTH);
     }
 
 }
