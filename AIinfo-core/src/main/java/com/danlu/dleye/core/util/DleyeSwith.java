@@ -45,7 +45,7 @@ public class DleyeSwith {
     private String citys = "chengdu";
 
     @Switch(description = "读书分享会会员名单", name = "member")
-    private String member = "周巧扬,胡道庭,唐正攀,张梦娇,夏耩,何苗,王梅,贾旭飞,缪攀,周龙波,李一方,郑娟,罗浪,凌小华,刘兵,胡凯,张虎,陈卓,陈家川";
+    private String member = "周巧扬,胡道庭,唐正攀,张梦娇,夏耩,何苗,王梅,贾旭飞,缪攀,周龙波,李一方,郑娟,罗浪,凌小华,刘兵,胡凯,张虎,陈卓,陈家川,刘阳,罗灵";
 
     @Switch(description = "当前书单期数", name = "bookListDate")
     private int bookListDate = 1;
