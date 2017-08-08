@@ -50,6 +50,8 @@
 		     alert("密码不能为空");
 			 return false;
 		}
+		var password = md5($('#password').val());
+		$('#password').val(password);
       });
     </script>
 </body>

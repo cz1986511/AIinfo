@@ -108,7 +108,7 @@ public class UserController implements Serializable {
         if (!StringUtils.isBlank(tel) && !StringUtils.isBlank(password)) {
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("tel", tel);
-            map.put("password", CommonUtil.encode(password, "MD5"));
+            map.put("password", password);
             List<UserInfoEntity> list = userManager.getUserListByParams(map);
             if (!CollectionUtils.isEmpty(list)) {
                 UserInfoEntity user = list.get(0);
