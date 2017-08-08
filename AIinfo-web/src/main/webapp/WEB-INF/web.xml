@@ -24,7 +24,7 @@
 	<!-- 登录SessionFilter -->
 	<filter>
         <filter-name>SessionFilter</filter-name>
-        <filter-class>com.danlu.web.filter.SessionFilter</filter-class>
+        <filter-class>com.danlu.dleye.filter.SessionFilter</filter-class>
         <init-param>
         <param-name>logonStrings</param-name><!-- 对登录页面不进行过滤 -->
         <param-value>load.html;login.html;insure.html;websocket;art_list;user_address_list;weather;oilinfo;wx_action;wx_token</param-value>
