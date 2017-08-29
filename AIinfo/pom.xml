@@ -16,7 +16,7 @@
 		<springframework.version>4.0.6.RELEASE</springframework.version>
 		<log4j.version>2.0</log4j.version>
 		<junit.version>4.11</junit.version>
-		<nexus.baseurl>http://fb.danlu.com:8081/nexus</nexus.baseurl>
+		<nexus.baseurl>http://nexus.idanlu.com/nexus</nexus.baseurl>
 	</properties>
 
 	<!-- 聚合项目 聚合是模块的位置 -->
