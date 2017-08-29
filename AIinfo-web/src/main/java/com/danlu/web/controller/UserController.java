@@ -139,6 +139,8 @@ public class UserController implements Serializable {
                 m.addObject("msg", "手机号或者密码错误");
                 m.setViewName("login");
             }
+        } else {
+            m.setViewName("login");
         }
         m.addObject("wisdom", dleyeSwith.getWisdom());
         return m;
