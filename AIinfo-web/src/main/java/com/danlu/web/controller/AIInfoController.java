@@ -203,7 +203,7 @@ public class AIInfoController implements Serializable {
                 bindTel(content, fromUser);
             } else if ("读书签到".equals(content)) {
                 //读书签到
-                readSigin(content, fromUser);
+                content = readSigin(content, fromUser);
             } else if ("1".equals(content)) {
                 content = "http://xiaozhuo.info";
             } else {
@@ -307,7 +307,7 @@ public class AIInfoController implements Serializable {
         return null;
     }
 
-    private void readSigin(String content, String fromUser) {
+    private String readSigin(String content, String fromUser) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("openId", fromUser);
         List<UserInfoEntity> list = userManager.getUserListByParams(map);
@@ -319,7 +319,7 @@ public class AIInfoController implements Serializable {
             map1.put("date", dateString);
             List<UserSign> list1 = userSignManager.getUserSignListByParams(map1);
             if (!CollectionUtils.isEmpty(list1)) {
-                content = "请勿重复签到";
+                return "请勿重复签到";
             } else {
                 UserSign userSign = new UserSign();
                 userSign.setSignInfo("微信签到");
@@ -327,10 +327,10 @@ public class AIInfoController implements Serializable {
                 userSign.setDate(CommonTools.getDateString());
                 userSignManager.addUserSign(userSign);
                 logger.info("user:" + userName + "|sign:微信签到");
-                content = "签到成功";
+                return "签到成功";
             }
         } else {
-            content = "请先绑定手机号";
+            return "请先绑定手机号";
         }
     }
 
