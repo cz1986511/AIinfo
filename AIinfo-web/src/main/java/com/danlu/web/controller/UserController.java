@@ -45,19 +45,6 @@ public class UserController implements Serializable {
     @Autowired
     private RedisClient redisClient;
 
-    @RequestMapping("we_chat.html")
-    public ModelAndView chat(HttpServletRequest request) {
-        ModelAndView m = new ModelAndView();
-        if (null != request.getSession().getAttribute("type")) {
-            int userType = (int) request.getSession().getAttribute("type");
-            m.addObject("userType", userType);
-        } else {
-            m.setViewName("login");
-            return m;
-        }
-        return m;
-    }
-
     @RequestMapping("index.html")
     public ModelAndView index(HttpServletRequest request) {
         ModelAndView m = new ModelAndView();
