@@ -24,6 +24,8 @@
 	<bean id="userSignManager" class="com.danlu.dleye.core.impl.UserSignManagerImpl" />
 	<bean id="userSignStatisticsManager" class="com.danlu.dleye.core.impl.UserSignStatisticsManagerImpl" />
 	<bean id="oilInfoManager" class="com.danlu.dleye.core.impl.OilInfoManagerImpl" />
+	<bean id="exactUserManager" class="com.danlu.dleye.core.impl.ExactUserManagerImpl" />
+	<bean id="exactUserSubscribeManager" class="com.danlu.dleye.core.impl.ExactUserSubscribeManagerImpl" />
 	<bean id="dleyeSwith" class="com.danlu.dleye.core.util.DleyeSwith" />
 	<bean id="oilInfoUtil" class="com.danlu.dleye.core.util.OilInfoUtil" />
 	<bean id="crawler" class="com.danlu.dleye.core.util.Crawler" />
