@@ -96,6 +96,35 @@ public class ExactDataController implements Serializable {
         return m;
     }
 
+    @RequestMapping(value = "/wx_login", produces = "text/html;charset=UTF-8")
+    public ModelAndView wxLogin(HttpServletRequest request) {
+        ModelAndView m = new ModelAndView();
+        m.setViewName("exactlogin");
+        String userOpenId = request.getParameter("userOpenId");
+        String tel = request.getParameter("tel");
+        String password = request.getParameter("password");
+        if (StringUtils.isBlank(userOpenId) || StringUtils.isBlank(tel)
+            || StringUtils.isBlank(password)) {
+            m.addObject("msg", "参数不能为空");
+        } else {
+            List<String> userOpenIds = new ArrayList<String>();
+            userOpenIds.add(userOpenId);
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("userOpenIds", userOpenIds);
+            List<ExactUserInfo> exactUserInfos = exactUserManager.getExactUserInfosByParams(map);
+            if (CollectionUtils.isEmpty(exactUserInfos)) {
+                logger.info("openId:" + userOpenId + "|tel:" + tel + "|password:" + password);
+                m.addObject("msg", "登陆成功");
+            } else {
+                ExactUserInfo userInfo = exactUserInfos.get(0);
+                m.setViewName("exactindex");
+                m.addObject("userName", userInfo.getUserCompanyName());
+                m.addObject("userType", userInfo.getUserCompanyType());
+            }
+        }
+        return m;
+    }
+
     public static JSONObject httpsRequest(String requestUrl, String requestMethod, String outputStr) {
         JSONObject jsonObject = null;
         try {

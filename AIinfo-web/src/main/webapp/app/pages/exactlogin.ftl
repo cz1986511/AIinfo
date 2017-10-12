@@ -12,7 +12,8 @@
             <div class="col-md-4 col-md-offset-4">
                 <div class="login-panel panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">请登录（丹露注册手机号）</h3>
+                        <h3 class="panel-title">用户登录-内测</h3>
+						<h5 class="panel-title">请使用丹露经销商账号</h5>
                     </div>
                     <div class="panel-body">
                         <form name="form" action="wx_login" method="post">
