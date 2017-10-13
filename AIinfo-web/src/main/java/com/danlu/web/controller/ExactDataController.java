@@ -22,9 +22,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.danlu.dleye.core.ExactUserManager;
-import com.danlu.dleye.core.UserInfoManager;
-import com.danlu.dleye.core.UserSignManager;
-import com.danlu.dleye.core.util.DleyeSwith;
 import com.danlu.dleye.core.util.RedisClient;
 import com.danlu.dleye.persist.base.ExactUserInfo;
 import com.danlu.web.base.HttpUtil;
@@ -43,6 +40,8 @@ public class ExactDataController implements Serializable {
     private static String ORDERTEMPLATID = "EpFBzPzTAekeG3E72vCsYerKOA0j-GAyKILvQKlJ2DY";
     //销售统计消息模板ID
     private static String SALLTEMPLATID = "HCXZE9J3Nv8kb0gp_BxLiaHzbYPRPEM0G_ISmNLxsY0";
+    //模板消息参数值颜色
+    private static String COLOR = "#173177";
 
     //获取用户微信openID地址
     private static String OAUTH2URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
@@ -57,12 +56,7 @@ public class ExactDataController implements Serializable {
     private static String USERURL = "http://uc.danlu.com/uc/V1/users/?mobileNumber=";
     //丹露用户获取企业信息地址
     private static String COMPANYURL = "http://uc.danlu.com/uc/V1/dlcompany/get_companyinfo";
-    @Autowired
-    private UserSignManager userSignManager;
-    @Autowired
-    private UserInfoManager userManager;
-    @Autowired
-    private DleyeSwith dleyeSwith;
+
     @Autowired
     private RedisClient redisClient;
 
@@ -307,6 +301,50 @@ public class ExactDataController implements Serializable {
         json.put("data", data);
         logger.info("json:" + json);
         sendWechatmsgToUser(json.toString());
+    }
+
+    /**
+     * @ 生成消息json
+     * @param 
+     *   openId：            用户openId
+     *   templateId:模板ID
+     *   url:       消息跳转地址
+     *   first,keyword1,keyword2,keyword3,keyword4,keyword5,
+     */
+    private void makeMsgBody(JSONObject json, Map<String, Object> map) {
+        json.put("touser", map.get("openId"));
+        json.put("template_id", map.get("templateId"));
+        json.put("url", map.get("url"));
+        JSONObject data = new JSONObject();
+        JSONObject first = new JSONObject();
+        first.put("value", map.get("first"));
+        first.put("color", COLOR);
+        data.put("first", first);
+        JSONObject keyword1 = new JSONObject();
+        keyword1.put("value", map.get("keyword1"));
+        keyword1.put("color", COLOR);
+        data.put("keyword1", keyword1);
+        JSONObject keyword2 = new JSONObject();
+        keyword2.put("value", map.get("keyword2"));
+        keyword2.put("color", COLOR);
+        data.put("keyword2", keyword2);
+        JSONObject keyword3 = new JSONObject();
+        keyword3.put("value", map.get("keyword3"));
+        keyword3.put("color", COLOR);
+        data.put("keyword3", keyword3);
+        JSONObject keyword4 = new JSONObject();
+        keyword4.put("value", map.get("keyword4"));
+        keyword4.put("color", COLOR);
+        data.put("keyword4", keyword4);
+        JSONObject keyword5 = new JSONObject();
+        keyword5.put("value", map.get("keyword5"));
+        keyword5.put("color", COLOR);
+        data.put("keyword5", keyword5);
+        JSONObject remark = new JSONObject();
+        remark.put("value", map.get("remark"));
+        remark.put("color", COLOR);
+        data.put("remark", remark);
+        json.put("data", data);
     }
 
     public static void main(String[] args) {
