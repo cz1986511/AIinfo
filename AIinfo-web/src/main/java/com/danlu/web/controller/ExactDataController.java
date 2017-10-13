@@ -131,10 +131,9 @@ public class ExactDataController implements Serializable {
                                 JSONObject companyJsonObject = HttpUtil.httpRequest(COMPANYURL,
                                     "POST", params);
                                 if (null != companyJsonObject
-                                    && "0".equals(companyJsonObject.get("status"))) {
+                                    && "0".equals(companyJsonObject.getString("status"))) {
                                     JSONObject companyData = (JSONObject) companyJsonObject
                                         .get("data");
-                                    logger.info("companyData:" + companyData);
                                     JSONObject companyInfo = (JSONObject) companyData.get(userId);
                                     if (null != companyInfo) {
                                         ExactUserInfo exactUserInfo = new ExactUserInfo();
@@ -198,7 +197,7 @@ public class ExactDataController implements Serializable {
             String purl = "http://uc.danlu.com/uc/V1/dlcompany/get_companyinfo";
             JSONObject responseBodyJson1 = HttpUtil.httpRequest(purl, "POST", params);
             JSONObject companyJsonObject = (JSONObject) responseBodyJson1.get("data");
-            System.out.println(companyJsonObject.get(userId));
+            System.out.println(responseBodyJson1);
         } catch (Exception e) {
             e.printStackTrace();
         }
