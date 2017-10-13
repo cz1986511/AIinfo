@@ -98,7 +98,6 @@ public class ExactDataController implements Serializable {
             || StringUtils.isBlank(password)) {
             m.addObject("msg", "参数不能为空");
         } else {
-            logger.info("userOpenId:" + userOpenId + "|tel:" + tel + "|password:" + password);
             List<String> userOpenIds = new ArrayList<String>();
             userOpenIds.add(userOpenId);
             Map<String, Object> map = new HashMap<String, Object>();
@@ -106,8 +105,7 @@ public class ExactDataController implements Serializable {
             List<ExactUserInfo> exactUserInfos = exactUserManager.getExactUserInfosByParams(map);
             if (CollectionUtils.isEmpty(exactUserInfos)) {
                 JSONObject userJsonObject = HttpUtil.httpRequest(USERURL + tel, "GET", null);
-                logger.info("userJsonObject:" + userJsonObject);
-                if (null != userJsonObject && "1".equals(userJsonObject.getString("status"))) {
+                if (null != userJsonObject && "0".equals(userJsonObject.getString("status"))) {
                     JSONObject data = (JSONObject) userJsonObject.get("data");
                     JSONArray dataArray = (JSONArray) data.get("data_list");
                     if (null != dataArray) {
@@ -133,10 +131,9 @@ public class ExactDataController implements Serializable {
                                 JSONObject companyJsonObject = HttpUtil.httpRequest(COMPANYURL,
                                     "POST", params);
                                 if (null != companyJsonObject
-                                    && "1".equals(companyJsonObject.get("status"))) {
+                                    && "0".equals(companyJsonObject.get("status"))) {
                                     JSONObject companyData = (JSONObject) companyJsonObject
                                         .get("data");
-                                    logger.info("companyData:" + companyData);
                                     JSONObject companyInfo = (JSONObject) companyData.get(userId);
                                     if (null != companyInfo) {
                                         ExactUserInfo exactUserInfo = new ExactUserInfo();
