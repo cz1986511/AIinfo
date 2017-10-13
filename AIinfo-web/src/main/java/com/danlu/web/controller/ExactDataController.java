@@ -1,24 +1,11 @@
 package com.danlu.web.controller;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.Serializable;
-import java.net.ConnectException;
-import java.net.URL;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -30,6 +17,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.danlu.dleye.core.ExactUserManager;
 import com.danlu.dleye.core.UserInfoManager;
@@ -37,6 +25,7 @@ import com.danlu.dleye.core.UserSignManager;
 import com.danlu.dleye.core.util.DleyeSwith;
 import com.danlu.dleye.core.util.RedisClient;
 import com.danlu.dleye.persist.base.ExactUserInfo;
+import com.danlu.web.base.HttpUtil;
 
 @Controller
 @RequestMapping("/exact")
@@ -47,6 +36,8 @@ public class ExactDataController implements Serializable {
     private static String SECRET = "7d2ff0588993e3e14e9e87dea0580434";
     private static String APPID = "wxe6544f8f04a080bb";
     private static String OAUTH2URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
+    private static String USERURL = "http://uc.danlu.com/uc/V1/users/?mobileNumber=";
+    private static String COMPANYURL = "http://uc.danlu.com/uc/V1/dlcompany/get_companyinfo";
     @Autowired
     private UserSignManager userSignManager;
     @Autowired
@@ -68,7 +59,7 @@ public class ExactDataController implements Serializable {
             try {
                 String getOauthUrl = OAUTH2URL.replace("APPID", APPID).replace("SECRET", SECRET)
                     .replace("CODE", code);
-                JSONObject userOauth = httpsRequest(getOauthUrl, "GET", null);
+                JSONObject userOauth = HttpUtil.httpsRequest(getOauthUrl, "GET", null);
                 if (null != userOauth) {
                     String userOpenId = userOauth.getString("openid");
                     if (null != userOpenId) {
@@ -113,8 +104,74 @@ public class ExactDataController implements Serializable {
             map.put("userOpenIds", userOpenIds);
             List<ExactUserInfo> exactUserInfos = exactUserManager.getExactUserInfosByParams(map);
             if (CollectionUtils.isEmpty(exactUserInfos)) {
-                logger.info("openId:" + userOpenId + "|tel:" + tel + "|password:" + password);
-                m.addObject("msg", "登陆成功");
+                JSONObject userJsonObject = HttpUtil.httpRequest(USERURL + tel, "GET", null);
+                if (null != userJsonObject && "1".equals(userJsonObject.getString("status"))) {
+                    JSONObject data = (JSONObject) userJsonObject.get("data");
+                    JSONArray dataArray = (JSONArray) data.get("data_list");
+                    if (null != dataArray) {
+                        JSONObject userInfo = (JSONObject) dataArray.get(0);
+                        String userId = userInfo.getString("userId");
+                        String userPasswd = userInfo.getString("userPasswd");
+                        if (password.equals(userPasswd)) {
+                            map.clear();
+                            List<String> tels = new ArrayList<String>();
+                            tels.add(tel);
+                            map.put("userTels", tels);
+                            map.put("userStatus", "1");
+                            List<ExactUserInfo> exactUserInfoList = exactUserManager
+                                .getExactUserInfosByParams(map);
+                            if (!CollectionUtils.isEmpty(exactUserInfoList)) {
+                                m.addObject("userOpenId", userOpenId);
+                                m.addObject("tel", tel);
+                                m.addObject("msg", "手机号已经绑定过了");
+                            } else {
+                                List<String> userIds = new ArrayList<String>();
+                                userIds.add(userId);
+                                String params = JSONObject.toJSONString(userIds);
+                                JSONObject companyJsonObject = HttpUtil.httpRequest(COMPANYURL,
+                                    "POST", params);
+                                if (null != companyJsonObject
+                                    && "1".equals(companyJsonObject.get("status"))) {
+                                    JSONObject companyData = (JSONObject) companyJsonObject
+                                        .get("data");
+                                    JSONObject companyInfo = (JSONObject) companyData.get(userId);
+                                    if (null != companyInfo) {
+                                        ExactUserInfo exactUserInfo = new ExactUserInfo();
+                                        exactUserInfo.setUserOpenId(userOpenId);
+                                        exactUserInfo.setUserTel(tel);
+                                        exactUserInfo.setUserName(userInfo.getString("userName"));
+                                        exactUserInfo.setUserCompanyId(companyInfo
+                                            .getString("companyId"));
+                                        exactUserInfo.setUserCompanyName(companyInfo
+                                            .getString("companyName"));
+                                        exactUserInfo.setUserCompanyType(companyInfo
+                                            .getString("companyType"));
+                                        exactUserInfo.setUserStatus("1");
+                                        int result = exactUserManager
+                                            .addExactUserInfo(exactUserInfo);
+                                        if (result > 0) {
+                                            m.setViewName("exactindex");
+                                            m.addObject("userName",
+                                                exactUserInfo.getUserCompanyName());
+                                            m.addObject("userTel", exactUserInfo.getUserTel());
+                                            m.addObject("userType",
+                                                exactUserInfo.getUserCompanyType());
+                                        } else {
+                                            m.addObject("userOpenId", userOpenId);
+                                            m.addObject("tel", tel);
+                                            m.addObject("msg", "系统异常请稍后再试");
+                                        }
+                                    }
+                                }
+                            }
+
+                        } else {
+                            m.addObject("userOpenId", userOpenId);
+                            m.addObject("tel", tel);
+                            m.addObject("msg", "手机号密码不对");
+                        }
+                    }
+                }
             } else {
                 ExactUserInfo userInfo = exactUserInfos.get(0);
                 m.setViewName("exactindex");
@@ -125,70 +182,26 @@ public class ExactDataController implements Serializable {
         return m;
     }
 
-    public static JSONObject httpsRequest(String requestUrl, String requestMethod, String outputStr) {
-        JSONObject jsonObject = null;
-        try {
-            X509TrustManager tm = new X509TrustManager() {
-                @Override
-                public void checkClientTrusted(X509Certificate[] arg0, String arg1)
-                                                                                   throws CertificateException {
-                }
-
-                @Override
-                public void checkServerTrusted(X509Certificate[] arg0, String arg1)
-                                                                                   throws CertificateException {
-                }
-
-                @Override
-                public X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-            };
-            SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
-            sslContext.init(null, new TrustManager[] { tm }, new java.security.SecureRandom());
-            SSLSocketFactory ssf = sslContext.getSocketFactory();
-            URL url = new URL(requestUrl);
-            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-            conn.setSSLSocketFactory(ssf);
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setUseCaches(false);
-            conn.setRequestMethod(requestMethod);
-            if (null != outputStr) {
-                OutputStream outputStream = conn.getOutputStream();
-                outputStream.write(outputStr.getBytes("UTF-8"));
-                outputStream.close();
-            }
-            InputStream inputStream = conn.getInputStream();
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            String str = null;
-            StringBuffer buffer = new StringBuffer();
-            while ((str = bufferedReader.readLine()) != null) {
-                buffer.append(str);
-            }
-            bufferedReader.close();
-            inputStreamReader.close();
-            inputStream.close();
-            inputStream = null;
-            conn.disconnect();
-            jsonObject = JSONObject.parseObject(buffer.toString());
-        } catch (ConnectException ce) {
-            logger.error("连接超时：{}", ce);
-        } catch (Exception e) {
-            logger.error("https请求异常：{}", e);
-        }
-        return jsonObject;
-    }
-
     public static void main(String[] args) {
-        String requestUrl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="
-                            + APPID
-                            + "&secret="
-                            + SECRET
-                            + "&code=021vkj5P1M2ha41ztA5P1WUt5P1vkj5M&grant_type=authorization_code";
-        JSONObject tempJsonObject = httpsRequest(requestUrl, "GET", null);
-        System.out.println(tempJsonObject);
+        try {
+            String gurl = "http://uc.danlu.com/uc/V1/users/?mobileNumber=17780502327";
+            JSONObject responseBodyJson = HttpUtil.httpRequest(gurl, "GET", null);
+            JSONObject data = (JSONObject) responseBodyJson.get("data");
+            System.out.println(data);
+            JSONArray dataArray = (JSONArray) data.get("data_list");
+            JSONObject userInfo = (JSONObject) dataArray.get(0);
+            String userId = userInfo.getString("userId");
+            List<String> userIds = new ArrayList<String>();
+            userIds.add(userId);
+            System.out.println(userId);
+            String params = JSONObject.toJSONString(userIds);
+            String purl = "http://uc.danlu.com/uc/V1/dlcompany/get_companyinfo";
+            JSONObject responseBodyJson1 = HttpUtil.httpRequest(purl, "POST", params);
+            JSONObject companyJsonObject = (JSONObject) responseBodyJson1.get("data");
+            System.out.println(companyJsonObject.get(userId));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

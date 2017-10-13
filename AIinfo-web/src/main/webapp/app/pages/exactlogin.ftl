@@ -19,7 +19,7 @@
                         <form name="form" action="wx_login" method="post">
                             <fieldset>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="请输入手机号" id="tel" name="tel" type="text" autofocus><font color="red">${msg}</font>
+                                    <input class="form-control" placeholder="请输入手机号" id="tel" name="tel" type="text" autofocus>${tel}</input><font color="red">${msg}</font>
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control" placeholder="请输入密码" id="password" name="password" type="password" >

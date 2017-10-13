@@ -9,13 +9,27 @@
     <result column="user_company_id" property="userCompanyId" jdbcType="VARCHAR" />
     <result column="user_company_type" property="userCompanyType" jdbcType="VARCHAR" />
     <result column="user_tel" property="userTel" jdbcType="VARCHAR" />
+    <result column="user_wx_subscribe" property="userWxSubscribe" jdbcType="VARCHAR" />
+    <result column="user_wx_nickname" property="userWxNickname" jdbcType="VARCHAR" />
+    <result column="user_wx_sex" property="userWxSex" jdbcType="VARCHAR" />
+    <result column="user_wx_city" property="userWxCity" jdbcType="VARCHAR" />
+    <result column="user_wx_province" property="userWxProvince" jdbcType="VARCHAR" />
+    <result column="user_wx_country" property="userWxCountry" jdbcType="VARCHAR" />
+    <result column="user_wx_language" property="userWxLanguage" jdbcType="VARCHAR" />
+    <result column="user_wx_headimgurl" property="userWxHeadimgurl" jdbcType="VARCHAR" />
+    <result column="user_wx_subscribe_time" property="userWxSubscribeTime" jdbcType="VARCHAR" />
+    <result column="user_wx_remark" property="userWxRemark" jdbcType="VARCHAR" />
+    <result column="user_wx_groupid" property="userWxGroupid" jdbcType="VARCHAR" />
+    <result column="user_wx_tagid_list" property="userWxTagidList" jdbcType="VARCHAR" />
     <result column="user_status" property="userStatus" jdbcType="VARCHAR" />
     <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
     <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, user_open_id, user_name, user_company_name, user_company_id, user_company_type, user_tel, user_status, 
-    gmt_create, gmt_modified
+    id, user_open_id, user_name, user_company_name, user_company_id, user_company_type, 
+    user_tel, user_wx_subscribe, user_wx_nickname, user_wx_sex, user_wx_city, user_wx_province, 
+    user_wx_country, user_wx_language, user_wx_headimgurl, user_wx_subscribe_time, user_wx_remark, 
+    user_wx_groupid, user_wx_tagid_list, user_status, gmt_create, gmt_modified
   </sql>
   <sql id="selectByParamsWhere">
     <where>
@@ -46,16 +60,19 @@
 		</trim>
 		and
       </if>
+      <if test="userStatus != null">
+        user_status = #{userStatus, jdbcType=VARCHAR} and
+      </if>
         1 = 1
     </where>
   </sql>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from exact_user_info
     where id = #{id,jdbcType=BIGINT}
   </select>
-  
   <select id="selectByParams" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select 
     <include refid="Base_Column_List" />
@@ -72,13 +89,20 @@
   </delete>
   <insert id="insert" parameterType="com.danlu.dleye.persist.base.ExactUserInfo" >
     insert into exact_user_info (id, user_open_id, user_name, 
-      user_company_name, user_company_id,user_company_type, user_tel, 
-      user_status, gmt_create, gmt_modified
-      )
-    values (#{userOpenId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
-      #{userCompanyName,jdbcType=VARCHAR}, #{userCompanyId,jdbcType=VARCHAR}, #{userCompanyType,jdbcType=VARCHAR}, #{userTel,jdbcType=VARCHAR}, 
-      #{userStatus,jdbcType=VARCHAR}, NOW(),NOW()
-      )
+      user_company_name, user_company_id, user_company_type, 
+      user_tel, user_wx_subscribe, user_wx_nickname, 
+      user_wx_sex, user_wx_city, user_wx_province, 
+      user_wx_country, user_wx_language, user_wx_headimgurl, 
+      user_wx_subscribe_time, user_wx_remark, user_wx_groupid, 
+      user_wx_tagid_list, user_status, gmt_create, 
+      gmt_modified)
+    values (#{id,jdbcType=BIGINT}, #{userOpenId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{userCompanyName,jdbcType=VARCHAR}, #{userCompanyId,jdbcType=VARCHAR}, #{userCompanyType,jdbcType=VARCHAR}, 
+      #{userTel,jdbcType=VARCHAR}, #{userWxSubscribe,jdbcType=VARCHAR}, #{userWxNickname,jdbcType=VARCHAR}, 
+      #{userWxSex,jdbcType=VARCHAR}, #{userWxCity,jdbcType=VARCHAR}, #{userWxProvince,jdbcType=VARCHAR}, 
+      #{userWxCountry,jdbcType=VARCHAR}, #{userWxLanguage,jdbcType=VARCHAR}, #{userWxHeadimgurl,jdbcType=VARCHAR}, 
+      #{userWxSubscribeTime,jdbcType=VARCHAR}, #{userWxRemark,jdbcType=VARCHAR}, #{userWxGroupid,jdbcType=VARCHAR}, 
+      #{userWxTagidList,jdbcType=VARCHAR}, #{userStatus,jdbcType=VARCHAR}, NOW(), NOW())
   </insert>
   <insert id="insertSelective" parameterType="com.danlu.dleye.persist.base.ExactUserInfo" >
     insert into exact_user_info
@@ -100,6 +124,42 @@
       </if>
       <if test="userTel != null" >
         user_tel,
+      </if>
+      <if test="userWxSubscribe != null" >
+        user_wx_subscribe,
+      </if>
+      <if test="userWxNickname != null" >
+        user_wx_nickname,
+      </if>
+      <if test="userWxSex != null" >
+        user_wx_sex,
+      </if>
+      <if test="userWxCity != null" >
+        user_wx_city,
+      </if>
+      <if test="userWxProvince != null" >
+        user_wx_province,
+      </if>
+      <if test="userWxCountry != null" >
+        user_wx_country,
+      </if>
+      <if test="userWxLanguage != null" >
+        user_wx_language,
+      </if>
+      <if test="userWxHeadimgurl != null" >
+        user_wx_headimgurl,
+      </if>
+      <if test="userWxSubscribeTime != null" >
+        user_wx_subscribe_time,
+      </if>
+      <if test="userWxRemark != null" >
+        user_wx_remark,
+      </if>
+      <if test="userWxGroupid != null" >
+        user_wx_groupid,
+      </if>
+      <if test="userWxTagidList != null" >
+        user_wx_tagid_list,
       </if>
       <if test="userStatus != null" >
         user_status,
@@ -125,6 +185,42 @@
       </if>
       <if test="userTel != null" >
         #{userTel,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxSubscribe != null" >
+        #{userWxSubscribe,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxNickname != null" >
+        #{userWxNickname,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxSex != null" >
+        #{userWxSex,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxCity != null" >
+        #{userWxCity,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxProvince != null" >
+        #{userWxProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxCountry != null" >
+        #{userWxCountry,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxLanguage != null" >
+        #{userWxLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxHeadimgurl != null" >
+        #{userWxHeadimgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxSubscribeTime != null" >
+        #{userWxSubscribeTime,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxRemark != null" >
+        #{userWxRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxGroupid != null" >
+        #{userWxGroupid,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxTagidList != null" >
+        #{userWxTagidList,jdbcType=VARCHAR},
       </if>
       <if test="userStatus != null" >
         #{userStatus,jdbcType=VARCHAR},
@@ -154,6 +250,42 @@
       <if test="userTel != null" >
         user_tel = #{userTel,jdbcType=VARCHAR},
       </if>
+      <if test="userWxSubscribe != null" >
+        user_wx_subscribe = #{userWxSubscribe,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxNickname != null" >
+        user_wx_nickname = #{userWxNickname,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxSex != null" >
+        user_wx_sex = #{userWxSex,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxCity != null" >
+        user_wx_city = #{userWxCity,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxProvince != null" >
+        user_wx_province = #{userWxProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxCountry != null" >
+        user_wx_country = #{userWxCountry,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxLanguage != null" >
+        user_wx_language = #{userWxLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxHeadimgurl != null" >
+        user_wx_headimgurl = #{userWxHeadimgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxSubscribeTime != null" >
+        user_wx_subscribe_time = #{userWxSubscribeTime,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxRemark != null" >
+        user_wx_remark = #{userWxRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxGroupid != null" >
+        user_wx_groupid = #{userWxGroupid,jdbcType=VARCHAR},
+      </if>
+      <if test="userWxTagidList != null" >
+        user_wx_tagid_list = #{userWxTagidList,jdbcType=VARCHAR},
+      </if>
       <if test="userStatus != null" >
         user_status = #{userStatus,jdbcType=VARCHAR},
       </if>
@@ -169,6 +301,18 @@
       user_company_id = #{userCompanyId,jdbcType=VARCHAR},
       user_company_type = #{userCompanyType,jdbcType=VARCHAR},
       user_tel = #{userTel,jdbcType=VARCHAR},
+      user_wx_subscribe = #{userWxSubscribe,jdbcType=VARCHAR},
+      user_wx_nickname = #{userWxNickname,jdbcType=VARCHAR},
+      user_wx_sex = #{userWxSex,jdbcType=VARCHAR},
+      user_wx_city = #{userWxCity,jdbcType=VARCHAR},
+      user_wx_province = #{userWxProvince,jdbcType=VARCHAR},
+      user_wx_country = #{userWxCountry,jdbcType=VARCHAR},
+      user_wx_language = #{userWxLanguage,jdbcType=VARCHAR},
+      user_wx_headimgurl = #{userWxHeadimgurl,jdbcType=VARCHAR},
+      user_wx_subscribe_time = #{userWxSubscribeTime,jdbcType=VARCHAR},
+      user_wx_remark = #{userWxRemark,jdbcType=VARCHAR},
+      user_wx_groupid = #{userWxGroupid,jdbcType=VARCHAR},
+      user_wx_tagid_list = #{userWxTagidList,jdbcType=VARCHAR},
       user_status = #{userStatus,jdbcType=VARCHAR},
       gmt_modified = NOW()
     where id = #{id,jdbcType=BIGINT}
