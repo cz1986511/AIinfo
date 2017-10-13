@@ -134,6 +134,7 @@ public class ExactDataController implements Serializable {
                                     && "0".equals(companyJsonObject.get("status"))) {
                                     JSONObject companyData = (JSONObject) companyJsonObject
                                         .get("data");
+                                    logger.info("companyData:" + companyData);
                                     JSONObject companyInfo = (JSONObject) companyData.get(userId);
                                     if (null != companyInfo) {
                                         ExactUserInfo exactUserInfo = new ExactUserInfo();
@@ -164,7 +165,6 @@ public class ExactDataController implements Serializable {
                                     }
                                 }
                             }
-
                         } else {
                             m.addObject("userOpenId", userOpenId);
                             m.addObject("tel", tel);
