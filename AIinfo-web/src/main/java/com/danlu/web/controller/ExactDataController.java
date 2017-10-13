@@ -15,10 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.danlu.dleye.core.ExactUserManager;
 import com.danlu.dleye.core.UserInfoManager;
 import com.danlu.dleye.core.UserSignManager;
@@ -33,10 +35,27 @@ public class ExactDataController implements Serializable {
 
     private static final long serialVersionUID = -90859094251L;
     private static Logger logger = LoggerFactory.getLogger(ExactDataController.class);
+    //微信密码
     private static String SECRET = "7d2ff0588993e3e14e9e87dea0580434";
+    //微信appId
     private static String APPID = "wxe6544f8f04a080bb";
+    //新订单消息模板ID
+    private static String ORDERTEMPLATID = "EpFBzPzTAekeG3E72vCsYerKOA0j-GAyKILvQKlJ2DY";
+    //销售统计消息模板ID
+    private static String SALLTEMPLATID = "HCXZE9J3Nv8kb0gp_BxLiaHzbYPRPEM0G_ISmNLxsY0";
+
+    //获取用户微信openID地址
     private static String OAUTH2URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
+    //获取微信access_token地址
+    private static String ACCESSTOKENURL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=SECRET";
+    //获取用户微信信息地址
+    private static String USERINFOURL = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
+    //发送微信模板消息地址
+    private static String SENDMSGURL = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=ACCESS_TOKEN";
+
+    //丹露用户登录验证地址
     private static String USERURL = "http://uc.danlu.com/uc/V1/users/?mobileNumber=";
+    //丹露用户获取企业信息地址
     private static String COMPANYURL = "http://uc.danlu.com/uc/V1/dlcompany/get_companyinfo";
     @Autowired
     private UserSignManager userSignManager;
@@ -49,6 +68,16 @@ public class ExactDataController implements Serializable {
 
     @Autowired
     private ExactUserManager exactUserManager;
+
+    @RequestMapping(value = "/sendwxmsg", produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public String sendWXMsg(HttpServletRequest request) {
+        String openId = request.getParameter("openId");
+        if (!StringUtils.isBlank(openId)) {
+            sendOrderInfo(openId);
+        }
+        return null;
+    }
 
     @RequestMapping(value = "/wx_index", produces = "text/html;charset=UTF-8")
     public ModelAndView wxIndex(HttpServletRequest request) {
@@ -181,23 +210,108 @@ public class ExactDataController implements Serializable {
         return m;
     }
 
+    /**
+     * @ 获取微信access_token
+     * 
+     */
+    private String getAccessToken() {
+        String getAccessTokenUrl = ACCESSTOKENURL.replace("APPID", APPID).replace("SECRET", SECRET);
+        JSONObject accessJsonObject = HttpUtil.httpsRequest(getAccessTokenUrl, "GET", null);
+        if (null != accessJsonObject && null != accessJsonObject.getString("access_token")) {
+            String access_token = accessJsonObject.getString("access_token");
+            redisClient.set("access_token", access_token, 3600);
+            return access_token;
+        }
+        return null;
+    }
+
+    /**
+     * @ 通过openId获取用户信息
+     * @param
+     *   openId:用户openId
+     */
+    private JSONObject getUserWXinfoByOpenId(String openId) {
+        JSONObject jsonObject = null;
+        if (!StringUtils.isBlank(openId)) {
+            try {
+                String access_token = redisClient.get("access_token", new TypeReference<String>() {
+                });
+                if (StringUtils.isBlank(access_token)) {
+                    access_token = getAccessToken();
+                }
+                String getUserInfoUrl = USERINFOURL.replace("ACCESS_TOKEN", access_token).replace(
+                    "OPENID", openId);
+                jsonObject = HttpUtil.httpsRequest(getUserInfoUrl, "GET", null);
+            } catch (Exception e) {
+                logger.error("getUserWXinfoByOpenId is Exception:" + e.toString());
+            }
+        }
+        return jsonObject;
+    }
+
+    /**
+     * @ 发送模板消息
+     */
+    private JSONObject sendWechatmsgToUser(String jsonString) {
+        JSONObject jsonObject = null;
+        if (!StringUtils.isBlank(jsonString)) {
+            try {
+                String access_token = redisClient.get("access_token", new TypeReference<String>() {
+                });
+                if (StringUtils.isBlank(access_token)) {
+                    access_token = getAccessToken();
+                }
+                String sendUrl = SENDMSGURL.replace("ACCESS_TOKEN", access_token);
+                jsonObject = HttpUtil.httpsRequest(sendUrl, "POST", jsonString);
+            } catch (Exception e) {
+                logger.error("sendWechatmsgToUser is Exception:" + e.toString());
+            }
+        }
+        return jsonObject;
+    }
+
+    private void sendOrderInfo(String openId) {
+        JSONObject json = new JSONObject();
+        json.put("touser", openId);
+        json.put("template_id", ORDERTEMPLATID);
+        json.put("url", "http://xiaozhuo.info");
+        JSONObject data = new JSONObject();
+        JSONObject first = new JSONObject();
+        first.put("value", "亲,您有新的订单啦");
+        first.put("color", "#173177");
+        data.put("first", first);
+        JSONObject keyword1 = new JSONObject();
+        keyword1.put("value", "2017081109");
+        keyword1.put("color", "#173177");
+        data.put("keyword1", keyword1);
+        JSONObject keyword2 = new JSONObject();
+        keyword2.put("value", "茅台王子酒");
+        keyword2.put("color", "#173177");
+        data.put("keyword2", keyword2);
+        JSONObject keyword3 = new JSONObject();
+        keyword3.put("value", "5瓶");
+        keyword3.put("color", "#173177");
+        data.put("keyword3", keyword3);
+        JSONObject keyword4 = new JSONObject();
+        keyword4.put("value", "7000.00元");
+        keyword4.put("color", "#173177");
+        data.put("keyword4", keyword4);
+        JSONObject keyword5 = new JSONObject();
+        keyword5.put("value", "货到付款");
+        keyword5.put("color", "#173177");
+        data.put("keyword5", keyword5);
+        JSONObject remark = new JSONObject();
+        remark.put("value", "点击查看详情");
+        remark.put("color", "#173177");
+        data.put("remark", remark);
+        json.put("data", data);
+        logger.info("json:" + json);
+        sendWechatmsgToUser(json.toString());
+    }
+
     public static void main(String[] args) {
         try {
-            String gurl = "http://uc.danlu.com/uc/V1/users/?mobileNumber=17780502327";
-            JSONObject responseBodyJson = HttpUtil.httpRequest(gurl, "GET", null);
-            JSONObject data = (JSONObject) responseBodyJson.get("data");
-            System.out.println(data);
-            JSONArray dataArray = (JSONArray) data.get("data_list");
-            JSONObject userInfo = (JSONObject) dataArray.get(0);
-            String userId = userInfo.getString("userId");
-            List<String> userIds = new ArrayList<String>();
-            userIds.add(userId);
-            System.out.println(userId);
-            String params = JSONObject.toJSONString(userIds);
-            String purl = "http://uc.danlu.com/uc/V1/dlcompany/get_companyinfo";
-            JSONObject responseBodyJson1 = HttpUtil.httpRequest(purl, "POST", params);
-            JSONObject companyJsonObject = (JSONObject) responseBodyJson1.get("data");
-            System.out.println(responseBodyJson1);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
