@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONArray;
@@ -62,16 +61,6 @@ public class ExactDataController implements Serializable {
 
     @Autowired
     private ExactUserManager exactUserManager;
-
-    @RequestMapping(value = "/sendwxmsg", produces = "text/html;charset=UTF-8")
-    @ResponseBody
-    public String sendWXMsg(HttpServletRequest request) {
-        String openId = request.getParameter("openId");
-        if (!StringUtils.isBlank(openId)) {
-            sendOrderInfo(openId);
-        }
-        return null;
-    }
 
     @RequestMapping(value = "/wx_index", produces = "text/html;charset=UTF-8")
     public ModelAndView wxIndex(HttpServletRequest request) {
@@ -309,7 +298,7 @@ public class ExactDataController implements Serializable {
      *   openId：            用户openId
      *   templateId:模板ID
      *   url:       消息跳转地址
-     *   first,keyword1,keyword2,keyword3,keyword4,keyword5,
+     *   first,keyword1,keyword2,keyword3,keyword4,keyword5,remark
      */
     private void makeMsgBody(JSONObject json, Map<String, Object> map) {
         json.put("touser", map.get("openId"));
