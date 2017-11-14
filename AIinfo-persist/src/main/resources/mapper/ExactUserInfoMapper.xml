@@ -9,6 +9,7 @@
     <result column="user_company_id" property="userCompanyId" jdbcType="VARCHAR" />
     <result column="user_company_type" property="userCompanyType" jdbcType="VARCHAR" />
     <result column="user_tel" property="userTel" jdbcType="VARCHAR" />
+    <result column="user_read_url" property="userReadUrl" jdbcType="VARCHAR" />
     <result column="user_wx_subscribe" property="userWxSubscribe" jdbcType="VARCHAR" />
     <result column="user_wx_nickname" property="userWxNickname" jdbcType="VARCHAR" />
     <result column="user_wx_sex" property="userWxSex" jdbcType="VARCHAR" />
@@ -27,7 +28,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, user_open_id, user_name, user_company_name, user_company_id, user_company_type, 
-    user_tel, user_wx_subscribe, user_wx_nickname, user_wx_sex, user_wx_city, user_wx_province, 
+    user_tel, user_read_url, user_wx_subscribe, user_wx_nickname, user_wx_sex, user_wx_city, user_wx_province, 
     user_wx_country, user_wx_language, user_wx_headimgurl, user_wx_subscribe_time, user_wx_remark, 
     user_wx_groupid, user_wx_tagid_list, user_status, gmt_create, gmt_modified
   </sql>
@@ -90,7 +91,7 @@
   <insert id="insert" parameterType="com.danlu.dleye.persist.base.ExactUserInfo" >
     insert into exact_user_info (id, user_open_id, user_name, 
       user_company_name, user_company_id, user_company_type, 
-      user_tel, user_wx_subscribe, user_wx_nickname, 
+      user_tel, user_read_url, user_wx_subscribe, user_wx_nickname, 
       user_wx_sex, user_wx_city, user_wx_province, 
       user_wx_country, user_wx_language, user_wx_headimgurl, 
       user_wx_subscribe_time, user_wx_remark, user_wx_groupid, 
@@ -98,7 +99,7 @@
       gmt_modified)
     values (#{id,jdbcType=BIGINT}, #{userOpenId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
       #{userCompanyName,jdbcType=VARCHAR}, #{userCompanyId,jdbcType=VARCHAR}, #{userCompanyType,jdbcType=VARCHAR}, 
-      #{userTel,jdbcType=VARCHAR}, #{userWxSubscribe,jdbcType=VARCHAR}, #{userWxNickname,jdbcType=VARCHAR}, 
+      #{userTel,jdbcType=VARCHAR}, #{userReadUrl,jdbcType=VARCHAR}, #{userWxSubscribe,jdbcType=VARCHAR}, #{userWxNickname,jdbcType=VARCHAR}, 
       #{userWxSex,jdbcType=VARCHAR}, #{userWxCity,jdbcType=VARCHAR}, #{userWxProvince,jdbcType=VARCHAR}, 
       #{userWxCountry,jdbcType=VARCHAR}, #{userWxLanguage,jdbcType=VARCHAR}, #{userWxHeadimgurl,jdbcType=VARCHAR}, 
       #{userWxSubscribeTime,jdbcType=VARCHAR}, #{userWxRemark,jdbcType=VARCHAR}, #{userWxGroupid,jdbcType=VARCHAR}, 
@@ -124,6 +125,9 @@
       </if>
       <if test="userTel != null" >
         user_tel,
+      </if>
+      <if test="userReadUrl != null" >
+        user_read_url,
       </if>
       <if test="userWxSubscribe != null" >
         user_wx_subscribe,
@@ -185,6 +189,9 @@
       </if>
       <if test="userTel != null" >
         #{userTel,jdbcType=VARCHAR},
+      </if>
+      <if test="userReadUrl != null" >
+        #{userReadUrl,jdbcType=VARCHAR},
       </if>
       <if test="userWxSubscribe != null" >
         #{userWxSubscribe,jdbcType=VARCHAR},
@@ -250,6 +257,9 @@
       <if test="userTel != null" >
         user_tel = #{userTel,jdbcType=VARCHAR},
       </if>
+      <if test="userReadUrl != null" >
+        user_read_url = #{userReadUrl,jdbcType=VARCHAR},
+      </if>
       <if test="userWxSubscribe != null" >
         user_wx_subscribe = #{userWxSubscribe,jdbcType=VARCHAR},
       </if>
@@ -301,6 +311,7 @@
       user_company_id = #{userCompanyId,jdbcType=VARCHAR},
       user_company_type = #{userCompanyType,jdbcType=VARCHAR},
       user_tel = #{userTel,jdbcType=VARCHAR},
+      user_read_url = #{userReadUrl,jdbcType=VARCHAR},
       user_wx_subscribe = #{userWxSubscribe,jdbcType=VARCHAR},
       user_wx_nickname = #{userWxNickname,jdbcType=VARCHAR},
       user_wx_sex = #{userWxSex,jdbcType=VARCHAR},

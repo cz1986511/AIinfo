@@ -2,7 +2,8 @@ package com.danlu.dleye.persist.base;
 
 import java.util.Date;
 
-public class ExactUserInfo {
+public class ExactUserInfo
+{
     private Long id;
 
     private String userOpenId;
@@ -16,6 +17,8 @@ public class ExactUserInfo {
     private String userCompanyType;
 
     private String userTel;
+
+    private String userReadUrl;
 
     private String userWxSubscribe;
 
@@ -47,179 +50,233 @@ public class ExactUserInfo {
 
     private Date gmtModified;
 
-    public Long getId() {
+    public String getUserReadUrl()
+    {
+        return userReadUrl;
+    }
+
+    public void setUserReadUrl(String userReadUrl)
+    {
+        this.userReadUrl = userReadUrl;
+    }
+
+    public Long getId()
+    {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Long id)
+    {
         this.id = id;
     }
 
-    public String getUserOpenId() {
+    public String getUserOpenId()
+    {
         return userOpenId;
     }
 
-    public void setUserOpenId(String userOpenId) {
+    public void setUserOpenId(String userOpenId)
+    {
         this.userOpenId = userOpenId == null ? null : userOpenId.trim();
     }
 
-    public String getUserName() {
+    public String getUserName()
+    {
         return userName;
     }
 
-    public void setUserName(String userName) {
+    public void setUserName(String userName)
+    {
         this.userName = userName == null ? null : userName.trim();
     }
 
-    public String getUserCompanyName() {
+    public String getUserCompanyName()
+    {
         return userCompanyName;
     }
 
-    public void setUserCompanyName(String userCompanyName) {
+    public void setUserCompanyName(String userCompanyName)
+    {
         this.userCompanyName = userCompanyName == null ? null : userCompanyName.trim();
     }
 
-    public String getUserCompanyId() {
+    public String getUserCompanyId()
+    {
         return userCompanyId;
     }
 
-    public void setUserCompanyId(String userCompanyId) {
+    public void setUserCompanyId(String userCompanyId)
+    {
         this.userCompanyId = userCompanyId == null ? null : userCompanyId.trim();
     }
 
-    public String getUserCompanyType() {
+    public String getUserCompanyType()
+    {
         return userCompanyType;
     }
 
-    public void setUserCompanyType(String userCompanyType) {
+    public void setUserCompanyType(String userCompanyType)
+    {
         this.userCompanyType = userCompanyType == null ? null : userCompanyType.trim();
     }
 
-    public String getUserTel() {
+    public String getUserTel()
+    {
         return userTel;
     }
 
-    public void setUserTel(String userTel) {
+    public void setUserTel(String userTel)
+    {
         this.userTel = userTel == null ? null : userTel.trim();
     }
 
-    public String getUserWxSubscribe() {
+    public String getUserWxSubscribe()
+    {
         return userWxSubscribe;
     }
 
-    public void setUserWxSubscribe(String userWxSubscribe) {
+    public void setUserWxSubscribe(String userWxSubscribe)
+    {
         this.userWxSubscribe = userWxSubscribe == null ? null : userWxSubscribe.trim();
     }
 
-    public String getUserWxNickname() {
+    public String getUserWxNickname()
+    {
         return userWxNickname;
     }
 
-    public void setUserWxNickname(String userWxNickname) {
+    public void setUserWxNickname(String userWxNickname)
+    {
         this.userWxNickname = userWxNickname == null ? null : userWxNickname.trim();
     }
 
-    public String getUserWxSex() {
+    public String getUserWxSex()
+    {
         return userWxSex;
     }
 
-    public void setUserWxSex(String userWxSex) {
+    public void setUserWxSex(String userWxSex)
+    {
         this.userWxSex = userWxSex == null ? null : userWxSex.trim();
     }
 
-    public String getUserWxCity() {
+    public String getUserWxCity()
+    {
         return userWxCity;
     }
 
-    public void setUserWxCity(String userWxCity) {
+    public void setUserWxCity(String userWxCity)
+    {
         this.userWxCity = userWxCity == null ? null : userWxCity.trim();
     }
 
-    public String getUserWxProvince() {
+    public String getUserWxProvince()
+    {
         return userWxProvince;
     }
 
-    public void setUserWxProvince(String userWxProvince) {
+    public void setUserWxProvince(String userWxProvince)
+    {
         this.userWxProvince = userWxProvince == null ? null : userWxProvince.trim();
     }
 
-    public String getUserWxCountry() {
+    public String getUserWxCountry()
+    {
         return userWxCountry;
     }
 
-    public void setUserWxCountry(String userWxCountry) {
+    public void setUserWxCountry(String userWxCountry)
+    {
         this.userWxCountry = userWxCountry == null ? null : userWxCountry.trim();
     }
 
-    public String getUserWxLanguage() {
+    public String getUserWxLanguage()
+    {
         return userWxLanguage;
     }
 
-    public void setUserWxLanguage(String userWxLanguage) {
+    public void setUserWxLanguage(String userWxLanguage)
+    {
         this.userWxLanguage = userWxLanguage == null ? null : userWxLanguage.trim();
     }
 
-    public String getUserWxHeadimgurl() {
+    public String getUserWxHeadimgurl()
+    {
         return userWxHeadimgurl;
     }
 
-    public void setUserWxHeadimgurl(String userWxHeadimgurl) {
+    public void setUserWxHeadimgurl(String userWxHeadimgurl)
+    {
         this.userWxHeadimgurl = userWxHeadimgurl == null ? null : userWxHeadimgurl.trim();
     }
 
-    public String getUserWxSubscribeTime() {
+    public String getUserWxSubscribeTime()
+    {
         return userWxSubscribeTime;
     }
 
-    public void setUserWxSubscribeTime(String userWxSubscribeTime) {
+    public void setUserWxSubscribeTime(String userWxSubscribeTime)
+    {
         this.userWxSubscribeTime = userWxSubscribeTime == null ? null : userWxSubscribeTime.trim();
     }
 
-    public String getUserWxRemark() {
+    public String getUserWxRemark()
+    {
         return userWxRemark;
     }
 
-    public void setUserWxRemark(String userWxRemark) {
+    public void setUserWxRemark(String userWxRemark)
+    {
         this.userWxRemark = userWxRemark == null ? null : userWxRemark.trim();
     }
 
-    public String getUserWxGroupid() {
+    public String getUserWxGroupid()
+    {
         return userWxGroupid;
     }
 
-    public void setUserWxGroupid(String userWxGroupid) {
+    public void setUserWxGroupid(String userWxGroupid)
+    {
         this.userWxGroupid = userWxGroupid == null ? null : userWxGroupid.trim();
     }
 
-    public String getUserWxTagidList() {
+    public String getUserWxTagidList()
+    {
         return userWxTagidList;
     }
 
-    public void setUserWxTagidList(String userWxTagidList) {
+    public void setUserWxTagidList(String userWxTagidList)
+    {
         this.userWxTagidList = userWxTagidList == null ? null : userWxTagidList.trim();
     }
 
-    public String getUserStatus() {
+    public String getUserStatus()
+    {
         return userStatus;
     }
 
-    public void setUserStatus(String userStatus) {
+    public void setUserStatus(String userStatus)
+    {
         this.userStatus = userStatus == null ? null : userStatus.trim();
     }
 
-    public Date getGmtCreate() {
+    public Date getGmtCreate()
+    {
         return gmtCreate;
     }
 
-    public void setGmtCreate(Date gmtCreate) {
+    public void setGmtCreate(Date gmtCreate)
+    {
         this.gmtCreate = gmtCreate;
     }
 
-    public Date getGmtModified() {
+    public Date getGmtModified()
+    {
         return gmtModified;
     }
 
-    public void setGmtModified(Date gmtModified) {
+    public void setGmtModified(Date gmtModified)
+    {
         this.gmtModified = gmtModified;
     }
 }
