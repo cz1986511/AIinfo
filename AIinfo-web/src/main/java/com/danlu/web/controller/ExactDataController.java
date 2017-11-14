@@ -140,32 +140,70 @@ public class ExactDataController implements Serializable
             List<ExactUserInfo> exactUserInfos = exactUserManager.getExactUserInfosByParams(map);
             if (CollectionUtils.isEmpty(exactUserInfos))
             {
-                JSONObject userJsonObject = HttpUtil.httpRequest(USERURL + tel, "GET", null);
-                if (null != userJsonObject && "0".equals(userJsonObject.getString("status")))
+                map.clear();
+                map.put("userTel", tel);
+                map.put("userPassword", password);
+                map.put("userStatus", 1);
+                List<ExactUserInfo> exactUserInfoList = exactUserManager
+                    .getExactUserInfosByParams(map);
+                if (!CollectionUtils.isEmpty(exactUserInfoList))
                 {
-                    JSONObject data = (JSONObject) userJsonObject.get("data");
-                    JSONArray dataArray = (JSONArray) data.get("data_list");
-                    if (null != dataArray)
+                    ExactUserInfo userInfo = exactUserInfoList.get(0);
+                    String openId = userInfo.getUserOpenId();
+                    String url = userInfo.getUserReadUrl();
+                    if (!StringUtils.isBlank(openId))
                     {
-                        JSONObject userInfo = (JSONObject) dataArray.get(0);
-                        String userId = userInfo.getString("userId");
-                        String userPasswd = userInfo.getString("userPasswd");
-                        if (password.equals(userPasswd))
+                        if (openId.equals(userOpenId))
                         {
-                            map.clear();
-                            List<String> tels = new ArrayList<String>();
-                            tels.add(tel);
-                            map.put("userTels", tels);
-                            map.put("userStatus", "1");
-                            List<ExactUserInfo> exactUserInfoList = exactUserManager
-                                .getExactUserInfosByParams(map);
-                            if (!CollectionUtils.isEmpty(exactUserInfoList))
+                            if (!StringUtils.isBlank(url))
                             {
-                                m.addObject("userOpenId", userOpenId);
-                                m.addObject("tel", tel);
-                                m.addObject("msg", "手机号已经绑定过了");
+                                return new ModelAndView(url);
                             }
                             else
+                            {
+                                m.setViewName("exactindex");
+                                m.addObject("userName", userInfo.getUserCompanyName());
+                                m.addObject("userTel", userInfo.getUserTel());
+                                m.addObject("userType", userInfo.getUserCompanyType());
+                            }
+                        }
+                        else
+                        {
+                            m.addObject("userOpenId", userOpenId);
+                            m.addObject("tel", tel);
+                            m.addObject("msg", "手机号已经绑定过了");
+                        }
+                    }
+                    else
+                    {
+                        userInfo.setUserOpenId(userOpenId);
+                        exactUserManager.updateExactUserInfo(userInfo);
+                        if (!StringUtils.isBlank(url))
+                        {
+                            return new ModelAndView(url);
+                        }
+                        else
+                        {
+                            m.setViewName("exactindex");
+                            m.addObject("userName", userInfo.getUserCompanyName());
+                            m.addObject("userTel", userInfo.getUserTel());
+                            m.addObject("userType", userInfo.getUserCompanyType());
+                        }
+                    }
+                }
+                else
+                {
+                    JSONObject userJsonObject = HttpUtil.httpRequest(USERURL + tel, "GET", null);
+                    if (null != userJsonObject && "0".equals(userJsonObject.getString("status")))
+                    {
+                        JSONObject data = (JSONObject) userJsonObject.get("data");
+                        JSONArray dataArray = (JSONArray) data.get("data_list");
+                        if (null != dataArray)
+                        {
+                            JSONObject userInfo = (JSONObject) dataArray.get(0);
+                            String userId = userInfo.getString("userId");
+                            String userPasswd = userInfo.getString("userPasswd");
+                            if (password.equals(userPasswd))
                             {
                                 List<String> userIds = new ArrayList<String>();
                                 userIds.add(userId);
@@ -224,10 +262,18 @@ public class ExactDataController implements Serializable
             else
             {
                 ExactUserInfo userInfo = exactUserInfos.get(0);
-                m.setViewName("exactindex");
-                m.addObject("userName", userInfo.getUserCompanyName());
-                m.addObject("userTel", userInfo.getUserTel());
-                m.addObject("userType", userInfo.getUserCompanyType());
+                String url = userInfo.getUserReadUrl();
+                if (!StringUtils.isBlank(url))
+                {
+                    return new ModelAndView(url);
+                }
+                else
+                {
+                    m.setViewName("exactindex");
+                    m.addObject("userName", userInfo.getUserCompanyName());
+                    m.addObject("userTel", userInfo.getUserTel());
+                    m.addObject("userType", userInfo.getUserCompanyType());
+                }
             }
         }
         return m;

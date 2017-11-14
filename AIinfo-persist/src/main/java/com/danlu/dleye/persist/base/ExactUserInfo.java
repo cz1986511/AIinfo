@@ -18,6 +18,8 @@ public class ExactUserInfo
 
     private String userTel;
 
+    private String userPassword;
+
     private String userReadUrl;
 
     private String userWxSubscribe;
@@ -49,6 +51,16 @@ public class ExactUserInfo
     private Date gmtCreate;
 
     private Date gmtModified;
+
+    public String getUserPassword()
+    {
+        return userPassword;
+    }
+
+    public void setUserPassword(String userPassword)
+    {
+        this.userPassword = userPassword;
+    }
 
     public String getUserReadUrl()
     {
