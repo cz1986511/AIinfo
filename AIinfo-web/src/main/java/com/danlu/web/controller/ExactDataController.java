@@ -23,6 +23,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.danlu.dleye.core.ExactUserManager;
 import com.danlu.dleye.core.util.RedisClient;
 import com.danlu.dleye.persist.base.ExactUserInfo;
+import com.danlu.web.base.CommonBase;
 import com.danlu.web.base.HttpUtil;
 
 @Controller
@@ -32,30 +33,6 @@ public class ExactDataController implements Serializable
 
     private static final long serialVersionUID = -90859094251L;
     private static Logger logger = LoggerFactory.getLogger(ExactDataController.class);
-    // 微信密码
-    private static String SECRET = "7d2ff0588993e3e14e9e87dea0580434";
-    // 微信appId
-    private static String APPID = "wxe6544f8f04a080bb";
-    // 新订单消息模板ID
-    private static String ORDERTEMPLATID = "EpFBzPzTAekeG3E72vCsYerKOA0j-GAyKILvQKlJ2DY";
-    // 销售统计消息模板ID
-    private static String SALLTEMPLATID = "HCXZE9J3Nv8kb0gp_BxLiaHzbYPRPEM0G_ISmNLxsY0";
-    // 模板消息参数值颜色
-    private static String COLOR = "#173177";
-
-    // 获取用户微信openID地址
-    private static String OAUTH2URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
-    // 获取微信access_token地址
-    private static String ACCESSTOKENURL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=SECRET";
-    // 获取用户微信信息地址
-    private static String USERINFOURL = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
-    // 发送微信模板消息地址
-    private static String SENDMSGURL = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=ACCESS_TOKEN";
-
-    // 丹露用户登录验证地址
-    private static String USERURL = "http://uc.danlu.com/uc/V1/users/?mobileNumber=";
-    // 丹露用户获取企业信息地址
-    private static String COMPANYURL = "http://uc.danlu.com/uc/V1/dlcompany/get_companyinfo";
 
     @Autowired
     private RedisClient redisClient;
@@ -73,8 +50,8 @@ public class ExactDataController implements Serializable
         {
             try
             {
-                String getOauthUrl = OAUTH2URL.replace("APPID", APPID).replace("SECRET", SECRET)
-                    .replace("CODE", code);
+                String getOauthUrl = CommonBase.OAUTH2URL.replace("APPID", CommonBase.APPID)
+                    .replace("SECRET", CommonBase.SECRET).replace("CODE", code);
                 JSONObject userOauth = HttpUtil.httpsRequest(getOauthUrl, "GET", null);
                 if (null != userOauth)
                 {
@@ -193,7 +170,9 @@ public class ExactDataController implements Serializable
                 }
                 else
                 {
-                    JSONObject userJsonObject = HttpUtil.httpRequest(USERURL + tel, "GET", null);
+                    JSONObject userJsonObject = HttpUtil.httpRequest(CommonBase.USERURL
+                                                                     + "?mobileNumber=" + tel,
+                        "GET", null);
                     if (null != userJsonObject && "0".equals(userJsonObject.getString("status")))
                     {
                         JSONObject data = (JSONObject) userJsonObject.get("data");
@@ -205,46 +184,78 @@ public class ExactDataController implements Serializable
                             String userPasswd = userInfo.getString("userPasswd");
                             if (password.equals(userPasswd))
                             {
-                                List<String> userIds = new ArrayList<String>();
-                                userIds.add(userId);
-                                String params = JSONObject.toJSONString(userIds);
-                                JSONObject companyJsonObject = HttpUtil.httpRequest(COMPANYURL,
-                                    "POST", params);
-                                if (null != companyJsonObject
-                                    && "0".equals(companyJsonObject.getString("status")))
+                                boolean isAdmin = false;
+                                JSONObject userAclJsonObject = HttpUtil.httpRequest(
+                                    CommonBase.USERURL + userId, "GET", null);
+                                if (null != userAclJsonObject
+                                    && "0".equals(userAclJsonObject.getString("status")))
                                 {
-                                    JSONObject companyData = (JSONObject) companyJsonObject
-                                        .get("data");
-                                    JSONObject companyInfo = (JSONObject) companyData.get(userId);
-                                    if (null != companyInfo)
+                                    JSONObject userAclData = userAclJsonObject
+                                        .getJSONObject("data");
+                                    if (null != userAclData)
                                     {
-                                        ExactUserInfo exactUserInfo = new ExactUserInfo();
-                                        exactUserInfo.setUserOpenId(userOpenId);
-                                        exactUserInfo.setUserTel(tel);
-                                        exactUserInfo.setUserName(userInfo.getString("userName"));
-                                        exactUserInfo.setUserCompanyId(companyInfo
-                                            .getString("companyId"));
-                                        exactUserInfo.setUserCompanyName(companyInfo
-                                            .getString("companyName"));
-                                        exactUserInfo.setUserCompanyType(companyInfo
-                                            .getString("companyType"));
-                                        exactUserInfo.setUserStatus("1");
-                                        int result = exactUserManager
-                                            .addExactUserInfo(exactUserInfo);
-                                        if (result > 0)
+                                        JSONArray aclDtoArray = userAclData
+                                            .getJSONArray("aclDtoList");
+                                        if (null != aclDtoArray)
                                         {
-                                            m.setViewName("exactindex");
-                                            m.addObject("userName",
-                                                exactUserInfo.getUserCompanyName());
-                                            m.addObject("userTel", exactUserInfo.getUserTel());
-                                            m.addObject("userType",
-                                                exactUserInfo.getUserCompanyType());
+                                            for (int i = 0; i < aclDtoArray.size(); i++)
+                                            {
+                                                JSONObject tempAcl = aclDtoArray.getJSONObject(i);
+                                                String id = tempAcl.getString("id");
+                                                if (CommonBase.ACLID.equals(id))
+                                                {
+                                                    isAdmin = true;
+                                                    break;
+                                                }
+                                            }
                                         }
-                                        else
+                                    }
+                                }
+                                if (isAdmin)
+                                {
+                                    List<String> userIds = new ArrayList<String>();
+                                    userIds.add(userId);
+                                    String params = JSONObject.toJSONString(userIds);
+                                    JSONObject companyJsonObject = HttpUtil.httpRequest(
+                                        CommonBase.COMPANYURL, "POST", params);
+                                    if (null != companyJsonObject
+                                        && "0".equals(companyJsonObject.getString("status")))
+                                    {
+                                        JSONObject companyData = (JSONObject) companyJsonObject
+                                            .get("data");
+                                        JSONObject companyInfo = (JSONObject) companyData
+                                            .get(userId);
+                                        if (null != companyInfo)
                                         {
-                                            m.addObject("userOpenId", userOpenId);
-                                            m.addObject("tel", tel);
-                                            m.addObject("msg", "系统异常请稍后再试");
+                                            ExactUserInfo exactUserInfo = new ExactUserInfo();
+                                            exactUserInfo.setUserOpenId(userOpenId);
+                                            exactUserInfo.setUserTel(tel);
+                                            exactUserInfo.setUserName(userInfo
+                                                .getString("userName"));
+                                            exactUserInfo.setUserCompanyId(companyInfo
+                                                .getString("companyId"));
+                                            exactUserInfo.setUserCompanyName(companyInfo
+                                                .getString("companyName"));
+                                            exactUserInfo.setUserCompanyType(companyInfo
+                                                .getString("companyType"));
+                                            exactUserInfo.setUserStatus("1");
+                                            int result = exactUserManager
+                                                .addExactUserInfo(exactUserInfo);
+                                            if (result > 0)
+                                            {
+                                                m.setViewName("exactindex");
+                                                m.addObject("userName",
+                                                    exactUserInfo.getUserCompanyName());
+                                                m.addObject("userTel", exactUserInfo.getUserTel());
+                                                m.addObject("userType",
+                                                    exactUserInfo.getUserCompanyType());
+                                            }
+                                            else
+                                            {
+                                                m.addObject("userOpenId", userOpenId);
+                                                m.addObject("tel", tel);
+                                                m.addObject("msg", "系统异常请稍后再试");
+                                            }
                                         }
                                     }
                                 }
@@ -285,7 +296,8 @@ public class ExactDataController implements Serializable
      */
     private String getAccessToken()
     {
-        String getAccessTokenUrl = ACCESSTOKENURL.replace("APPID", APPID).replace("SECRET", SECRET);
+        String getAccessTokenUrl = CommonBase.ACCESSTOKENURL.replace("APPID", CommonBase.APPID)
+            .replace("SECRET", CommonBase.SECRET);
         JSONObject accessJsonObject = HttpUtil.httpsRequest(getAccessTokenUrl, "GET", null);
         if (null != accessJsonObject && null != accessJsonObject.getString("access_token"))
         {
@@ -315,8 +327,8 @@ public class ExactDataController implements Serializable
                 {
                     access_token = getAccessToken();
                 }
-                String getUserInfoUrl = USERINFOURL.replace("ACCESS_TOKEN", access_token).replace(
-                    "OPENID", openId);
+                String getUserInfoUrl = CommonBase.USERINFOURL
+                    .replace("ACCESS_TOKEN", access_token).replace("OPENID", openId);
                 jsonObject = HttpUtil.httpsRequest(getUserInfoUrl, "GET", null);
             }
             catch (Exception e)
@@ -344,7 +356,7 @@ public class ExactDataController implements Serializable
                 {
                     access_token = getAccessToken();
                 }
-                String sendUrl = SENDMSGURL.replace("ACCESS_TOKEN", access_token);
+                String sendUrl = CommonBase.SENDMSGURL.replace("ACCESS_TOKEN", access_token);
                 jsonObject = HttpUtil.httpsRequest(sendUrl, "POST", jsonString);
             }
             catch (Exception e)
@@ -359,7 +371,7 @@ public class ExactDataController implements Serializable
     {
         JSONObject json = new JSONObject();
         json.put("touser", openId);
-        json.put("template_id", ORDERTEMPLATID);
+        json.put("template_id", CommonBase.ORDERTEMPLATID);
         json.put("url", "http://xiaozhuo.info");
         JSONObject data = new JSONObject();
         JSONObject first = new JSONObject();
@@ -409,45 +421,33 @@ public class ExactDataController implements Serializable
         JSONObject data = new JSONObject();
         JSONObject first = new JSONObject();
         first.put("value", map.get("first"));
-        first.put("color", COLOR);
+        first.put("color", CommonBase.COLOR);
         data.put("first", first);
         JSONObject keyword1 = new JSONObject();
         keyword1.put("value", map.get("keyword1"));
-        keyword1.put("color", COLOR);
+        keyword1.put("color", CommonBase.COLOR);
         data.put("keyword1", keyword1);
         JSONObject keyword2 = new JSONObject();
         keyword2.put("value", map.get("keyword2"));
-        keyword2.put("color", COLOR);
+        keyword2.put("color", CommonBase.COLOR);
         data.put("keyword2", keyword2);
         JSONObject keyword3 = new JSONObject();
         keyword3.put("value", map.get("keyword3"));
-        keyword3.put("color", COLOR);
+        keyword3.put("color", CommonBase.COLOR);
         data.put("keyword3", keyword3);
         JSONObject keyword4 = new JSONObject();
         keyword4.put("value", map.get("keyword4"));
-        keyword4.put("color", COLOR);
+        keyword4.put("color", CommonBase.COLOR);
         data.put("keyword4", keyword4);
         JSONObject keyword5 = new JSONObject();
         keyword5.put("value", map.get("keyword5"));
-        keyword5.put("color", COLOR);
+        keyword5.put("color", CommonBase.COLOR);
         data.put("keyword5", keyword5);
         JSONObject remark = new JSONObject();
         remark.put("value", map.get("remark"));
-        remark.put("color", COLOR);
+        remark.put("color", CommonBase.COLOR);
         data.put("remark", remark);
         json.put("data", data);
-    }
-
-    public static void main(String[] args)
-    {
-        try
-        {
-
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
     }
 
 }
