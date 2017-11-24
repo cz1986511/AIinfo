@@ -460,7 +460,7 @@ public class AIInfoController implements Serializable
         if (!StringUtils.isBlank(noteInfo))
         {
             SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            noteInfo += "--" + ft.format(new Date());
+            noteInfo += " ( " + ft.format(new Date()) + " )";
             String noteKey = "noteKey";
             List<String> noteList = null;
             try
