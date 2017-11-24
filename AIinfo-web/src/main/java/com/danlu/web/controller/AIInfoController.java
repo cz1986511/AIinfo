@@ -516,8 +516,17 @@ public class AIInfoController implements Serializable
                     });
                 if (!CollectionUtils.isEmpty(noteList))
                 {
-                    logger.info("user:" + userName + "del:" + noteList.get(Integer.valueOf(id)));
-                    noteList.remove(Integer.valueOf(id));
+                    String temp = noteList.get(Integer.valueOf(id));
+                    logger.info("user:" + userName + "del:" + temp);
+                    Iterator<String> iterator = noteList.iterator();
+                    while (iterator.hasNext())
+                    {
+                        String e = iterator.next();
+                        if (e.equals(temp))
+                        {
+                            iterator.remove();
+                        }
+                    }
                     redisClient.set(noteKey, noteList);
                     result.put("status", 0);
                     result.put("msg", "小子干坏事成功,你已被FBI盯上了");
