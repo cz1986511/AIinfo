@@ -45,7 +45,8 @@ import com.danlu.dleye.persist.base.UserSign;
 
 @SuppressWarnings("deprecation")
 @Controller
-public class AIInfoController implements Serializable {
+public class AIInfoController implements Serializable
+{
 
     private static final long serialVersionUID = -90859094251L;
     private static Logger logger = LoggerFactory.getLogger(AIInfoController.class);
@@ -62,38 +63,49 @@ public class AIInfoController implements Serializable {
 
     @RequestMapping(value = "art_list", produces = "text/html;charset=UTF-8")
     @ResponseBody
-    public String getArticleList(HttpServletRequest request) {
+    public String getArticleList(HttpServletRequest request)
+    {
         Map<String, Object> result = new HashMap<String, Object>();
         JSONObject json = new JSONObject(result);
         String source = request.getParameter("source");
         String tag = request.getParameter("tag");
         String defaultKey = "dKey";
-        try {
+        try
+        {
             Map<String, Object> map = new HashMap<String, Object>();
-            if (!StringUtils.isBlank(source)) {
+            if (!StringUtils.isBlank(source))
+            {
                 map.put("source", source);
                 defaultKey += source;
             }
-            if (!StringUtils.isBlank(tag)) {
+            if (!StringUtils.isBlank(tag))
+            {
                 map.put("tag", tag);
                 defaultKey += tag;
             }
             map.put("offset", 0);
             map.put("limit", dleyeSwith.getRequestSize());
             List<ArticleInfo> resultList = (List<ArticleInfo>) redisClient.get(defaultKey,
-                new TypeReference<List<ArticleInfo>>() {
+                new TypeReference<List<ArticleInfo>>()
+                {
                 });
-            if (!CollectionUtils.isEmpty(resultList)) {
+            if (!CollectionUtils.isEmpty(resultList))
+            {
                 result.put("data", resultList);
-            } else {
+            }
+            else
+            {
                 List<ArticleInfo> articleInfoList = articleInfoManager.getArticleInfosByParams(map);
-                if (!CollectionUtils.isEmpty(articleInfoList)) {
+                if (!CollectionUtils.isEmpty(articleInfoList))
+                {
                     result.put("data", articleInfoList);
                     redisClient.set(defaultKey, articleInfoList, dleyeSwith.getEffectiveTime());
                 }
             }
             result.put("status", 0);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             logger.error("getArticleList is exception:" + e.toString());
             result.put("status", 1);
             result.put("msg", "程序小哥跟老板娘跑了");
@@ -103,22 +115,29 @@ public class AIInfoController implements Serializable {
 
     @RequestMapping(value = "weather", produces = "text/html;charset=UTF-8")
     @ResponseBody
-    public String getWeather(HttpServletRequest request) {
+    public String getWeather(HttpServletRequest request)
+    {
         Map<String, Object> result = new HashMap<String, Object>();
         JSONObject json = new JSONObject(result);
         String weather = "weather";
         List<JSONObject> list = null;
-        try {
+        try
+        {
             list = (List<JSONObject>) redisClient.get(weather,
-                new TypeReference<List<JSONObject>>() {
+                new TypeReference<List<JSONObject>>()
+                {
                 });
-            if (!CollectionUtils.isEmpty(list)) {
+            if (!CollectionUtils.isEmpty(list))
+            {
                 result.put("data", list);
-            } else {
+            }
+            else
+            {
                 list = new ArrayList<JSONObject>();
                 String citys = dleyeSwith.getCitys();
                 String[] cityStrings = citys.split(",");
-                for (int i = 0; i < cityStrings.length; i++) {
+                for (int i = 0; i < cityStrings.length; i++)
+                {
                     JSONObject jsonObject = getWeatherNext(cityStrings[i]);
                     jsonObject.put("now", getWeatherNow(cityStrings[i]));
                     jsonObject.put("suggestion", getSuggestion(cityStrings[i]));
@@ -128,7 +147,9 @@ public class AIInfoController implements Serializable {
                 redisClient.set(weather, list, 3600);
             }
             result.put("status", 0);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             result.put("status", 1);
             result.put("msg", "程序小哥跟老板娘跑了");
             logger.error("getWeather is exception:" + e.toString());
@@ -138,22 +159,30 @@ public class AIInfoController implements Serializable {
 
     @RequestMapping(value = "oilinfo", produces = "text/html;charset=UTF-8")
     @ResponseBody
-    public String getOilInfo(HttpServletRequest request) {
+    public String getOilInfo(HttpServletRequest request)
+    {
         Map<String, Object> result = new HashMap<String, Object>();
         JSONObject json = new JSONObject(result);
         String oilKey = "oilKey";
         JSONObject oilJson = null;
-        try {
-            oilJson = (JSONObject) redisClient.get(oilKey, new TypeReference<JSONObject>() {
+        try
+        {
+            oilJson = (JSONObject) redisClient.get(oilKey, new TypeReference<JSONObject>()
+            {
             });
-            if (!CollectionUtils.isEmpty(oilJson)) {
+            if (!CollectionUtils.isEmpty(oilJson))
+            {
                 result.put("data", oilJson);
-            } else {
+            }
+            else
+            {
                 result.put("status", 1);
                 result.put("msg", "程序小哥跟老板娘跑了");
             }
             result.put("status", 0);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             result.put("status", 1);
             result.put("msg", "程序小哥跟老板娘跑了");
             logger.error("getOilInfo is exception:" + e.toString());
@@ -163,13 +192,16 @@ public class AIInfoController implements Serializable {
 
     @RequestMapping(value = "wx_action", produces = "text/html;charset=UTF-8")
     @ResponseBody
-    public String wxAction(HttpServletRequest request) {
+    public String wxAction(HttpServletRequest request)
+    {
         Document getdocument = null;
         String echostr = request.getParameter("echostr");
-        if (!StringUtils.isBlank(echostr)) {
+        if (!StringUtils.isBlank(echostr))
+        {
             return echostr;
         }
-        try {
+        try
+        {
             String toUser = null;
             String fromUser = null;
             String content = null;
@@ -177,7 +209,8 @@ public class AIInfoController implements Serializable {
                 "UTF-8"));
             String buffer = null;
             StringBuffer xml = new StringBuffer();
-            while ((buffer = br.readLine()) != null) {
+            while ((buffer = br.readLine()) != null)
+            {
                 xml.append(buffer);
             }
             SAXReader reader = new SAXReader();
@@ -185,74 +218,103 @@ public class AIInfoController implements Serializable {
             InputStreamReader ir = new InputStreamReader(inputStream);
             getdocument = reader.read(ir);
             Element parenetElement = getdocument.getRootElement();
-            for (Iterator<Element> i = parenetElement.elementIterator(); i.hasNext();) {
+            for (Iterator<Element> i = parenetElement.elementIterator(); i.hasNext();)
+            {
                 Element nodeElement = i.next();
-                if ("ToUserName".equals(nodeElement.getName())) {
+                if ("ToUserName".equals(nodeElement.getName()))
+                {
                     toUser = nodeElement.getText();
                 }
-                if ("FromUserName".equals(nodeElement.getName())) {
+                if ("FromUserName".equals(nodeElement.getName()))
+                {
                     fromUser = nodeElement.getText();
                 }
-                if ("Content".equals(nodeElement.getName())) {
+                if ("Content".equals(nodeElement.getName()))
+                {
                     content = nodeElement.getText();
                 }
                 logger.info(nodeElement.getName() + ":" + nodeElement.getText());
             }
-            if (null != content && content.length() == 11) {
-                //绑定手机号
+            if (null != content && content.length() == 11)
+            {
+                // 绑定手机号
                 bindTel(content, fromUser);
-            } else if ("读书签到".equals(content)) {
-                //读书签到
+            }
+            else if ("读书签到".equals(content))
+            {
+                // 读书签到
                 content = readSigin(content, fromUser);
-            } else if ("1".equals(content)) {
+            }
+            else if ("1".equals(content))
+            {
                 content = "http://xiaozhuo.info";
-            } else {
+            }
+            else
+            {
                 String telName = "tel-" + content;
-                String result = redisClient.get(telName, new TypeReference<String>() {
+                String result = redisClient.get(telName, new TypeReference<String>()
+                {
                 });
-                if (null != result) {
+                if (null != result)
+                {
                     content = result;
-                } else {
+                }
+                else
+                {
                     content = "输入错误";
                 }
             }
-            for (Iterator<Element> j = parenetElement.elementIterator(); j.hasNext();) {
+            for (Iterator<Element> j = parenetElement.elementIterator(); j.hasNext();)
+            {
                 Element nodeElement = j.next();
-                if ("ToUserName".equals(nodeElement.getName())) {
+                if ("ToUserName".equals(nodeElement.getName()))
+                {
                     nodeElement.setText(fromUser);
                 }
-                if ("FromUserName".equals(nodeElement.getName())) {
+                if ("FromUserName".equals(nodeElement.getName()))
+                {
                     nodeElement.setText(toUser);
                 }
-                if ("Content".equals(nodeElement.getName())) {
+                if ("Content".equals(nodeElement.getName()))
+                {
                     nodeElement.setText(content);
                 }
                 logger.info(nodeElement.getName() + ":" + nodeElement.getText());
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             logger.error(e.toString());
         }
         return getdocument.asXML();
     }
 
     @SuppressWarnings({ "resource" })
-    private JSONObject getSuggestion(String city) {
+    private JSONObject getSuggestion(String city)
+    {
         HttpClient httpClient = new DefaultHttpClient();
-        try {
+        try
+        {
             String restUrl = "https://api.seniverse.com/v3/life/suggestion.json?key=tl9ml0o784jsrc4h&language=zh-Hans&location=";
             HttpGet getMethod = new HttpGet(restUrl + city);
             HttpResponse response = httpClient.execute(getMethod);
-            if (null != response) {
+            if (null != response)
+            {
                 int statusCode = response.getStatusLine().getStatusCode();
-                if (statusCode < 300) {
+                if (statusCode < 300)
+                {
                     String responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
                     JSONArray array = (JSONArray) JSON.parseObject(responseBody).get("results");
                     return array.getJSONObject(0).getJSONObject("suggestion");
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             logger.error("getSuggestion is exception:" + e.toString());
-        } finally {
+        }
+        finally
+        {
             httpClient.getConnectionManager().shutdown();
         }
         logger.error("getSuggestion is null");
@@ -260,23 +322,31 @@ public class AIInfoController implements Serializable {
     }
 
     @SuppressWarnings({ "resource" })
-    private JSONObject getWeatherNow(String city) {
+    private JSONObject getWeatherNow(String city)
+    {
         HttpClient httpClient = new DefaultHttpClient();
-        try {
+        try
+        {
             String restUrl = "https://api.seniverse.com/v3/weather/now.json?key=tl9ml0o784jsrc4h&language=zh-Hans&unit=c&location=";
             HttpGet getMethod = new HttpGet(restUrl + city);
             HttpResponse response = httpClient.execute(getMethod);
-            if (null != response) {
+            if (null != response)
+            {
                 int statusCode = response.getStatusLine().getStatusCode();
-                if (statusCode < 300) {
+                if (statusCode < 300)
+                {
                     String responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
                     JSONArray array = (JSONArray) JSON.parseObject(responseBody).get("results");
                     return array.getJSONObject(0).getJSONObject("now");
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             logger.error("getSuggestion is exception:" + e.toString());
-        } finally {
+        }
+        finally
+        {
             httpClient.getConnectionManager().shutdown();
         }
         logger.error("getSuggestion is null");
@@ -284,43 +354,56 @@ public class AIInfoController implements Serializable {
     }
 
     @SuppressWarnings({ "resource" })
-    private JSONObject getWeatherNext(String city) {
+    private JSONObject getWeatherNext(String city)
+    {
         HttpClient httpClient = new DefaultHttpClient();
-        try {
+        try
+        {
             String restUrl = "https://api.seniverse.com/v3/weather/daily.json?key=tl9ml0o784jsrc4h&language=zh-Hans&unit=c&start=0&days=5&location=";
             HttpGet getMethod = new HttpGet(restUrl + city);
             HttpResponse response = httpClient.execute(getMethod);
-            if (null != response) {
+            if (null != response)
+            {
                 int statusCode = response.getStatusLine().getStatusCode();
-                if (statusCode < 300) {
+                if (statusCode < 300)
+                {
                     String responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
                     JSONArray array = (JSONArray) JSON.parseObject(responseBody).get("results");
                     return array.getJSONObject(0);
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             logger.error("getSuggestion is exception:" + e.toString());
-        } finally {
+        }
+        finally
+        {
             httpClient.getConnectionManager().shutdown();
         }
         logger.error("getSuggestion is null");
         return null;
     }
 
-    private String readSigin(String content, String fromUser) {
+    private String readSigin(String content, String fromUser)
+    {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("openId", fromUser);
         List<UserInfoEntity> list = userManager.getUserListByParams(map);
-        if (!CollectionUtils.isEmpty(list)) {
+        if (!CollectionUtils.isEmpty(list))
+        {
             String userName = list.get(0).getUserName();
             String dateString = CommonTools.getDateString();
             Map<String, Object> map1 = new HashMap<String, Object>();
             map1.put("userName", userName);
             map1.put("date", dateString);
             List<UserSign> list1 = userSignManager.getUserSignListByParams(map1);
-            if (!CollectionUtils.isEmpty(list1)) {
+            if (!CollectionUtils.isEmpty(list1))
+            {
                 return "请勿重复签到";
-            } else {
+            }
+            else
+            {
                 UserSign userSign = new UserSign();
                 userSign.setSignInfo("微信签到");
                 userSign.setUserName(userName);
@@ -329,31 +412,126 @@ public class AIInfoController implements Serializable {
                 logger.info("user:" + userName + "|sign:微信签到");
                 return "签到成功";
             }
-        } else {
+        }
+        else
+        {
             return "请先绑定手机号";
         }
     }
 
-    private void bindTel(String content, String fromUser) {
+    private void bindTel(String content, String fromUser)
+    {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("openId", fromUser);
         List<UserInfoEntity> list = userManager.getUserListByParams(map);
-        if (CollectionUtils.isEmpty(list)) {
+        if (CollectionUtils.isEmpty(list))
+        {
             Map<String, Object> map1 = new HashMap<String, Object>();
             map1.put("tel", content);
             List<UserInfoEntity> list1 = userManager.getUserListByParams(map1);
-            if (!CollectionUtils.isEmpty(list1)) {
+            if (!CollectionUtils.isEmpty(list1))
+            {
                 UserInfoEntity newUserInfoEntity = new UserInfoEntity();
                 newUserInfoEntity.setUserId(list1.get(0).getUserId());
                 newUserInfoEntity.setOpenId(fromUser);
                 userManager.updateUserInfo(newUserInfoEntity);
                 content = "绑定成功";
-            } else {
+            }
+            else
+            {
                 content = "手机号输入错误";
             }
-        } else {
+        }
+        else
+        {
             content = "请勿重复绑定";
         }
+    }
+
+    @RequestMapping(value = "note/add", produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public String addNoteInfo(HttpServletRequest request)
+    {
+        Map<String, Object> result = new HashMap<String, Object>();
+        JSONObject json = new JSONObject(result);
+        String noteInfo = request.getParameter("noteInfo");
+        if (!StringUtils.isBlank(noteInfo))
+        {
+            String noteKey = "noteKey";
+            List<String> noteList = null;
+            try
+            {
+                noteList = (List<String>) redisClient.get(noteKey,
+                    new TypeReference<List<String>>()
+                    {
+                    });
+                if (CollectionUtils.isEmpty(noteList))
+                {
+                    noteList = new ArrayList<String>();
+                }
+                if (noteList.size() > 50)
+                {
+                    noteList.remove(0);
+                }
+                noteList.add(noteInfo);
+                redisClient.set(noteKey, noteList);
+                result.put("status", 0);
+                result.put("msg", "保存成功");
+            }
+            catch (Exception e)
+            {
+                result.put("status", 1);
+                result.put("msg", "程序小哥跟老板娘跑了");
+            }
+        }
+        else
+        {
+            result.put("status", 1);
+            result.put("msg", "亲,写点什么吧");
+        }
+        return json.toJSONString();
+    }
+
+    @RequestMapping(value = "note/del", produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public String delNoteInfo(HttpServletRequest request)
+    {
+        Map<String, Object> result = new HashMap<String, Object>();
+        JSONObject json = new JSONObject(result);
+        return json.toJSONString();
+    }
+
+    @RequestMapping(value = "note/list", produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public String getNoteInfos(HttpServletRequest request)
+    {
+        Map<String, Object> result = new HashMap<String, Object>();
+        JSONObject json = new JSONObject(result);
+        String noteKey = "noteKey";
+        List<String> noteList = null;
+        try
+        {
+            noteList = (List<String>) redisClient.get(noteKey, new TypeReference<List<String>>()
+            {
+            });
+            if (!CollectionUtils.isEmpty(noteList))
+            {
+                result.put("data", noteList);
+                result.put("status", 0);
+            }
+            else
+            {
+                result.put("status", 1);
+                result.put("msg", "暂无内容");
+            }
+        }
+        catch (Exception e)
+        {
+            logger.error("getNoteInfos is Exception:" + e.toString());
+            result.put("status", 1);
+            result.put("msg", "程序小哥跟老板娘跑了");
+        }
+        return json.toJSONString();
     }
 
 }
