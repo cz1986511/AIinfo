@@ -475,7 +475,16 @@ public class AIInfoController implements Serializable
                 }
                 if (noteList.size() > 50)
                 {
-                    noteList.remove(0);
+                    String temp = noteList.get(0);
+                    Iterator<String> iterator = noteList.iterator();
+                    while (iterator.hasNext())
+                    {
+                        String e = iterator.next();
+                        if (e.equals(temp))
+                        {
+                            iterator.remove();
+                        }
+                    }
                 }
                 noteList.add(noteInfo);
                 redisClient.set(noteKey, noteList);
