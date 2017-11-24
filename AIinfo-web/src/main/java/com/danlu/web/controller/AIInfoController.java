@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -457,6 +459,8 @@ public class AIInfoController implements Serializable
         String noteInfo = request.getParameter("noteInfo");
         if (!StringUtils.isBlank(noteInfo))
         {
+            SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            noteInfo += "--" + ft.format(new Date());
             String noteKey = "noteKey";
             List<String> noteList = null;
             try
@@ -498,6 +502,44 @@ public class AIInfoController implements Serializable
     {
         Map<String, Object> result = new HashMap<String, Object>();
         JSONObject json = new JSONObject(result);
+        String userName = (String) request.getSession().getAttribute("userName");
+        String id = request.getParameter("id");
+        if (!StringUtils.isBlank(id))
+        {
+            String noteKey = "noteKey";
+            List<String> noteList = null;
+            try
+            {
+                noteList = (List<String>) redisClient.get(noteKey,
+                    new TypeReference<List<String>>()
+                    {
+                    });
+                if (!CollectionUtils.isEmpty(noteList))
+                {
+                    logger.info("user:" + userName + "del:" + noteList.get(Integer.valueOf(id)));
+                    noteList.remove(Integer.valueOf(id));
+                    redisClient.set(noteKey, noteList);
+                    result.put("status", 0);
+                    result.put("msg", "小子干坏事成功,你已被FBI盯上了");
+                }
+                else
+                {
+                    result.put("status", 1);
+                    result.put("msg", "note不存在");
+                }
+            }
+            catch (Exception e)
+            {
+                result.put("status", 1);
+                result.put("msg", "程序小哥跟老板娘跑了");
+            }
+        }
+        else
+        {
+            result.put("status", 1);
+            result.put("msg", "参数不对");
+        }
+
         return json.toJSONString();
     }
 
@@ -532,6 +574,13 @@ public class AIInfoController implements Serializable
             result.put("msg", "程序小哥跟老板娘跑了");
         }
         return json.toJSONString();
+    }
+
+    public static void main(String[] args)
+    {
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String test = ft.format(new Date());
+        System.out.println(test);
     }
 
 }
