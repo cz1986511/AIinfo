@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.danlu.dleye.persist.mapper.OrderOperationMapper" >
+  <resultMap id="BaseResultMap" type="com.danlu.dleye.persist.base.OrderOperation" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="order_op_type" property="orderOpType" jdbcType="VARCHAR" />
+    <result column="order_op_type_name" property="orderOpTypeName" jdbcType="VARCHAR" />
+    <result column="order_op_content" property="orderOpContent" jdbcType="VARCHAR" />
+    <result column="order_op_time" property="orderOpTime" jdbcType="TIMESTAMP" />
+    <result column="order_op_person" property="orderOpPerson" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, order_no, order_op_type, order_op_type_name, order_op_content, order_op_time, 
+    order_op_person, gmt_create, gmt_modified
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from dmall_order_operation
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from dmall_order_operation
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.danlu.dleye.persist.base.OrderOperation" >
+    insert into dmall_order_operation (id, order_no, order_op_type, 
+      order_op_type_name, order_op_content, order_op_time, 
+      order_op_person, gmt_create, gmt_modified
+      )
+    values (#{id,jdbcType=BIGINT}, #{orderNo,jdbcType=VARCHAR}, #{orderOpType,jdbcType=VARCHAR}, 
+      #{orderOpTypeName,jdbcType=VARCHAR}, #{orderOpContent,jdbcType=VARCHAR}, #{orderOpTime,jdbcType=TIMESTAMP}, 
+      #{orderOpPerson,jdbcType=VARCHAR}, NOW(), NOW())
+  </insert>
+  <insert id="insertSelective" parameterType="com.danlu.dleye.persist.base.OrderOperation" >
+    insert into dmall_order_operation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderNo != null" >
+        order_no,
+      </if>
+      <if test="orderOpType != null" >
+        order_op_type,
+      </if>
+      <if test="orderOpTypeName != null" >
+        order_op_type_name,
+      </if>
+      <if test="orderOpContent != null" >
+        order_op_content,
+      </if>
+      <if test="orderOpTime != null" >
+        order_op_time,
+      </if>
+      <if test="orderOpPerson != null" >
+        order_op_person,
+      </if>
+        gmt_create,
+        gmt_modified
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orderOpType != null" >
+        #{orderOpType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderOpTypeName != null" >
+        #{orderOpTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderOpContent != null" >
+        #{orderOpContent,jdbcType=VARCHAR},
+      </if>
+      <if test="orderOpTime != null" >
+        #{orderOpTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderOpPerson != null" >
+        #{orderOpPerson,jdbcType=VARCHAR},
+      </if>
+        NOW(),
+        NOW()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.danlu.dleye.persist.base.OrderOperation" >
+    update dmall_order_operation
+    <set >
+      <if test="orderNo != null" >
+        order_no = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orderOpType != null" >
+        order_op_type = #{orderOpType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderOpTypeName != null" >
+        order_op_type_name = #{orderOpTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderOpContent != null" >
+        order_op_content = #{orderOpContent,jdbcType=VARCHAR},
+      </if>
+      <if test="orderOpTime != null" >
+        order_op_time = #{orderOpTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderOpPerson != null" >
+        order_op_person = #{orderOpPerson,jdbcType=VARCHAR},
+      </if>
+        gmt_modified = NOW()
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.danlu.dleye.persist.base.OrderOperation" >
+    update dmall_order_operation
+    set order_no = #{orderNo,jdbcType=VARCHAR},
+      order_op_type = #{orderOpType,jdbcType=VARCHAR},
+      order_op_type_name = #{orderOpTypeName,jdbcType=VARCHAR},
+      order_op_content = #{orderOpContent,jdbcType=VARCHAR},
+      order_op_time = #{orderOpTime,jdbcType=TIMESTAMP},
+      order_op_person = #{orderOpPerson,jdbcType=VARCHAR},
+      gmt_modified = NOW()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

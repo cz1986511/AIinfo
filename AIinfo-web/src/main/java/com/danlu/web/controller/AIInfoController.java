@@ -1,8 +1,5 @@
 package com.danlu.web.controller;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,9 +17,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +31,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.danlu.dleye.core.ArticleInfoManager;
 import com.danlu.dleye.core.UserInfoManager;
-import com.danlu.dleye.core.UserSignManager;
-import com.danlu.dleye.core.util.CommonTools;
 import com.danlu.dleye.core.util.DleyeSwith;
 import com.danlu.dleye.core.util.RedisClient;
 import com.danlu.dleye.persist.base.ArticleInfo;
-import com.danlu.dleye.persist.base.UserInfoEntity;
-import com.danlu.dleye.persist.base.UserSign;
 
 @SuppressWarnings("deprecation")
 @Controller
@@ -52,8 +42,6 @@ public class AIInfoController implements Serializable
 
     private static final long serialVersionUID = -90859094251L;
     private static Logger logger = LoggerFactory.getLogger(AIInfoController.class);
-    @Autowired
-    private UserSignManager userSignManager;
     @Autowired
     private UserInfoManager userManager;
     @Autowired
@@ -192,105 +180,6 @@ public class AIInfoController implements Serializable
         return json.toJSONString();
     }
 
-    @RequestMapping(value = "wx_action", produces = "text/html;charset=UTF-8")
-    @ResponseBody
-    public String wxAction(HttpServletRequest request)
-    {
-        Document getdocument = null;
-        String echostr = request.getParameter("echostr");
-        if (!StringUtils.isBlank(echostr))
-        {
-            return echostr;
-        }
-        try
-        {
-            String toUser = null;
-            String fromUser = null;
-            String content = null;
-            BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream(),
-                "UTF-8"));
-            String buffer = null;
-            StringBuffer xml = new StringBuffer();
-            while ((buffer = br.readLine()) != null)
-            {
-                xml.append(buffer);
-            }
-            SAXReader reader = new SAXReader();
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.toString().getBytes());
-            InputStreamReader ir = new InputStreamReader(inputStream);
-            getdocument = reader.read(ir);
-            Element parenetElement = getdocument.getRootElement();
-            for (Iterator<Element> i = parenetElement.elementIterator(); i.hasNext();)
-            {
-                Element nodeElement = i.next();
-                if ("ToUserName".equals(nodeElement.getName()))
-                {
-                    toUser = nodeElement.getText();
-                }
-                if ("FromUserName".equals(nodeElement.getName()))
-                {
-                    fromUser = nodeElement.getText();
-                }
-                if ("Content".equals(nodeElement.getName()))
-                {
-                    content = nodeElement.getText();
-                }
-                logger.info(nodeElement.getName() + ":" + nodeElement.getText());
-            }
-            if (null != content && content.length() == 11)
-            {
-                // 绑定手机号
-                bindTel(content, fromUser);
-            }
-            else if ("读书签到".equals(content))
-            {
-                // 读书签到
-                content = readSigin(content, fromUser);
-            }
-            else if ("1".equals(content))
-            {
-                content = "http://xiaozhuo.info";
-            }
-            else
-            {
-                String telName = "tel-" + content;
-                String result = redisClient.get(telName, new TypeReference<String>()
-                {
-                });
-                if (null != result)
-                {
-                    content = result;
-                }
-                else
-                {
-                    content = "输入错误";
-                }
-            }
-            for (Iterator<Element> j = parenetElement.elementIterator(); j.hasNext();)
-            {
-                Element nodeElement = j.next();
-                if ("ToUserName".equals(nodeElement.getName()))
-                {
-                    nodeElement.setText(fromUser);
-                }
-                if ("FromUserName".equals(nodeElement.getName()))
-                {
-                    nodeElement.setText(toUser);
-                }
-                if ("Content".equals(nodeElement.getName()))
-                {
-                    nodeElement.setText(content);
-                }
-                logger.info(nodeElement.getName() + ":" + nodeElement.getText());
-            }
-        }
-        catch (Exception e)
-        {
-            logger.error(e.toString());
-        }
-        return getdocument.asXML();
-    }
-
     @SuppressWarnings({ "resource" })
     private JSONObject getSuggestion(String city)
     {
@@ -385,69 +274,6 @@ public class AIInfoController implements Serializable
         }
         logger.error("getSuggestion is null");
         return null;
-    }
-
-    private String readSigin(String content, String fromUser)
-    {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("openId", fromUser);
-        List<UserInfoEntity> list = userManager.getUserListByParams(map);
-        if (!CollectionUtils.isEmpty(list))
-        {
-            String userName = list.get(0).getUserName();
-            String dateString = CommonTools.getDateString();
-            Map<String, Object> map1 = new HashMap<String, Object>();
-            map1.put("userName", userName);
-            map1.put("date", dateString);
-            List<UserSign> list1 = userSignManager.getUserSignListByParams(map1);
-            if (!CollectionUtils.isEmpty(list1))
-            {
-                return "请勿重复签到";
-            }
-            else
-            {
-                UserSign userSign = new UserSign();
-                userSign.setSignInfo("微信签到");
-                userSign.setUserName(userName);
-                userSign.setDate(CommonTools.getDateString());
-                userSignManager.addUserSign(userSign);
-                logger.info("user:" + userName + "|sign:微信签到");
-                return "签到成功";
-            }
-        }
-        else
-        {
-            return "请先绑定手机号";
-        }
-    }
-
-    private void bindTel(String content, String fromUser)
-    {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("openId", fromUser);
-        List<UserInfoEntity> list = userManager.getUserListByParams(map);
-        if (CollectionUtils.isEmpty(list))
-        {
-            Map<String, Object> map1 = new HashMap<String, Object>();
-            map1.put("tel", content);
-            List<UserInfoEntity> list1 = userManager.getUserListByParams(map1);
-            if (!CollectionUtils.isEmpty(list1))
-            {
-                UserInfoEntity newUserInfoEntity = new UserInfoEntity();
-                newUserInfoEntity.setUserId(list1.get(0).getUserId());
-                newUserInfoEntity.setOpenId(fromUser);
-                userManager.updateUserInfo(newUserInfoEntity);
-                content = "绑定成功";
-            }
-            else
-            {
-                content = "手机号输入错误";
-            }
-        }
-        else
-        {
-            content = "请勿重复绑定";
-        }
     }
 
     @RequestMapping(value = "note/add", produces = "text/html;charset=UTF-8")
