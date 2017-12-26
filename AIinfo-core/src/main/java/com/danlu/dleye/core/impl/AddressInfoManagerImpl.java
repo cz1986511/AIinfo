@@ -45,4 +45,14 @@ public class AddressInfoManagerImpl implements AddressInfoManager
         return 0;
     }
 
+    @Override
+    public int deleteAddress(AddressInfo addressInfo)
+    {
+        if (null != addressInfo)
+        {
+            return addressInfoMapper.deleteAdressInfo(addressInfo);
+        }
+        return 0;
+    }
+
 }

@@ -1,18 +1,25 @@
 package com.danlu.dleye.persist.mapper;
 
+import java.util.List;
+import java.util.Map;
+
 import com.danlu.dleye.persist.base.ShoppingcarInfo;
 
 public interface ShoppingcarInfoMapper
 {
     int deleteByPrimaryKey(Long id);
 
-    int insert(ShoppingcarInfo record);
+    int deleteShoppingcarInfo(ShoppingcarInfo shoppingcarInfo);
 
-    int insertSelective(ShoppingcarInfo record);
+    int insert(ShoppingcarInfo shoppingcarInfo);
+
+    int insertSelective(ShoppingcarInfo shoppingcarInfo);
 
     ShoppingcarInfo selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(ShoppingcarInfo record);
+    int updateByPrimaryKeySelective(ShoppingcarInfo shoppingcarInfo);
 
-    int updateByPrimaryKey(ShoppingcarInfo record);
+    int updateByPrimaryKey(ShoppingcarInfo shoppingcarInfo);
+
+    List<ShoppingcarInfo> selectByParams(Map<String, Object> map);
 }

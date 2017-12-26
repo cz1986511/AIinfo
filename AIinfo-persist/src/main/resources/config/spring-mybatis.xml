@@ -18,6 +18,8 @@
 	                 	http://www.springframework.org/schema/mvc
 	                    http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 	<!-- 配置數據源 -->
+	<context:property-placeholder location="classpath:properties/AIinfo.properties" />
+	
 	<bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
 		init-method="" destroy-method="close">
 		<property name="url" value="${db.jdbc.url}" />

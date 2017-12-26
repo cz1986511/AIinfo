@@ -5,11 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
@@ -33,6 +33,7 @@ import com.danlu.dleye.core.ArticleInfoManager;
 import com.danlu.dleye.core.UserInfoManager;
 import com.danlu.dleye.core.util.DleyeSwith;
 import com.danlu.dleye.core.util.RedisClient;
+import com.danlu.dleye.core.util.UserBaseInfo;
 import com.danlu.dleye.persist.base.ArticleInfo;
 
 @SuppressWarnings("deprecation")
@@ -180,6 +181,39 @@ public class AIInfoController implements Serializable
         return json.toJSONString();
     }
 
+    @RequestMapping(value = "user_address_list", produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public String getUserAddressList(HttpServletRequest request, HttpServletResponse response)
+    {
+        Map<String, Object> result = new HashMap<String, Object>();
+        JSONObject json = new JSONObject(result);
+        String token = request.getParameter("token");
+        String key = "user_address_list";
+        if (!StringUtils.isBlank(token) && dleyeSwith.getToken().equals(token))
+        {
+            List<UserBaseInfo> list = (List<UserBaseInfo>) redisClient.get(key,
+                new TypeReference<List<UserBaseInfo>>()
+                {
+                });
+            if (!CollectionUtils.isEmpty(list))
+            {
+                result.put("data", list);
+                result.put("status", 0);
+            }
+            else
+            {
+                result.put("status", 1);
+                result.put("msg", "缓存获取数据失败");
+            }
+        }
+        else
+        {
+            result.put("status", 1);
+            result.put("msg", "程序猿小哥跟老板娘跑了");
+        }
+        return json.toJSONString();
+    }
+
     @SuppressWarnings({ "resource" })
     private JSONObject getSuggestion(String city)
     {
@@ -274,150 +308,6 @@ public class AIInfoController implements Serializable
         }
         logger.error("getSuggestion is null");
         return null;
-    }
-
-    @RequestMapping(value = "note/add", produces = "text/html;charset=UTF-8")
-    @ResponseBody
-    public String addNoteInfo(HttpServletRequest request)
-    {
-        Map<String, Object> result = new HashMap<String, Object>();
-        JSONObject json = new JSONObject(result);
-        String noteInfo = request.getParameter("noteInfo");
-        if (!StringUtils.isBlank(noteInfo))
-        {
-            SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            noteInfo += " ( " + ft.format(new Date()) + " )";
-            String noteKey = "noteKey";
-            List<String> noteList = null;
-            try
-            {
-                noteList = (List<String>) redisClient.get(noteKey,
-                    new TypeReference<List<String>>()
-                    {
-                    });
-                if (CollectionUtils.isEmpty(noteList))
-                {
-                    noteList = new ArrayList<String>();
-                }
-                if (noteList.size() > 50)
-                {
-                    String temp = noteList.get(0);
-                    Iterator<String> iterator = noteList.iterator();
-                    while (iterator.hasNext())
-                    {
-                        String e = iterator.next();
-                        if (e.equals(temp))
-                        {
-                            iterator.remove();
-                        }
-                    }
-                }
-                noteList.add(noteInfo);
-                redisClient.set(noteKey, noteList);
-                result.put("status", 0);
-                result.put("msg", "保存成功");
-            }
-            catch (Exception e)
-            {
-                result.put("status", 1);
-                result.put("msg", "程序小哥跟老板娘跑了");
-            }
-        }
-        else
-        {
-            result.put("status", 1);
-            result.put("msg", "亲,写点什么吧");
-        }
-        return json.toJSONString();
-    }
-
-    @RequestMapping(value = "note/del", produces = "text/html;charset=UTF-8")
-    @ResponseBody
-    public String delNoteInfo(HttpServletRequest request)
-    {
-        Map<String, Object> result = new HashMap<String, Object>();
-        JSONObject json = new JSONObject(result);
-        String userName = (String) request.getSession().getAttribute("userName");
-        String id = request.getParameter("id");
-        if (!StringUtils.isBlank(id))
-        {
-            String noteKey = "noteKey";
-            List<String> noteList = null;
-            try
-            {
-                noteList = (List<String>) redisClient.get(noteKey,
-                    new TypeReference<List<String>>()
-                    {
-                    });
-                if (!CollectionUtils.isEmpty(noteList))
-                {
-                    String temp = noteList.get(Integer.valueOf(id));
-                    logger.info("user:" + userName + "del:" + temp);
-                    Iterator<String> iterator = noteList.iterator();
-                    while (iterator.hasNext())
-                    {
-                        String e = iterator.next();
-                        if (e.equals(temp))
-                        {
-                            iterator.remove();
-                        }
-                    }
-                    redisClient.set(noteKey, noteList);
-                    result.put("status", 0);
-                    result.put("msg", "小子干坏事成功,你已被FBI盯上了");
-                }
-                else
-                {
-                    result.put("status", 1);
-                    result.put("msg", "note不存在");
-                }
-            }
-            catch (Exception e)
-            {
-                result.put("status", 1);
-                result.put("msg", "程序小哥跟老板娘跑了");
-            }
-        }
-        else
-        {
-            result.put("status", 1);
-            result.put("msg", "参数不对");
-        }
-
-        return json.toJSONString();
-    }
-
-    @RequestMapping(value = "note/list", produces = "text/html;charset=UTF-8")
-    @ResponseBody
-    public String getNoteInfos(HttpServletRequest request)
-    {
-        Map<String, Object> result = new HashMap<String, Object>();
-        JSONObject json = new JSONObject(result);
-        String noteKey = "noteKey";
-        List<String> noteList = null;
-        try
-        {
-            noteList = (List<String>) redisClient.get(noteKey, new TypeReference<List<String>>()
-            {
-            });
-            if (!CollectionUtils.isEmpty(noteList))
-            {
-                result.put("data", noteList);
-                result.put("status", 0);
-            }
-            else
-            {
-                result.put("status", 1);
-                result.put("msg", "暂无内容");
-            }
-        }
-        catch (Exception e)
-        {
-            logger.error("getNoteInfos is Exception:" + e.toString());
-            result.put("status", 1);
-            result.put("msg", "程序小哥跟老板娘跑了");
-        }
-        return json.toJSONString();
     }
 
     public static void main(String[] args)

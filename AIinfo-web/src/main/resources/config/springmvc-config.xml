@@ -17,12 +17,29 @@
 	                 	http://www.springframework.org/schema/mvc
 	                    http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 
-	<!-- 启用spring mvc 注解 -->
-	<context:annotation-config />
-	<mvc:annotation-driven> 
-    </mvc:annotation-driven> 
-	<context:property-placeholder location="classpath:properties/AIinfo.properties" />
-
+	<bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		<property name="favorPathExtension" value="false" />
+	</bean>
+	<mvc:annotation-driven content-negotiation-manager="contentNegotiationManager">
+		<mvc:message-converters >
+			<bean id="jsonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>application/json;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+			<bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/plain;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+			<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	
 	<!-- 注解扫描 -->
 	<context:component-scan base-package="com.danlu.web.controller" />
 	<context:component-scan base-package="com.danlu.web.springconfig" />

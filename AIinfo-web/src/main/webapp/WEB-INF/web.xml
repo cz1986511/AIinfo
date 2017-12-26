@@ -18,7 +18,12 @@
 
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath*:config/spring-config.xml,classpath*:config/spring-mybatis.xml,classpath*:config/core-config.xml,classpath*:config/quartz-config.xml</param-value>
+		<param-value>
+		  classpath*:config/spring-mybatis.xml,
+		  classpath*:config/core-config.xml,
+		  classpath*:config/service-config.xml,
+		  classpath*:config/quartz-config.xml
+		</param-value>
 	</context-param>
 	
 	<!-- 登录SessionFilter -->
@@ -31,7 +36,7 @@
 	    </init-param>
 	    <init-param>
 	        <param-name>includeStrings</param-name><!-- 只对指定过滤参数后缀进行过滤 -->
-	        <param-value></param-value>
+	        <param-value>shoppingcar/list</param-value>
 	    </init-param>
 	    <init-param>
 	        <param-name>redirectPath</param-name><!-- 未通过跳转到登录界面 -->
@@ -39,7 +44,7 @@
 	    </init-param>
 	    <init-param>
 	        <param-name>disabletestfilter</param-name><!-- Y:过滤无效 -->
-	        <param-value>N</param-value>
+	        <param-value>Y</param-value>
 	    </init-param>
     </filter>
     <filter-mapping>
@@ -82,7 +87,7 @@
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>ContextConfigLocation</param-name>
-			<param-value>classpath:config/spring-config.xml</param-value>
+			<param-value>classpath:config/springmvc-config.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>

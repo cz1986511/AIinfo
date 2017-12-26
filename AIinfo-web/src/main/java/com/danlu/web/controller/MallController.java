@@ -20,14 +20,14 @@ import com.danlu.dleye.client.entity.JsonResult;
 import com.danlu.dleye.service.ItemService;
 
 @Controller
-@RequestMapping("/item")
-public class ItemController
+@RequestMapping("/mall")
+public class MallController
 {
 
     @Autowired
     private ItemService itemService;
 
-    private final static Logger log = LoggerFactory.getLogger(ItemController.class);
+    private final static Logger log = LoggerFactory.getLogger(MallController.class);
 
     /**
      * @Title: getItemInfoByItemId
@@ -63,7 +63,7 @@ public class ItemController
     }
 
     /**
-     * @Title: queryItems
+     * @Title: queryShops
      * @Description: 多条件查询商品列表信息
      * @param:userLongitude： 地图坐标经度
      * @param:userLatitude： 地图坐标纬度

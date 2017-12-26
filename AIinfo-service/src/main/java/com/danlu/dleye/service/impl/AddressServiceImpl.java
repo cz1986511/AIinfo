@@ -3,6 +3,7 @@ package com.danlu.dleye.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,16 +38,30 @@ public class AddressServiceImpl implements AddressService
     }
 
     @Override
-    public int addNewAddress(AddressInfo addressInfo)
+    public int addOrUpdateAddress(AddressInfo addressInfo)
     {
-        // TODO Auto-generated method stub
+        if (null != addressInfo)
+        {
+            String addressId = addressInfo.getAddressId();
+            if (!StringUtils.isBlank(addressId))
+            {
+                return addressInfoManager.updateAddress(addressInfo);
+            }
+            else
+            {
+                return addressInfoManager.addNewAddress(addressInfo);
+            }
+        }
         return 0;
     }
 
     @Override
-    public int updateAddress(AddressInfo addressInfo)
+    public int deleteAddress(AddressInfo addressInfo)
     {
-        // TODO Auto-generated method stub
+        if (null != addressInfo)
+        {
+            return addressInfoManager.deleteAddress(addressInfo);
+        }
         return 0;
     }
 

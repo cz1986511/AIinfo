@@ -9,8 +9,8 @@ public interface AddressService
 {
     List<AddressInfo> getAddressInfos(Map<String, Object> map);
 
-    int addNewAddress(AddressInfo addressInfo);
+    int addOrUpdateAddress(AddressInfo addressInfo);
 
-    int updateAddress(AddressInfo addressInfo);
+    int deleteAddress(AddressInfo addressInfo);
 
 }

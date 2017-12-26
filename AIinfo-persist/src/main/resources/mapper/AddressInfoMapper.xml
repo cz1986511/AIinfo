@@ -62,6 +62,11 @@
     delete from dmall_address_info
     where id = #{id,jdbcType=BIGINT}
   </delete>
+  <delete id="deleteAdressInfo" parameterType="com.danlu.dleye.persist.base.AddressInfo" >
+    delete from dmall_address_info
+    where address_id = #{addressId,jdbcType=VARCHAR} and user_id = #{userId,jdbcType=VARCHAR}
+  </delete>
+  
   <insert id="insert" parameterType="com.danlu.dleye.persist.base.AddressInfo" >
     insert into dmall_address_info (id, user_id, address_id, 
       address_name, address_tel, address_info, 

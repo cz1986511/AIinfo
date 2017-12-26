@@ -13,4 +13,6 @@ public interface AddressInfoManager
 
     int updateAddress(AddressInfo addressInfo);
 
+    int deleteAddress(AddressInfo addressInfo);
+
 }

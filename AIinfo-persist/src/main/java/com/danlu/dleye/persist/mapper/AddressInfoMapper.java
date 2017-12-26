@@ -9,6 +9,8 @@ public interface AddressInfoMapper
 {
     int deleteByPrimaryKey(Long id);
 
+    int deleteAdressInfo(AddressInfo addressInfo);
+
     int insert(AddressInfo addressInfo);
 
     int insertSelective(AddressInfo addressInfo);
