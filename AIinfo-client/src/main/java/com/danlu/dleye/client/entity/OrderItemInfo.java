@@ -1,11 +1,7 @@
-package com.danlu.dleye.persist.base;
+package com.danlu.dleye.client.entity;
 
-import java.util.Date;
-
-public class OrderItem
+public class OrderItemInfo
 {
-    private Long id;
-
     private String orderNo;
 
     private String orderItemType;
@@ -18,20 +14,6 @@ public class OrderItem
 
     private Long orderItemPrice;
 
-    private Date gmtCreate;
-
-    private Date gmtModified;
-
-    public Long getId()
-    {
-        return id;
-    }
-
-    public void setId(Long id)
-    {
-        this.id = id;
-    }
-
     public String getOrderNo()
     {
         return orderNo;
@@ -39,7 +21,7 @@ public class OrderItem
 
     public void setOrderNo(String orderNo)
     {
-        this.orderNo = orderNo == null ? null : orderNo.trim();
+        this.orderNo = orderNo;
     }
 
     public String getOrderItemType()
@@ -49,7 +31,7 @@ public class OrderItem
 
     public void setOrderItemType(String orderItemType)
     {
-        this.orderItemType = orderItemType == null ? null : orderItemType.trim();
+        this.orderItemType = orderItemType;
     }
 
     public Long getOrderItemId()
@@ -92,23 +74,4 @@ public class OrderItem
         this.orderItemPrice = orderItemPrice;
     }
 
-    public Date getGmtCreate()
-    {
-        return gmtCreate;
-    }
-
-    public void setGmtCreate(Date gmtCreate)
-    {
-        this.gmtCreate = gmtCreate;
-    }
-
-    public Date getGmtModified()
-    {
-        return gmtModified;
-    }
-
-    public void setGmtModified(Date gmtModified)
-    {
-        this.gmtModified = gmtModified;
-    }
 }

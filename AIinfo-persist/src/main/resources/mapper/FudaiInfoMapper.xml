@@ -5,33 +5,70 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="fd_id" property="fdId" jdbcType="VARCHAR" />
     <result column="fd_name" property="fdName" jdbcType="VARCHAR" />
+    <result column="fd_amount" property="fdAmount" jdbcType="BIGINT" />
+    <result column="fd_price" property="fdPrice" jdbcType="BIGINT" />
     <result column="fd_code" property="fdCode" jdbcType="VARCHAR" />
     <result column="fd_type" property="fdType" jdbcType="VARCHAR" />
     <result column="fd_status" property="fdStatus" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
     <result column="create_person" property="createPerson" jdbcType="VARCHAR" />
     <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
     <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, fd_id, fd_name, fd_code, fd_type, fd_status, create_person, gmt_create, gmt_modified
+    id, fd_id, fd_name, fd_amount, fd_price, fd_code, fd_type, fd_status, user_id, create_person, gmt_create, gmt_modified
   </sql>
+  <sql id="selectByParamsWhere">
+    <where>
+	  <if test="fdIds != null">
+		fd_id in
+		<trim suffixOverrides=",">
+			<foreach collection="fdIds" item="fdId" index="index" separator="," open="(" close=")">
+				#{fdId, jdbcType=VARCHAR}
+			</foreach>
+		</trim>
+		and
+	  </if>
+	  <if test="fdType != null">
+        fd_type = #{fdType,jdbcType=VARCHAR} and
+      </if>
+      <if test="fdStatus != null">
+        fd_status = #{fdStatus,jdbcType=VARCHAR} and
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT} and
+      </if>
+        1 = 1
+    </where>
+  </sql>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from dmall_fudai_info
     where id = #{id,jdbcType=BIGINT}
   </select>
+  <select id="selectByParams" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from dmall_fudai_info
+    <include refid="selectByParamsWhere" />
+    <if test=" offset != null and limit != null">
+	  limit ${offset},${limit}
+	</if>
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from dmall_fudai_info
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.danlu.dleye.persist.base.FudaiInfo" >
-    insert into dmall_fudai_info (id, fd_id, fd_name, 
-      fd_code, fd_type, fd_status, 
+    insert into dmall_fudai_info (id, fd_id, fd_name, fd_amount, fd_price, 
+      fd_code, fd_type, fd_status, user_id 
       create_person, gmt_create, gmt_modified
       )
-    values (#{id,jdbcType=BIGINT}, #{fdId,jdbcType=VARCHAR}, #{fdName,jdbcType=VARCHAR}, 
-      #{fdCode,jdbcType=VARCHAR}, #{fdType,jdbcType=VARCHAR}, #{fdStatus,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{fdId,jdbcType=VARCHAR}, #{fdName,jdbcType=VARCHAR}, #{fdAmount,jdbcType=BIGINT}, #{fdPrice,jdbcType=BIGINT},
+      #{fdCode,jdbcType=VARCHAR}, #{fdType,jdbcType=VARCHAR}, #{fdStatus,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT}, 
       #{createPerson,jdbcType=VARCHAR}, NOW(), NOW()
       )
   </insert>
@@ -47,6 +84,12 @@
       <if test="fdName != null" >
         fd_name,
       </if>
+      <if test="fdAmount != null" >
+        fd_amount,
+      </if>
+      <if test="fdPrice != null" >
+        fd_price,
+      </if>
       <if test="fdCode != null" >
         fd_code,
       </if>
@@ -55,6 +98,9 @@
       </if>
       <if test="fdStatus != null" >
         fd_status,
+      </if>
+      <if test="userId != null" >
+        user_id,
       </if>
       <if test="createPerson != null" >
         create_person,
@@ -72,6 +118,12 @@
       <if test="fdName != null" >
         #{fdName,jdbcType=VARCHAR},
       </if>
+      <if test="fdAmount != null" >
+        #{fdAmount,jdbcType=BIGINT},
+      </if>
+      <if test="fdPrice != null" >
+        #{fdPrice,jdbcType=BIGINT},
+      </if>
       <if test="fdCode != null" >
         #{fdCode,jdbcType=VARCHAR},
       </if>
@@ -80,6 +132,9 @@
       </if>
       <if test="fdStatus != null" >
         #{fdStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
       </if>
       <if test="createPerson != null" >
         #{createPerson,jdbcType=VARCHAR},
@@ -91,11 +146,14 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.danlu.dleye.persist.base.FudaiInfo" >
     update dmall_fudai_info
     <set >
-      <if test="fdId != null" >
-        fd_id = #{fdId,jdbcType=VARCHAR},
-      </if>
       <if test="fdName != null" >
         fd_name = #{fdName,jdbcType=VARCHAR},
+      </if>
+      <if test="fdAmount != null" >
+        fd_amount = #{fdAmount,jdbcType=BIGINT},
+      </if>
+      <if test="fdPrice != null" >
+        fd_price = #{fdPrice,jdbcType=BIGINT},
       </if>
       <if test="fdCode != null" >
         fd_code = #{fdCode,jdbcType=VARCHAR},
@@ -106,22 +164,14 @@
       <if test="fdStatus != null" >
         fd_status = #{fdStatus,jdbcType=VARCHAR},
       </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
       <if test="createPerson != null" >
         create_person = #{createPerson,jdbcType=VARCHAR},
       </if>
         gmt_modified = NOW()
     </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.danlu.dleye.persist.base.FudaiInfo" >
-    update dmall_fudai_info
-    set fd_id = #{fdId,jdbcType=VARCHAR},
-      fd_name = #{fdName,jdbcType=VARCHAR},
-      fd_code = #{fdCode,jdbcType=VARCHAR},
-      fd_type = #{fdType,jdbcType=VARCHAR},
-      fd_status = #{fdStatus,jdbcType=VARCHAR},
-      create_person = #{createPerson,jdbcType=VARCHAR},
-      gmt_modified = NOW()
-    where id = #{id,jdbcType=BIGINT}
+    where fd_id = #{fd_id,jdbcType=VARCHAR}
   </update>
 </mapper>

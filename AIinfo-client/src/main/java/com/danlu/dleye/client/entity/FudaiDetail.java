@@ -1,11 +1,9 @@
-package com.danlu.dleye.persist.base;
+package com.danlu.dleye.client.entity;
 
-import java.util.Date;
+import java.util.List;
 
-public class FudaiInfo
+public class FudaiDetail
 {
-    private Long id;
-
     private String fdId;
 
     private String fdName;
@@ -24,19 +22,9 @@ public class FudaiInfo
 
     private String createPerson;
 
-    private Date gmtCreate;
+    private List<FudaiItemInfo> fudaiItemInfos;
 
-    private Date gmtModified;
-
-    public Long getId()
-    {
-        return id;
-    }
-
-    public void setId(Long id)
-    {
-        this.id = id;
-    }
+    private List<FudaiPictureInfo> fudaiPictureInfos;
 
     public String getFdId()
     {
@@ -45,7 +33,7 @@ public class FudaiInfo
 
     public void setFdId(String fdId)
     {
-        this.fdId = fdId == null ? null : fdId.trim();
+        this.fdId = fdId;
     }
 
     public String getFdName()
@@ -55,7 +43,7 @@ public class FudaiInfo
 
     public void setFdName(String fdName)
     {
-        this.fdName = fdName == null ? null : fdName.trim();
+        this.fdName = fdName;
     }
 
     public Long getFdAmount()
@@ -85,7 +73,7 @@ public class FudaiInfo
 
     public void setFdCode(String fdCode)
     {
-        this.fdCode = fdCode == null ? null : fdCode.trim();
+        this.fdCode = fdCode;
     }
 
     public String getFdType()
@@ -95,7 +83,7 @@ public class FudaiInfo
 
     public void setFdType(String fdType)
     {
-        this.fdType = fdType == null ? null : fdType.trim();
+        this.fdType = fdType;
     }
 
     public String getFdStatus()
@@ -105,7 +93,7 @@ public class FudaiInfo
 
     public void setFdStatus(String fdStatus)
     {
-        this.fdStatus = fdStatus == null ? null : fdStatus.trim();
+        this.fdStatus = fdStatus;
     }
 
     public Long getUserId()
@@ -125,26 +113,27 @@ public class FudaiInfo
 
     public void setCreatePerson(String createPerson)
     {
-        this.createPerson = createPerson == null ? null : createPerson.trim();
+        this.createPerson = createPerson;
     }
 
-    public Date getGmtCreate()
+    public List<FudaiItemInfo> getFudaiItemInfos()
     {
-        return gmtCreate;
+        return fudaiItemInfos;
     }
 
-    public void setGmtCreate(Date gmtCreate)
+    public void setFudaiItemInfos(List<FudaiItemInfo> fudaiItemInfos)
     {
-        this.gmtCreate = gmtCreate;
+        this.fudaiItemInfos = fudaiItemInfos;
     }
 
-    public Date getGmtModified()
+    public List<FudaiPictureInfo> getFudaiPictureInfos()
     {
-        return gmtModified;
+        return fudaiPictureInfos;
     }
 
-    public void setGmtModified(Date gmtModified)
+    public void setFudaiPictureInfos(List<FudaiPictureInfo> fudaiPictureInfos)
     {
-        this.gmtModified = gmtModified;
+        this.fudaiPictureInfos = fudaiPictureInfos;
     }
+
 }

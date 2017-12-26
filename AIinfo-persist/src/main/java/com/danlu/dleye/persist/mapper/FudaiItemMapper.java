@@ -1,18 +1,21 @@
 package com.danlu.dleye.persist.mapper;
 
+import java.util.List;
+import java.util.Map;
+
 import com.danlu.dleye.persist.base.FudaiItem;
 
 public interface FudaiItemMapper
 {
-    int deleteByPrimaryKey(Long id);
+    int deleteByParams(Map<String, Object> map);
 
-    int insert(FudaiItem record);
+    int insert(FudaiItem fudaiItem);
 
-    int insertSelective(FudaiItem record);
+    int insertSelective(FudaiItem fudaiItem);
 
     FudaiItem selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(FudaiItem record);
+    int updateByPrimaryKeySelective(FudaiItem fudaiItem);
 
-    int updateByPrimaryKey(FudaiItem record);
+    List<FudaiItem> selectByParams(Map<String, Object> map);
 }

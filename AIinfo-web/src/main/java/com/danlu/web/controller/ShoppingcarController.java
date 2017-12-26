@@ -35,7 +35,7 @@ public class ShoppingcarController
 
     /**
      * @Title: queryShoppingcarItems
-     * @Description: 多条件查询购物车商品列表信息
+     * @Description: 查询购物车商品列表信息
      * @return:ResponseEntity<JsonResult<List<ShoppingcarInfo>>>
      */
     @RequestMapping(value = "/list", method = { RequestMethod.POST, RequestMethod.GET })

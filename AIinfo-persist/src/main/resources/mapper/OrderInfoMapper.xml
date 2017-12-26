@@ -3,6 +3,7 @@
 <mapper namespace="com.danlu.dleye.persist.mapper.OrderInfoMapper" >
   <resultMap id="BaseResultMap" type="com.danlu.dleye.persist.base.OrderInfo" >
     <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
     <result column="order_type" property="orderType" jdbcType="VARCHAR" />
     <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
@@ -16,26 +17,76 @@
     <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, order_no, order_type, order_status, order_amount, order_retail, order_discount, 
+    id, user_id, order_no, order_type, order_status, order_amount, order_retail, order_discount, 
     pay_no, pay_type, pay_status, gmt_create, gmt_modified
   </sql>
+  <sql id="selectByParamsWhere">
+    <where>
+      <if test="userIds != null">
+		user_id in
+		<trim suffixOverrides=",">
+			<foreach collection="userIds" item="userId" index="index" separator="," open="(" close=")">
+				#{userId, jdbcType=VARCHAR}
+			</foreach>
+		</trim>
+		and
+	  </if>
+	  <if test="orderNos != null">
+		order_no in
+		<trim suffixOverrides=",">
+			<foreach collection="orderNos" item="orderNo" index="index" separator="," open="(" close=")">
+				#{orderNo, jdbcType=VARCHAR}
+			</foreach>
+		</trim>
+		and
+	  </if>
+	  <if test="orderAmountH != null">
+	  <![CDATA[
+        order_amount <= #{orderAmountH,jdbcType=BIGINT} and
+      ]]>
+      </if>
+      <if test="orderAmountL != null">
+      <![CDATA[
+        order_amount >= #{orderAmountL,jdbcType=BIGINT} and
+      ]]>
+      </if>
+      <if test="orderType != null">
+        order_type = #{orderType,jdbcType=VARCHAR} and
+      </if>
+      <if test="orderStatus != null">
+        order_status = #{orderStatus,jdbcType=VARCHAR} and
+      </if>
+        1 = 1
+    </where>
+  </sql>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from dmall_order_info
     where id = #{id,jdbcType=BIGINT}
   </select>
+  <select id="selectByParams" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from dmall_order_info
+    <include refid="selectByParamsWhere" />
+    <if test=" offset != null and limit != null">
+	  limit ${offset},${limit}
+	</if>
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from dmall_order_info
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.danlu.dleye.persist.base.OrderInfo" >
-    insert into dmall_order_info (id, order_no, order_type, 
+    insert into dmall_order_info (id, user_id, order_no, order_type, 
       order_status, order_amount, order_retail, 
       order_discount, pay_no, pay_type, 
       pay_status, gmt_create, gmt_modified
       )
-    values (#{id,jdbcType=BIGINT}, #{orderNo,jdbcType=VARCHAR}, #{orderType,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, #{orderType,jdbcType=VARCHAR}, 
       #{orderStatus,jdbcType=VARCHAR}, #{orderAmount,jdbcType=BIGINT}, #{orderRetail,jdbcType=BIGINT}, 
       #{orderDiscount,jdbcType=BIGINT}, #{payNo,jdbcType=VARCHAR}, #{payType,jdbcType=VARCHAR}, 
       #{payStatus,jdbcType=VARCHAR}, NOW(), NOW())
@@ -48,6 +99,9 @@
       </if>
       <if test="orderNo != null" >
         order_no,
+      </if>
+      <if test="userId != null" >
+        user_id,
       </if>
       <if test="orderType != null" >
         order_type,
@@ -79,6 +133,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
       </if>
       <if test="orderNo != null" >
         #{orderNo,jdbcType=VARCHAR},
@@ -114,9 +171,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.danlu.dleye.persist.base.OrderInfo" >
     update dmall_order_info
     <set >
-      <if test="orderNo != null" >
-        order_no = #{orderNo,jdbcType=VARCHAR},
-      </if>
       <if test="orderType != null" >
         order_type = #{orderType,jdbcType=VARCHAR},
       </if>
@@ -143,20 +197,6 @@
       </if>
         gmt_modified = NOW()
     </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.danlu.dleye.persist.base.OrderInfo" >
-    update dmall_order_info
-    set order_no = #{orderNo,jdbcType=VARCHAR},
-      order_type = #{orderType,jdbcType=VARCHAR},
-      order_status = #{orderStatus,jdbcType=VARCHAR},
-      order_amount = #{orderAmount,jdbcType=BIGINT},
-      order_retail = #{orderRetail,jdbcType=BIGINT},
-      order_discount = #{orderDiscount,jdbcType=BIGINT},
-      pay_no = #{payNo,jdbcType=VARCHAR},
-      pay_type = #{payType,jdbcType=VARCHAR},
-      pay_status = #{payStatus,jdbcType=VARCHAR},
-      gmt_modified = NOW()
-    where id = #{id,jdbcType=BIGINT}
+    where order_no = #{orderNo,jdbcType=VARCHAR}
   </update>
 </mapper>

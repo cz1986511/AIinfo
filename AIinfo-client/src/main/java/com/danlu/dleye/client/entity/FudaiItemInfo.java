@@ -1,11 +1,7 @@
-package com.danlu.dleye.persist.base;
+package com.danlu.dleye.client.entity;
 
-import java.util.Date;
-
-public class FudaiItem
+public class FudaiItemInfo
 {
-    private Long id;
-
     private String fdId;
 
     private Long fdItemId;
@@ -18,20 +14,6 @@ public class FudaiItem
 
     private String fdItemPic;
 
-    private Date gmtCreate;
-
-    private Date gmtModified;
-
-    public Long getId()
-    {
-        return id;
-    }
-
-    public void setId(Long id)
-    {
-        this.id = id;
-    }
-
     public String getFdId()
     {
         return fdId;
@@ -39,7 +21,7 @@ public class FudaiItem
 
     public void setFdId(String fdId)
     {
-        this.fdId = fdId == null ? null : fdId.trim();
+        this.fdId = fdId;
     }
 
     public Long getFdItemId()
@@ -59,7 +41,7 @@ public class FudaiItem
 
     public void setFdItemName(String fdItemName)
     {
-        this.fdItemName = fdItemName == null ? null : fdItemName.trim();
+        this.fdItemName = fdItemName;
     }
 
     public Long getFdItemPrice()
@@ -92,23 +74,4 @@ public class FudaiItem
         this.fdItemPic = fdItemPic;
     }
 
-    public Date getGmtCreate()
-    {
-        return gmtCreate;
-    }
-
-    public void setGmtCreate(Date gmtCreate)
-    {
-        this.gmtCreate = gmtCreate;
-    }
-
-    public Date getGmtModified()
-    {
-        return gmtModified;
-    }
-
-    public void setGmtModified(Date gmtModified)
-    {
-        this.gmtModified = gmtModified;
-    }
 }
