@@ -25,7 +25,7 @@ import com.danlu.dleye.service.FudaiService;
 
 @Controller
 @RequestMapping("/fudai")
-public class FudaiController
+public class FudaiController extends BaseController
 {
     private final static Logger log = LoggerFactory.getLogger(FudaiController.class);
 
@@ -91,7 +91,7 @@ public class FudaiController
         {
             if (null != condition.get("isMy"))
             {
-                if (null != request.getSession().getAttribute("userId"))
+                if (this.hasLogin(request))
                 {
                     Long userId = (Long) request.getSession().getAttribute("userId");
                     condition.put("userId", userId);
@@ -99,8 +99,7 @@ public class FudaiController
                 else
                 {
                     log.info("未登录");
-                    data.setMsg("未登录");
-                    data.setStatus(2);
+                    this.setNotLoginMsg(data);
                     return new ResponseEntity<JsonResult<List<FudaiDetail>>>(data, HttpStatus.OK);
                 }
             }
@@ -142,7 +141,7 @@ public class FudaiController
         JsonResult<String> data = new JsonResult<String>();
         try
         {
-            if (null != request.getSession().getAttribute("userId"))
+            if (this.hasLogin(request))
             {
                 if(condition == null || condition.isEmpty()){
                     throw new NullPointerException("新增福袋参数不能为空.");
@@ -168,8 +167,7 @@ public class FudaiController
             else
             {
                 log.info("未登录");
-                data.setMsg("未登录");
-                data.setStatus(2);
+                this.setNotLoginMsg(data);
                 return new ResponseEntity<JsonResult<String>>(data, HttpStatus.OK);
             }
         }
@@ -198,7 +196,7 @@ public class FudaiController
         JsonResult<String> data = new JsonResult<String>();
         try
         {
-            if (null != request.getSession().getAttribute("userId"))
+            if (this.hasLogin(request))
             {
                 String userId = request.getSession().getAttribute("userId").toString();
                 condition.put("userId", Long.valueOf(userId));
@@ -221,8 +219,7 @@ public class FudaiController
             else
             {
                 log.info("未登录");
-                data.setMsg("未登录");
-                data.setStatus(2);
+                this.setNotLoginMsg(data);
                 return new ResponseEntity<JsonResult<String>>(data, HttpStatus.OK);
             }
         }

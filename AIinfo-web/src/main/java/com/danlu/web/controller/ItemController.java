@@ -3,6 +3,8 @@ package com.danlu.web.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ import com.danlu.dleye.service.ItemService;
 
 @Controller
 @RequestMapping("/item")
-public class ItemController
+public class ItemController extends BaseController
 {
 
     @Autowired
@@ -37,22 +39,28 @@ public class ItemController
      * @return: ResponseEntity<JsonResult<ItemInfo>>
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<JsonResult<ItemInfo>> getItemInfoByItemId(@PathVariable("id") final String itemId)
+    public ResponseEntity<JsonResult<ItemInfo>> getItemInfoByItemId(HttpServletRequest request,@PathVariable("id") final String itemId)
     {
         log.info("获取商品详情入参，itemId={}", itemId);
         JsonResult<ItemInfo> data = new JsonResult<ItemInfo>();
         try
         {
-            if (StringUtils.isEmpty(itemId))
-            {
-                data.setMsg("参数为空");
+            
+            if(this.hasLogin(request)){
+                if (StringUtils.isEmpty(itemId))
+                {
+                    data.setMsg("参数为空");
+                    data.setStatus(0);
+                    return new ResponseEntity<JsonResult<ItemInfo>>(data, HttpStatus.OK);
+                }
+                ItemInfo itemInfo = itemService.getItemById(Long.valueOf(itemId));
+                data.setData(itemInfo);
                 data.setStatus(0);
-                return new ResponseEntity<JsonResult<ItemInfo>>(data, HttpStatus.OK);
+                data.setMsg("查询成功");
+            }else{
+                this.setNotLoginMsg(data);
             }
-            ItemInfo itemInfo = itemService.getItemById(Long.valueOf(itemId));
-            data.setData(itemInfo);
-            data.setStatus(0);
-            data.setMsg("查询成功");
+           
         }
         catch (Exception e)
         {
@@ -73,16 +81,20 @@ public class ItemController
      * @return:ResponseEntity<JsonResult<JSONArray>>
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public ResponseEntity<JsonResult<JSONObject>> queryItems(@RequestBody Map<String, Object> condition)
+    public ResponseEntity<JsonResult<JSONObject>> queryItems(HttpServletRequest request,@RequestBody Map<String, Object> condition)
     {
         log.info("多条件查询商品信息,入参={}", condition);
         JsonResult<JSONObject> datas = new JsonResult<JSONObject>();
         try
         {
-            JSONObject items = itemService.getItemsByParamsFromSolr(condition);
-            datas.setData(items);
-            datas.setStatus(0);
-            datas.setMsg("查询成功");
+            if(this.hasLogin(request)){
+                JSONObject items = itemService.getItemsByParamsFromSolr(condition);
+                datas.setData(items);
+                datas.setStatus(0);
+                datas.setMsg("查询成功");
+            }else{
+                this.setNotLoginMsg(datas);
+            }
         }
         catch (Exception e)
         {
@@ -100,16 +112,20 @@ public class ItemController
      * @return:ResponseEntity<JsonResult<List<ItemInfo>>>
      */
     @RequestMapping(value = "/fudailist", method = RequestMethod.POST)
-    public ResponseEntity<JsonResult<List<ItemInfo>>> getFudaiItems(@RequestBody Map<String, Object> condition)
+    public ResponseEntity<JsonResult<List<ItemInfo>>> getFudaiItems(HttpServletRequest request, @RequestBody Map<String, Object> condition)
     {
         log.info("获取福袋商品信息,入参={}", condition);
         JsonResult<List<ItemInfo>> data = new JsonResult<List<ItemInfo>>();
         try
         {
-            List<ItemInfo> items = itemService.getItemsByParams(condition);
-            data.setData(items);
-            data.setStatus(0);
-            data.setMsg("查询成功");
+            if(this.hasLogin(request)){
+                List<ItemInfo> items = itemService.getItemsByParams(condition);
+                data.setData(items);
+                data.setStatus(0);
+                data.setMsg("查询成功");
+            }else{
+                this.setNotLoginMsg(data);
+            }
         }
         catch (Exception e)
         {
