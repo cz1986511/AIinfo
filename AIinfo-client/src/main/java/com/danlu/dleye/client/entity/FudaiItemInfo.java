@@ -9,11 +9,19 @@ public class FudaiItemInfo
     private String fdItemName;
 
     private Long fdItemPrice;
-
+    private Long fdItemOriginPrice;
     private Integer fdItemNumber;
 
     private String fdItemPic;
 
+    public void setFdItemOriginPrice(Long fdItemOriginPrice)
+    {
+        this.fdItemOriginPrice = fdItemOriginPrice;
+    }
+    public Long getFdItemOriginPrice()
+    {
+        return fdItemOriginPrice;
+    }
     public String getFdId()
     {
         return fdId;
@@ -72,6 +80,14 @@ public class FudaiItemInfo
     public void setFdItemPic(String fdItemPic)
     {
         this.fdItemPic = fdItemPic;
+    }
+    @Override
+    public String toString()
+    {
+        return "{\"fdId\":\"" + fdId + "\",\"fdItemId\":\"" + fdItemId + "\",\"fdItemName\":\""
+               + fdItemName + "\",\"fdItemPrice\":\"" + fdItemPrice + "\",\"fdItemOriginPrice\":\""
+               + fdItemOriginPrice + "\",\"fdItemNumber\":\"" + fdItemNumber
+               + "\",\"fdItemPic\":\"" + fdItemPic + "\"}";
     }
 
 }

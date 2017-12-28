@@ -13,6 +13,8 @@ public class FudaiItem
     private String fdItemName;
 
     private Long fdItemPrice;
+    
+    private Long fdItemOriginPrice;
 
     private Integer fdItemNumber;
 
@@ -22,6 +24,16 @@ public class FudaiItem
 
     private Date gmtModified;
 
+    
+    public void setFdItemOriginPrice(Long fdItemOriginPrice)
+    {
+        this.fdItemOriginPrice = fdItemOriginPrice;
+    }
+    public Long getFdItemOriginPrice()
+    {
+        return fdItemOriginPrice;
+    }
+    
     public Long getId()
     {
         return id;
@@ -111,4 +123,14 @@ public class FudaiItem
     {
         this.gmtModified = gmtModified;
     }
+    @Override
+    public String toString()
+    {
+        return "{\"id\":\"" + id + "\",\"fdId\":\"" + fdId + "\",\"fdItemId\":\"" + fdItemId
+               + "\",\"fdItemName\":\"" + fdItemName + "\",\"fdItemPrice\":\"" + fdItemPrice
+               + "\",\"fdItemOriginPrice\":\"" + fdItemOriginPrice + "\",\"fdItemNumber\":\""
+               + fdItemNumber + "\",\"fdItemPic\":\"" + fdItemPic + "\",\"gmtCreate\":\""
+               + gmtCreate + "\",\"gmtModified\":\"" + gmtModified + "\"}";
+    }
+    
 }

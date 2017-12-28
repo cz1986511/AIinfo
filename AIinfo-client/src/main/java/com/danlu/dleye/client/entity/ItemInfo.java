@@ -24,6 +24,7 @@ public class ItemInfo {
     private String itemStatus;
 
     private String itemDesc;
+    private String itemUrl;
 
     private Long itemPrice;
 
@@ -175,4 +176,28 @@ public class ItemInfo {
         this.itemDetailInfo = itemDetailInfo;
     }
 
+    public void setItemUrl(String itemUrl)
+    {
+        this.itemUrl = itemUrl;
+    }
+    public String getItemUrl()
+    {
+        return itemUrl;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "{\"itemId\":\"" + itemId + "\",\"itemName\":\"" + itemName
+               + "\",\"itemProductId\":\"" + itemProductId + "\",\"itemCategoryCode\":\""
+               + itemCategoryCode + "\",\"itemCategoryName\":\"" + itemCategoryName
+               + "\",\"itemBrandCode\":\"" + itemBrandCode + "\",\"itemBrandName\":\""
+               + itemBrandName + "\",\"itemShopId\":\"" + itemShopId + "\",\"itemStatus\":\""
+               + itemStatus + "\",\"itemDesc\":\"" + itemDesc + "\",\"itemUrl\":\"" + itemUrl
+               + "\",\"itemPrice\":\"" + itemPrice + "\",\"itemOriginPrice\":\"" + itemOriginPrice
+               + "\",\"itemStock\":\"" + itemStock + "\",\"itemType\":\"" + itemType
+               + "\",\"itemCoverPic\":\"" + itemCoverPic + "\",\"itemDetailPic\":\""
+               + itemDetailPic + "\",\"itemDetailInfo\":\"" + itemDetailInfo + "\"}";
+    }
+    
 }

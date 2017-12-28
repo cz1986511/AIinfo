@@ -13,6 +13,7 @@
     <result column="item_shop_id" property="itemShopId" jdbcType="BIGINT" />
     <result column="item_status" property="itemStatus" jdbcType="VARCHAR" />
     <result column="item_desc" property="itemDesc" jdbcType="VARCHAR" />
+    <result column="item_url" property="itemUrl" jdbcType="VARCHAR" />
     <result column="item_price" property="itemPrice" jdbcType="BIGINT" />
     <result column="item_origin_price" property="itemOriginPrice" jdbcType="BIGINT" />
     <result column="item_stock" property="itemStock" jdbcType="INTEGER" />
@@ -22,7 +23,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     item_id, item_name, item_info, item_product_id, item_category_code, item_category_name, item_brand_code, 
-    item_brand_name, item_shop_id, item_status, item_desc, item_price, item_origin_price, 
+    item_brand_name, item_shop_id, item_status, item_desc, item_url,item_price, item_origin_price, 
     item_stock, item_type, gmt_create, gmt_modified
   </sql>
   <sql id="selectByParamsWhere">
@@ -91,13 +92,13 @@
     insert into dmall_item_base_info (item_name, item_info, item_product_id, 
       item_category_code, item_category_name, item_brand_code, 
       item_brand_name, item_shop_id, item_status, 
-      item_desc, item_price, item_origin_price, 
+      item_desc, item_url,item_price, item_origin_price, 
       item_stock, item_type, gmt_create, 
       gmt_modified)
     values (#{itemName,jdbcType=VARCHAR}, #{itemInfo,jdbcType=VARCHAR}, #{itemProductId,jdbcType=BIGINT}, 
       #{itemCategoryCode,jdbcType=VARCHAR}, #{itemCategoryName,jdbcType=VARCHAR}, #{itemBrandCode,jdbcType=VARCHAR}, 
       #{itemBrandName,jdbcType=VARCHAR}, #{itemShopId,jdbcType=BIGINT}, #{itemStatus,jdbcType=VARCHAR}, 
-      #{itemDesc,jdbcType=VARCHAR}, #{itemPrice,jdbcType=BIGINT}, #{itemOriginPrice,jdbcType=BIGINT}, 
+      #{itemDesc,jdbcType=VARCHAR}, #{itemUrl,jdbcType=VARCHAR}, #{itemPrice,jdbcType=BIGINT}, #{itemOriginPrice,jdbcType=BIGINT}, 
       #{itemStock,jdbcType=INTEGER}, #{itemType,jdbcType=VARCHAR}, NOW(), NOW())
   </insert>
   <insert id="insertSelective" parameterType="com.danlu.dleye.persist.base.ItemBase" >
@@ -132,6 +133,9 @@
       </if>
       <if test="itemDesc != null" >
         item_desc,
+      </if>
+      <if test="itemUrl != null" >
+        item_url,
       </if>
       <if test="itemPrice != null" >
         item_price,
@@ -178,6 +182,9 @@
       </if>
       <if test="itemDesc != null" >
         #{itemDesc,jdbcType=VARCHAR},
+      </if>
+       <if test="itemUrl != null" >
+         #{itemUrl,jdbcType=VARCHAR},
       </if>
       <if test="itemPrice != null" >
         #{itemPrice,jdbcType=BIGINT},
@@ -228,6 +235,9 @@
       <if test="itemDesc != null" >
         item_desc = #{itemDesc,jdbcType=VARCHAR},
       </if>
+      <if test="itemUrl != null" >
+        item_url = #{itemUrl,jdbcType=VARCHAR},
+      </if>
       <if test="itemPrice != null" >
         item_price = #{itemPrice,jdbcType=BIGINT},
       </if>
@@ -256,6 +266,7 @@
       item_shop_id = #{itemShopId,jdbcType=BIGINT},
       item_status = #{itemStatus,jdbcType=VARCHAR},
       item_desc = #{itemDesc,jdbcType=VARCHAR},
+      item_url = #{itemUrl,jdbcType=VARCHAR},
       item_price = #{itemPrice,jdbcType=BIGINT},
       item_origin_price = #{itemOriginPrice,jdbcType=BIGINT},
       item_stock = #{itemStock,jdbcType=INTEGER},

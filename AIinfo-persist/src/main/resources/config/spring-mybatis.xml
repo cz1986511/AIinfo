@@ -88,5 +88,10 @@
 
 		</tx:attributes>
 	</tx:advice>
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="engineInterceptorPointCuts"
+			expression="execution(* com.danlu.dleye.core..*.*(..))" />
+		<aop:advisor advice-ref="transactionAdvice" pointcut-ref="engineInterceptorPointCuts" />
+	</aop:config>
 	</beans>
 	

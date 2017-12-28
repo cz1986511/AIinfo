@@ -7,13 +7,14 @@
     <result column="fd_item_id" property="fdItemId" jdbcType="BIGINT" />
     <result column="fd_item_name" property="fdItemName" jdbcType="VARCHAR" />
     <result column="fd_item_Price" property="fdItemPrice" jdbcType="BIGINT" />
+    <result column="fd_item_origin_price" property="fdItemOriginPrice" jdbcType="BIGINT" />
     <result column="fd_item_number" property="fdItemNumber" jdbcType="INTEGER" />
     <result column="fd_item_pic" property="fdItemPic" jdbcType="VARCHAR" />
     <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
     <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, fd_id, fd_item_id, fd_item_name, fd_item_price, fd_item_number, fd_item_pic, gmt_create, gmt_modified
+    id, fd_id, fd_item_id, fd_item_name, fd_item_price,fd_item_origin_price, fd_item_number, fd_item_pic, gmt_create, gmt_modified
   </sql>
   <sql id="selectByParamsWhere">
     <where>
@@ -55,9 +56,9 @@
   </delete>
   <insert id="insert" parameterType="com.danlu.dleye.persist.base.FudaiItem" >
     insert into dmall_fudai_item (id, fd_id, fd_item_id, 
-      fd_item_name, fd_item_price,fd_item_number,fd_item_pic, gmt_create, gmt_modified
+      fd_item_name, fd_item_price,fd_item_origin_price,fd_item_number,fd_item_pic, gmt_create, gmt_modified
       )
-    values (#{id,jdbcType=BIGINT}, #{fdId,jdbcType=VARCHAR}, #{fdItemId,jdbcType=BIGINT}, 
+    values (#{id,jdbcType=BIGINT}, #{fdId,jdbcType=VARCHAR}, #{fdItemId,jdbcType=BIGINT},  #{fdItemOriginPrice,jdbcType=BIGINT}, 
       #{fdItemName,jdbcType=VARCHAR}, #{fdItemPrice,jdbcType=BIGINT}, #{fdItemNumber,jdbcType=INTEGER},#{fdItemPic,jdbcType=VARCHAR}, NOW(), NOW()
       )
   </insert>
@@ -78,6 +79,9 @@
       </if>
       <if test="fdItemPrice != null" >
         fd_item_price,
+      </if>
+      <if test="fdItemOriginPrice != null" >
+        fd_item_origin_price,
       </if>
       <if test="fdItemNumber != null" >
         fd_item_number,
@@ -104,6 +108,9 @@
       <if test="fdItemPrice != null" >
         #{fdItemPrice,jdbcType=BIGINT},
       </if>
+      <if test="fdItemOriginPrice != null" >
+         #{fdItemOriginPrice,jdbcType=BIGINT},
+      </if>
       <if test="fdItemNumber != null" >
         #{fdItemNumber,jdbcType=INTEGER},
       </if>
@@ -122,6 +129,9 @@
       </if>
       <if test="fdItemPrice != null" >
         fd_item_price = #{fdItemPrice,jdbcType=BIGINT},
+      </if>
+      <if test="fdItemOriginPrice != null" >
+        fd_item_origin_price = #{fdItemOriginPrice,jdbcType=BIGINT},
       </if>
       <if test="fdItemNumber != null" >
         fd_item_number = #{fdItemNumber,jdbcType=INTEGER},

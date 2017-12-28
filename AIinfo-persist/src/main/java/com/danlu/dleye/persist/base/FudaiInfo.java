@@ -18,6 +18,7 @@ public class FudaiInfo
 
     private String fdType;
 
+    /**01-新建,02-，03-分享,99-删除*/
     private String fdStatus;
 
     private Long userId;

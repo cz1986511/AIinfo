@@ -1,18 +1,27 @@
 package com.danlu.dleye.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
 import com.danlu.dleye.client.entity.FudaiDetail;
+import com.danlu.dleye.client.entity.FudaiItemInfo;
+import com.danlu.dleye.client.entity.ItemInfo;
+import com.danlu.dleye.constants.FuDaiConstants;
 import com.danlu.dleye.core.FudaiManager;
 import com.danlu.dleye.persist.base.FudaiSubscribe;
 import com.danlu.dleye.service.FudaiService;
+import com.danlu.dleye.service.ItemService;
+import com.danlu.dleye.util.DlBeanUtils;
 
 public class FudaiServiceImpl implements FudaiService
 {
@@ -20,6 +29,9 @@ public class FudaiServiceImpl implements FudaiService
 
     @Autowired
     private FudaiManager fudaiManager;
+    
+    @Autowired
+    private ItemService itemService;
 
     @Override
     public int addFudai(Map<String, Object> map)
@@ -30,6 +42,15 @@ public class FudaiServiceImpl implements FudaiService
             try
             {
                 FudaiDetail fudaiDetail = new FudaiDetail();
+                DlBeanUtils.copyDTOProperties(map, fudaiDetail);
+                if(StringUtils.isBlank(fudaiDetail.getFdName())){
+                    throw new NullPointerException("福袋名称不能为空.");
+                }
+                if(CollectionUtils.isEmpty(fudaiDetail.getFudaiItemInfos())){
+                    throw new NullPointerException("福袋item不能为空.");
+                }
+                fudaiDetail.setCreatePerson((String)map.get("userName"));
+                this.setItemDetailInfo(fudaiDetail);
                 result = fudaiManager.addFudai(fudaiDetail);
             }
             catch (Exception e)
@@ -37,8 +58,46 @@ public class FudaiServiceImpl implements FudaiService
                 log.error("addFudai is Exception:" + e.toString());
             }
         }
-
         return result;
+    }
+    
+    private void setItemDetailInfo(FudaiDetail fudaiDetail){
+        Map<Long,FudaiItemInfo> itemMap  = new HashMap<Long, FudaiItemInfo>();
+        for (FudaiItemInfo item : fudaiDetail.getFudaiItemInfos())
+        {
+            if(item != null && item.getFdItemId() != null){
+                itemMap.put(item.getFdItemId(), item);
+            }
+        }
+        if(!CollectionUtils.isEmpty(itemMap)){
+            Map<String, Object> inputData = new HashMap<String, Object>();
+            inputData.put("itemIds", itemMap.keySet());
+            log.info("查询商品基础信息入参params=>{}.",inputData);
+            List<ItemInfo> items = this.itemService.getItemsByParams(inputData);
+            if(!CollectionUtils.isEmpty(items)){
+                FudaiItemInfo _item = null;
+                Long originPrice = 0L;
+                Long price = 0L;
+                for (ItemInfo item : items)
+                {
+                    if(item != null){
+                        _item = itemMap.get(item.getItemId());
+                        if(_item != null){
+                            _item.setFdItemName(item.getItemName());
+                            _item.setFdItemOriginPrice(item.getItemOriginPrice());
+                            _item.setFdItemPrice(item.getItemPrice());
+                            _item.setFdItemPic(item.getItemDesc());
+                            originPrice = originPrice +(item.getItemOriginPrice() == null ?0:item.getItemOriginPrice());
+                            price = price + (item.getItemPrice() == null ?0:item.getItemPrice());
+                        }
+                    }
+                }
+                fudaiDetail.setFdAmount(originPrice);
+                fudaiDetail.setFdPrice(price);
+                fudaiDetail.setFudaiItemInfos(new ArrayList<FudaiItemInfo>(itemMap.values()));
+                fudaiDetail.setFdStatus(FuDaiConstants.STATUS.CREATE);
+            }
+        }
     }
 
     @Override
@@ -50,14 +109,14 @@ public class FudaiServiceImpl implements FudaiService
             try
             {
                 String actionType = (String) map.get("actionType");
-                if ("02".equals(actionType))
+                if (FuDaiConstants.STATUS.SHARE.equals(actionType))
                 {
                     FudaiDetail fudaiDetail = new FudaiDetail();
                     fudaiDetail.setFdId((String) map.get("fdId"));
                     fudaiDetail.setFdStatus("02");
                     result = fudaiManager.updateFudai(fudaiDetail);
                 }
-                if ("03".equals(actionType))
+                if (FuDaiConstants.STATUS.SUBSCRIBE.equals(actionType))
                 {
                     List<Long> userIds = new ArrayList<Long>();
                     Long userId = (Long) map.get("userId");
@@ -76,7 +135,7 @@ public class FudaiServiceImpl implements FudaiService
                         result = 1;
                     }
                 }
-                if ("99".equals(actionType))
+                if (FuDaiConstants.STATUS.DELETE.equals(actionType))
                 {
                     result = fudaiManager.deleteFudai(map);
                 }
@@ -96,14 +155,49 @@ public class FudaiServiceImpl implements FudaiService
         {
             try
             {
+                Long userId = (Long) map.get("userId");
+                if(userId != null){
+                    List<FudaiSubscribe>  subs = this.getSubscribes(userId);
+                    if(!CollectionUtils.isEmpty(subs)){
+                        Set<String> fudaiIds = new HashSet<String>();
+                        for (FudaiSubscribe fudaiSubscribe : subs)
+                        {
+                            if(fudaiSubscribe != null && StringUtils.isNotBlank(fudaiSubscribe.getFdId())){
+                                fudaiIds.add(fudaiSubscribe.getFdId());
+                            }
+                        }
+                        if(!CollectionUtils.isEmpty(fudaiIds)){
+                            log.info("查询我的福袋共=>{}",fudaiIds.size());
+                            map.put("fdIds", fudaiIds);
+                        }
+                    }
+                }
                 return fudaiManager.getFudaiDetailsByParams(map);
             }
             catch (Exception e)
             {
-                log.error("getFudaiDetails is Exception:" + e.toString());
+                log.error("getFudaiDetails is Exception:" ,e);
             }
         }
         return null;
+    }
+    
+    private List<FudaiSubscribe> getSubscribes(Long userId){
+        Map<String,Object> map = new HashMap<String, Object>();
+        if(userId != null){
+            List<Long> userIds = new ArrayList<Long>();
+            userIds.add(userId);
+            map.put("userIds", userIds);
+        }
+        try
+        {
+            return this.fudaiManager.getFudaiSubscribes(map);
+        }
+        catch (Exception e)
+        {
+            log.info("查询{}已订阅福袋异常.",userId);
+            throw e;
+        }
     }
 
 }

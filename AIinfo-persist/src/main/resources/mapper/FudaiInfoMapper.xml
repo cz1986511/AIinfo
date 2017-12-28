@@ -176,6 +176,6 @@
       </if>
         gmt_modified = NOW()
     </set>
-    where fd_id = #{fd_id,jdbcType=VARCHAR}
+    where fd_id = #{fdId,jdbcType=VARCHAR}
   </update>
 </mapper>

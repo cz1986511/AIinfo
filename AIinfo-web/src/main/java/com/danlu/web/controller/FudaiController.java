@@ -31,6 +31,7 @@ public class FudaiController
 
     @Autowired
     private FudaiService fudaiService;
+    
 
     /**
      * @Title: getFudaiByfdId
@@ -92,7 +93,7 @@ public class FudaiController
             {
                 if (null != request.getSession().getAttribute("userId"))
                 {
-                    String userId = (String) request.getSession().getAttribute("userId");
+                    Long userId = (Long) request.getSession().getAttribute("userId");
                     condition.put("userId", userId);
                 }
                 else
@@ -122,6 +123,15 @@ public class FudaiController
      * @Description: 新增福袋
      * @param:fd_name： 福袋名称
      * @param:items： 福袋商品列表
+     * <code>
+     *  {
+     *      fdName:"双旦福袋",
+     *      fudaiItemInfos:[{
+     *              fdItemId:"ajfldsjfjsfds",
+     *              fdItemNumber:12
+     *          }]
+     *  }
+     * </code>
      * @return:ResponseEntity<JsonResult<String>>
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -134,10 +144,15 @@ public class FudaiController
         {
             if (null != request.getSession().getAttribute("userId"))
             {
-                String userId = (String) request.getSession().getAttribute("userId");
+                if(condition == null || condition.isEmpty()){
+                    throw new NullPointerException("新增福袋参数不能为空.");
+                }
+                
+                String userId = request.getSession().getAttribute("userId").toString();
                 String userName = (String) request.getSession().getAttribute("userName");
                 condition.put("userId", userId);
                 condition.put("userName", userName);
+                
                 int result = fudaiService.addFudai(condition);
                 if (result > 0)
                 {
@@ -185,7 +200,7 @@ public class FudaiController
         {
             if (null != request.getSession().getAttribute("userId"))
             {
-                String userId = (String) request.getSession().getAttribute("userId");
+                String userId = request.getSession().getAttribute("userId").toString();
                 condition.put("userId", Long.valueOf(userId));
                 String fdId = (String) condition.get("fdId");
                 List<String> fdIds = new ArrayList<String>();

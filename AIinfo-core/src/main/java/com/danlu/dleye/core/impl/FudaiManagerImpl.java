@@ -22,6 +22,7 @@ import com.danlu.dleye.persist.mapper.FudaiItemMapper;
 import com.danlu.dleye.persist.mapper.FudaiPictureMapper;
 import com.danlu.dleye.persist.mapper.FudaiSubscribeMapper;
 import com.danlu.dleye.util.DlBeanUtils;
+import com.danlu.dleye.util.IDUtils;
 
 public class FudaiManagerImpl implements FudaiManager
 {
@@ -42,6 +43,7 @@ public class FudaiManagerImpl implements FudaiManager
         {
             FudaiInfo fudaiInfo = new FudaiInfo();
             DlBeanUtils.copyProperties(fudaiDetail, fudaiInfo);
+            fudaiInfo.setFdId(IDUtils.nextUUID());
             result = fudaiInfoMapper.insertSelective(fudaiInfo);
             List<FudaiItemInfo> fudaiItemInfos = fudaiDetail.getFudaiItemInfos();
             if (!CollectionUtils.isEmpty(fudaiItemInfos))
@@ -52,6 +54,7 @@ public class FudaiManagerImpl implements FudaiManager
                     FudaiItemInfo temp = ite1.next();
                     FudaiItem fudaiItem = new FudaiItem();
                     DlBeanUtils.copyProperties(temp, fudaiItem);
+                    fudaiItem.setFdId(fudaiInfo.getFdId());
                     fudaiItemMapper.insertSelective(fudaiItem);
                 }
             }
@@ -64,6 +67,7 @@ public class FudaiManagerImpl implements FudaiManager
                     FudaiPictureInfo temp = ite2.next();
                     FudaiPicture fudaiPicture = new FudaiPicture();
                     DlBeanUtils.copyProperties(temp, fudaiPicture);
+                    fudaiPicture.setFdId(fudaiInfo.getFdId());
                     fudaiPictureMapper.insertSelective(fudaiPicture);
                 }
             }
