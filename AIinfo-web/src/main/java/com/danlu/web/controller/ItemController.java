@@ -1,5 +1,6 @@
 package com.danlu.web.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ public class ItemController
     /**
      * @Title: getItemInfoByItemId
      * @Description: 通过itemId返回商品信息
-     * @param: shopId
+     * @param: itemId
      * @return: ResponseEntity<JsonResult<ItemInfo>>
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -90,5 +91,32 @@ public class ItemController
             datas.setStatus(1);
         }
         return new ResponseEntity<JsonResult<JSONObject>>(datas, HttpStatus.OK);
+    }
+
+    /**
+     * @Title: getFudaiItems
+     * @Description: 获取福袋商品列表信息
+     * @param:itemType： 02
+     * @return:ResponseEntity<JsonResult<List<ItemInfo>>>
+     */
+    @RequestMapping(value = "/fudailist", method = RequestMethod.POST)
+    public ResponseEntity<JsonResult<List<ItemInfo>>> getFudaiItems(@RequestBody Map<String, Object> condition)
+    {
+        log.info("获取福袋商品信息,入参={}", condition);
+        JsonResult<List<ItemInfo>> data = new JsonResult<List<ItemInfo>>();
+        try
+        {
+            List<ItemInfo> items = itemService.getItemsByParams(condition);
+            data.setData(items);
+            data.setStatus(0);
+            data.setMsg("查询成功");
+        }
+        catch (Exception e)
+        {
+            log.error("获取福袋商品信息：e={}", e);
+            data.setMsg("系统异常");
+            data.setStatus(1);
+        }
+        return new ResponseEntity<JsonResult<List<ItemInfo>>>(data, HttpStatus.OK);
     }
 }

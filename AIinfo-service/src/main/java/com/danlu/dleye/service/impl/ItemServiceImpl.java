@@ -1,12 +1,14 @@
 package com.danlu.dleye.service.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
@@ -62,8 +64,32 @@ public class ItemServiceImpl implements ItemService
     @Override
     public List<ItemInfo> getItemsByParams(Map<String, Object> inputData)
     {
+        if (!CollectionUtils.isEmpty(inputData))
+        {
+            try
+            {
+                List<ItemBase> itemBases = itemManager.getItemBasesByParams(inputData);
+                if (!CollectionUtils.isEmpty(itemBases))
+                {
+                    List<ItemInfo> result = new ArrayList<ItemInfo>();
+                    Iterator<ItemBase> ite1 = itemBases.iterator();
+                    while (ite1.hasNext())
+                    {
+                        ItemBase temp = ite1.next();
+                        ItemInfo itemInfo = new ItemInfo();
+                        DlBeanUtils.copyProperties(temp, itemInfo);
+                        result.add(itemInfo);
+                    }
+                    return result;
+                }
+            }
+            catch (Exception e)
+            {
+                log.error("getItemsByParams is Exception:" + e.toString());
+            }
+        }
 
-        return new ArrayList<ItemInfo>();
+        return null;
     }
 
     private ItemInfo getItemInfo(Long itemId)

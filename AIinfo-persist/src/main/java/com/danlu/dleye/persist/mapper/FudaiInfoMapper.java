@@ -9,6 +9,8 @@ public interface FudaiInfoMapper
 {
     int deleteByPrimaryKey(Long id);
 
+    int deleteByFdId(String fdId);
+
     int insert(FudaiInfo fudaiInfo);
 
     int insertSelective(FudaiInfo fudaiInfo);

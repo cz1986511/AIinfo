@@ -62,6 +62,10 @@
     delete from dmall_fudai_info
     where id = #{id,jdbcType=BIGINT}
   </delete>
+  <delete id="deleteByFdId" parameterType="java.lang.String" >
+    delete from dmall_fudai_info
+    where fd_id = #{fdId,jdbcType=VARCHAR}
+  </delete>
   <insert id="insert" parameterType="com.danlu.dleye.persist.base.FudaiInfo" >
     insert into dmall_fudai_info (id, fd_id, fd_name, fd_amount, fd_price, 
       fd_code, fd_type, fd_status, user_id 

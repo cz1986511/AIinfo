@@ -13,16 +13,46 @@
   <sql id="Base_Column_List" >
     id, fd_id, fd_pic_sort, fd_pic_url, fd_pic_status, gmt_create, gmt_modified
   </sql>
+  <sql id="selectByParamsWhere">
+    <where>
+	  <if test="fdIds != null">
+		fd_id in
+		<trim suffixOverrides=",">
+			<foreach collection="fdIds" item="fdId" index="index" separator="," open="(" close=")">
+				#{fdId, jdbcType=VARCHAR}
+			</foreach>
+		</trim>
+		and
+	  </if>
+        1 = 1
+    </where>
+  </sql>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from dmall_fudai_picture
     where id = #{id,jdbcType=BIGINT}
   </select>
+  <select id="selectByParams" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from dmall_fudai_picture
+    <include refid="selectByParamsWhere" />
+    <if test=" offset != null and limit != null">
+	  limit ${offset},${limit}
+	</if>
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from dmall_fudai_picture
     where id = #{id,jdbcType=BIGINT}
   </delete>
+  <delete id="deleteByFdId" parameterType="java.lang.String" >
+    delete from dmall_fudai_picture
+    where fd_id = #{fdId,jdbcType=VARCHAR}
+  </delete>
+  
   <insert id="insert" parameterType="com.danlu.dleye.persist.base.FudaiPicture" >
     insert into dmall_fudai_picture (id, fd_id, fd_pic_sort, 
       fd_pic_url, fd_pic_status, gmt_create, 

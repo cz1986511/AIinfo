@@ -11,7 +11,7 @@ import com.danlu.dleye.core.ShoppingcarInfoManager;
 import com.danlu.dleye.persist.base.ShoppingcarInfo;
 import com.danlu.dleye.persist.mapper.ShoppingcarInfoMapper;
 
-public abstract class ShoppingcarInfoManagerImpl implements ShoppingcarInfoManager
+public class ShoppingcarInfoManagerImpl implements ShoppingcarInfoManager
 {
     @Autowired
     ShoppingcarInfoMapper shoppingcarInfoMapper;

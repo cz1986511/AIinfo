@@ -19,10 +19,13 @@
 	<bean id="userInfoManager" class="com.danlu.dleye.core.impl.UserInfoManagerImpl" />
 	<bean id="articleInfoManager" class="com.danlu.dleye.core.impl.ArticleInfoManagerImpl" />
 	<bean id="oilInfoManager" class="com.danlu.dleye.core.impl.OilInfoManagerImpl" />
-	<bean id="shoppingcarInfoManager" class="com.danlu.dleye.core.impl.ShoppingcarInfoManagerImpl" />
 	<bean id="shopBaseManager" class="com.danlu.dleye.core.impl.ShopBaseManagerImpl" />
 	<bean id="itemBaseManager" class="com.danlu.dleye.core.impl.ItemBaseManagerImpl" />
 	<bean id="productExtendManager" class="com.danlu.dleye.core.impl.ProductExtendManagerImpl" />
+	<bean id="shoppingcarInfoManager" class="com.danlu.dleye.core.impl.ShoppingcarInfoManagerImpl" />
+	<bean id="addressInfoManager" class="com.danlu.dleye.core.impl.AddressInfoManagerImpl" />
+	<bean id="orderManager" class="com.danlu.dleye.core.impl.OrderManagerImpl" />
+	<bean id="fudaiManager" class="com.danlu.dleye.core.impl.FudaiManagerImpl" />
 	<bean id="dleyeSwith" class="com.danlu.dleye.core.util.DleyeSwith" />
 	<bean id="oilInfoUtil" class="com.danlu.dleye.core.util.OilInfoUtil" />
 	<bean id="crawler" class="com.danlu.dleye.core.util.Crawler" />
