@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,8 +40,8 @@ public class FudaiController extends BaseController
      * @param: fdId
      * @return: ResponseEntity<JsonResult<ItemInfo>>
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<JsonResult<FudaiDetail>> getFudaiByfdId(final String fdId)
+    @RequestMapping(value = "/{fdId}", method = RequestMethod.GET)
+    public ResponseEntity<JsonResult<FudaiDetail>> getFudaiByfdId(@PathVariable(value="fdId") String fdId)
     {
         log.info("获取福袋详情入参，fdId={}", fdId);
         JsonResult<FudaiDetail> data = new JsonResult<FudaiDetail>();
