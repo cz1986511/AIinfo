@@ -168,7 +168,9 @@ public class FudaiServiceImpl implements FudaiService
                             }
                         }
                     }
-                    List<FudaiDetail> list =  this.fudaiManager.getFudaiDetailsByParams(map);
+                    Map<String,Object> map1 = new HashMap<String, Object>(map);
+                    map1.remove("isDetail");
+                    List<FudaiDetail> list =  this.fudaiManager.getFudaiDetailsByParams(map1);
                     for (FudaiDetail fudaiDetail : list)
                     {
                         if(fudaiDetail != null && StringUtils.isNotBlank(fudaiDetail.getFdId())){
@@ -179,6 +181,7 @@ public class FudaiServiceImpl implements FudaiService
                         log.info("查询我的福袋共=>{}",fudaiIds.size());
                         map.put("fdIds", fudaiIds);
                     }
+                    map.remove("userId");
                 }
                 return fudaiManager.getFudaiDetailsByParams(map);
             }
