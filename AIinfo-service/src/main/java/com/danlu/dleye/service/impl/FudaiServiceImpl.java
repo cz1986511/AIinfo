@@ -155,23 +155,30 @@ public class FudaiServiceImpl implements FudaiService
         {
             try
             {
+                Set<String> fudaiIds = new HashSet<String>();
                 Long userId = (Long) map.get("userId");
-                if(userId != null){
+                if (null != map.get("isMy"))
+                {
                     List<FudaiSubscribe>  subs = this.getSubscribes(userId);
                     if(!CollectionUtils.isEmpty(subs)){
-                        Set<String> fudaiIds = new HashSet<String>();
-                        for (FudaiSubscribe fudaiSubscribe : subs)
+                       for (FudaiSubscribe fudaiSubscribe : subs)
                         {
                             if(fudaiSubscribe != null && StringUtils.isNotBlank(fudaiSubscribe.getFdId())){
                                 fudaiIds.add(fudaiSubscribe.getFdId());
                             }
                         }
-                        if(!CollectionUtils.isEmpty(fudaiIds)){
-                            log.info("查询我的福袋共=>{}",fudaiIds.size());
-                            map.put("fdIds", fudaiIds);
+                    }
+                    List<FudaiDetail> list =  this.fudaiManager.getFudaiDetailsByParams(map);
+                    for (FudaiDetail fudaiDetail : list)
+                    {
+                        if(fudaiDetail != null && StringUtils.isNotBlank(fudaiDetail.getFdId())){
+                            fudaiIds.add(fudaiDetail.getFdId());
                         }
                     }
-                    map.remove("userId");
+                    if(!CollectionUtils.isEmpty(fudaiIds)){
+                        log.info("查询我的福袋共=>{}",fudaiIds.size());
+                        map.put("fdIds", fudaiIds);
+                    }
                 }
                 return fudaiManager.getFudaiDetailsByParams(map);
             }

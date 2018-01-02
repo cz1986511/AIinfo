@@ -90,12 +90,15 @@ public class FudaiController extends BaseController
         JsonResult<List<FudaiDetail>> data = new JsonResult<List<FudaiDetail>>();
         try
         {
-            if (null != condition.get("isMy"))
-            {
                 if (this.hasLogin(request))
                 {
+                    
                     Long userId = (Long) request.getSession().getAttribute("userId");
                     condition.put("userId", userId);
+                    List<FudaiDetail> list = fudaiService.getFudaiDetails(condition);
+                    data.setData(list);
+                    data.setStatus(0);
+                    data.setMsg("查询成功");
                 }
                 else
                 {
@@ -103,11 +106,7 @@ public class FudaiController extends BaseController
                     this.setNotLoginMsg(data);
                     return new ResponseEntity<JsonResult<List<FudaiDetail>>>(data, HttpStatus.OK);
                 }
-            }
-            List<FudaiDetail> list = fudaiService.getFudaiDetails(condition);
-            data.setData(list);
-            data.setStatus(0);
-            data.setMsg("查询成功");
+           
         }
         catch (Exception e)
         {
