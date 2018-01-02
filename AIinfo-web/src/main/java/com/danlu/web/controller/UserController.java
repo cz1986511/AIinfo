@@ -110,6 +110,7 @@ public class UserController implements Serializable
                 userInfo.setPassword((String) condition.get("password"));
                 userInfo.setUserName((String) condition.get("userName"));
                 userInfo.setStatus(1);
+                userInfo.setType(2);
                 Long result = userManager.addUserInfo(userInfo);
                 if (result > 0L)
                 {
