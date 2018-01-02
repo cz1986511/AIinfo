@@ -171,6 +171,7 @@ public class FudaiServiceImpl implements FudaiService
                             map.put("fdIds", fudaiIds);
                         }
                     }
+                    map.remove("userId");
                 }
                 return fudaiManager.getFudaiDetailsByParams(map);
             }
