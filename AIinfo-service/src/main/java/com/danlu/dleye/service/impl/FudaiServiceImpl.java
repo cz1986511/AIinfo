@@ -87,8 +87,8 @@ public class FudaiServiceImpl implements FudaiService
                             _item.setFdItemOriginPrice(item.getItemOriginPrice());
                             _item.setFdItemPrice(item.getItemPrice());
                             _item.setFdItemPic(item.getItemDesc());
-                            originPrice = originPrice +(item.getItemOriginPrice() == null ?0:item.getItemOriginPrice());
-                            price = price + (item.getItemPrice() == null ?0:item.getItemPrice());
+                            originPrice = originPrice +((item.getItemOriginPrice() == null ?0:item.getItemOriginPrice()) * _item.getFdItemNumber());
+                            price = price +( (item.getItemPrice() == null ?0:item.getItemPrice()) * _item.getFdItemNumber());
                         }
                     }
                 }
