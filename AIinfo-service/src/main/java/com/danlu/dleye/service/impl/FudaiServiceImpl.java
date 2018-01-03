@@ -155,10 +155,12 @@ public class FudaiServiceImpl implements FudaiService
         {
             try
             {
+                map.put("notEqStatus", FuDaiConstants.STATUS.DELETE);
                 Set<String> fudaiIds = new HashSet<String>();
                 Long userId = (Long) map.get("userId");
                 if (null != map.get("isMy"))
                 {
+                    log.info("查询我的订阅福袋入参=>{}",map);
                     List<FudaiSubscribe>  subs = this.getSubscribes(userId);
                     if(!CollectionUtils.isEmpty(subs)){
                        for (FudaiSubscribe fudaiSubscribe : subs)
@@ -170,6 +172,7 @@ public class FudaiServiceImpl implements FudaiService
                     }
                     Map<String,Object> map1 = new HashMap<String, Object>(map);
                     map1.remove("isDetail");
+                    log.info("查询我的创建福袋入参=>{}",map1);
                     List<FudaiDetail> list =  this.fudaiManager.getFudaiDetailsByParams(map1);
                     if(!CollectionUtils.isEmpty(list)){
                         for (FudaiDetail fudaiDetail : list)
@@ -179,13 +182,15 @@ public class FudaiServiceImpl implements FudaiService
                             }
                         }
                     }
+                    log.info("查询我的福袋共=>{}",(fudaiIds == null ?0:fudaiIds.size()));
                     if(!CollectionUtils.isEmpty(fudaiIds)){
-                        log.info("查询我的福袋共=>{}",fudaiIds.size());
+                        map.remove("userId");
                         map.put("fdIds", fudaiIds);
+                    }else{
+                        return new ArrayList<FudaiDetail>();
                     }
-                    map.remove("userId");
                 }
-                map.put("notEqStatus", FuDaiConstants.STATUS.DELETE);
+                log.info("查询福袋列表入参=>{}",map);
                 return fudaiManager.getFudaiDetailsByParams(map);
             }
             catch (Exception e)
