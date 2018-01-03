@@ -185,6 +185,7 @@ public class FudaiServiceImpl implements FudaiService
                     }
                     map.remove("userId");
                 }
+                map.put("notEqStatus", FuDaiConstants.STATUS.DELETE);
                 return fudaiManager.getFudaiDetailsByParams(map);
             }
             catch (Exception e)
