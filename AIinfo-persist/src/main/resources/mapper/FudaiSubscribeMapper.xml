@@ -34,7 +34,6 @@
         1 = 1
     </where>
   </sql>
-  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
@@ -51,9 +50,9 @@
 	</if>
   </select>
   
-  <delete id="deleteByParams" parameterType="com.danlu.dleye.persist.base.FudaiSubscribe" >
+  <delete id="deleteByFdIdAndUserId" parameterType="com.danlu.dleye.persist.base.FudaiSubscribe" >
     delete from dmall_fudai_subscribe
-    where fd_id = #{fdId,jdbcType=VARCHAR} and user_id = #{UserId,jdbcType=BIGINT}
+    where fd_id = #{fdId,jdbcType=VARCHAR} and user_id = #{userId,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.danlu.dleye.persist.base.FudaiSubscribe" >
     insert into dmall_fudai_subscribe (id, fd_id, user_id, 
