@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.danlu.dleye.client.entity.FudaiDetail;
 import com.danlu.dleye.client.entity.JsonResult;
+import com.danlu.dleye.constants.FuDaiConstants;
 import com.danlu.dleye.service.FudaiService;
 
 @Controller
@@ -94,9 +95,10 @@ public class FudaiController extends BaseController
                 {
                     
                     Long userId = (Long) request.getSession().getAttribute("userId");
-                    if (null != condition.get("isMy"))
+                    condition.put("userId", userId);
+                    if (FuDaiConstants.STATUS.SHARE.equals(condition.get("fdStatus")))
                     {
-                        condition.put("userId", userId);
+                        condition.remove("userId");
                     }
                     List<FudaiDetail> list = fudaiService.getFudaiDetails(condition);
                     data.setData(list);
