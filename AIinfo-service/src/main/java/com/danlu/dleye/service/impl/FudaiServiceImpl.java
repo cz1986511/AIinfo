@@ -171,10 +171,12 @@ public class FudaiServiceImpl implements FudaiService
                     Map<String,Object> map1 = new HashMap<String, Object>(map);
                     map1.remove("isDetail");
                     List<FudaiDetail> list =  this.fudaiManager.getFudaiDetailsByParams(map1);
-                    for (FudaiDetail fudaiDetail : list)
-                    {
-                        if(fudaiDetail != null && StringUtils.isNotBlank(fudaiDetail.getFdId())){
-                            fudaiIds.add(fudaiDetail.getFdId());
+                    if(!CollectionUtils.isEmpty(list)){
+                        for (FudaiDetail fudaiDetail : list)
+                        {
+                            if(fudaiDetail != null && StringUtils.isNotBlank(fudaiDetail.getFdId())){
+                                fudaiIds.add(fudaiDetail.getFdId());
+                            }
                         }
                     }
                     if(!CollectionUtils.isEmpty(fudaiIds)){
