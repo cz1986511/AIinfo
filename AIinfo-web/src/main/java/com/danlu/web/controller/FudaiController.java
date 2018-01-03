@@ -94,7 +94,10 @@ public class FudaiController extends BaseController
                 {
                     
                     Long userId = (Long) request.getSession().getAttribute("userId");
-                    condition.put("userId", userId);
+                    if (null != condition.get("isMy"))
+                    {
+                        condition.put("userId", userId);
+                    }
                     List<FudaiDetail> list = fudaiService.getFudaiDetails(condition);
                     data.setData(list);
                     data.setStatus(0);
