@@ -15,12 +15,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.danlu.dleye.client.entity.FudaiDetail;
 import com.danlu.dleye.client.entity.JsonResult;
+import com.danlu.dleye.constants.FuDaiConstants;
 import com.danlu.dleye.service.FudaiService;
 
 @Controller
@@ -39,8 +41,8 @@ public class FudaiController extends BaseController
      * @param: fdId
      * @return: ResponseEntity<JsonResult<ItemInfo>>
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<JsonResult<FudaiDetail>> getFudaiByfdId(final String fdId)
+    @RequestMapping(value = "/{fdId}", method = RequestMethod.GET)
+    public ResponseEntity<JsonResult<FudaiDetail>> getFudaiByfdId(@PathVariable(value="fdId") String fdId)
     {
         log.info("获取福袋详情入参，fdId={}", fdId);
         JsonResult<FudaiDetail> data = new JsonResult<FudaiDetail>();
@@ -89,12 +91,19 @@ public class FudaiController extends BaseController
         JsonResult<List<FudaiDetail>> data = new JsonResult<List<FudaiDetail>>();
         try
         {
-            if (null != condition.get("isMy"))
-            {
                 if (this.hasLogin(request))
                 {
+                    
                     Long userId = (Long) request.getSession().getAttribute("userId");
                     condition.put("userId", userId);
+                    if (FuDaiConstants.STATUS.SHARE.equals(condition.get("fdStatus")))
+                    {
+                        condition.remove("userId");
+                    }
+                    List<FudaiDetail> list = fudaiService.getFudaiDetails(condition);
+                    data.setData(list);
+                    data.setStatus(0);
+                    data.setMsg("查询成功");
                 }
                 else
                 {
@@ -102,11 +111,7 @@ public class FudaiController extends BaseController
                     this.setNotLoginMsg(data);
                     return new ResponseEntity<JsonResult<List<FudaiDetail>>>(data, HttpStatus.OK);
                 }
-            }
-            List<FudaiDetail> list = fudaiService.getFudaiDetails(condition);
-            data.setData(list);
-            data.setStatus(0);
-            data.setMsg("查询成功");
+           
         }
         catch (Exception e)
         {

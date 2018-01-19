@@ -2,9 +2,11 @@ package com.danlu.dleye.core.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -12,6 +14,7 @@ import org.springframework.util.CollectionUtils;
 import com.danlu.dleye.client.entity.FudaiDetail;
 import com.danlu.dleye.client.entity.FudaiItemInfo;
 import com.danlu.dleye.client.entity.FudaiPictureInfo;
+import com.danlu.dleye.constants.FuDaiConstants;
 import com.danlu.dleye.core.FudaiManager;
 import com.danlu.dleye.persist.base.FudaiInfo;
 import com.danlu.dleye.persist.base.FudaiItem;
@@ -182,6 +185,21 @@ public class FudaiManagerImpl implements FudaiManager
             fudaiSubscribe.setFdId((String) map.get("fdId"));
             fudaiSubscribe.setUserId((Long) map.get("userId"));
             result = fudaiSubscribeMapper.deleteByFdIdAndUserId(fudaiSubscribe);
+            Set<String> fdIds = new HashSet<String>();
+            fdIds.add(fudaiSubscribe.getFdId());
+            List<FudaiInfo> fudaiInfos = fudaiInfoMapper.selectByParams(map);
+            if(!CollectionUtils.isEmpty(fudaiInfos)){
+                FudaiDetail fudaiDetail = null;
+                for (FudaiInfo info : fudaiInfos)
+                {
+                    if(info != null && info.getUserId() != null && info.getUserId().equals(fudaiSubscribe.getUserId())){
+                        fudaiDetail = new FudaiDetail();
+                        fudaiDetail.setFdId((String) map.get("fdId"));
+                        fudaiDetail.setFdStatus(FuDaiConstants.STATUS.DELETE);
+                        result +=  this.updateFudai(fudaiDetail);
+                    }
+                }
+            }
         }
         return result;
     }

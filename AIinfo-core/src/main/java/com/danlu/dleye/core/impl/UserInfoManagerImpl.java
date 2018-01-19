@@ -34,6 +34,7 @@ public class UserInfoManagerImpl implements UserInfoManager {
     @Override
     public Long addUserInfo(UserInfoEntity userInfoEntity) {
         if (null != userInfoEntity) {
+            userInfoEntity.setDelFlag(0);
             return userInfoEntityMapper.insert(userInfoEntity);
         }
         return 0l;
