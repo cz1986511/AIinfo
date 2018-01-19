@@ -83,6 +83,7 @@ public class SharesDateExecutor implements Runnable
                 gpPrecInfo.setGpSyl(temp.getString(39));
                 gpPrecInfo.setGpZsz(temp.getString(44));
                 gpPrecInfo.setGpLtsz(temp.getString(45));
+                gpPrecInfo.setGpQt(result.toJSONString());
                 gpPrecInfoManager.addGpPrecInfo(gpPrecInfo);
             }
         }
