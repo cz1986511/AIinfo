@@ -26,8 +26,11 @@
 	<bean id="addressInfoManager" class="com.danlu.dleye.core.impl.AddressInfoManagerImpl" />
 	<bean id="orderManager" class="com.danlu.dleye.core.impl.OrderManagerImpl" />
 	<bean id="fudaiManager" class="com.danlu.dleye.core.impl.FudaiManagerImpl" />
+	<bean id="gpHisInfoManager" class="com.danlu.dleye.core.impl.GpHisInfoManagerImpl" />
+	<bean id="gpPrecInfoManager" class="com.danlu.dleye.core.impl.GpPrecInfoManagerImpl" />
 	<bean id="dleyeSwith" class="com.danlu.dleye.core.util.DleyeSwith" />
 	<bean id="oilInfoUtil" class="com.danlu.dleye.core.util.OilInfoUtil" />
+	<bean id="sharesUtil" class="com.danlu.dleye.core.util.SharesUtil" />
 	<bean id="crawler" class="com.danlu.dleye.core.util.Crawler" />
 	<bean id="cleanData" class="com.danlu.dleye.core.util.CleanData" />
 </beans>

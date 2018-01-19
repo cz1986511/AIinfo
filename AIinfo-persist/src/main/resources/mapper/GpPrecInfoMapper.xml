@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.danlu.dleye.persist.mapper.GpPrecInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.danlu.dleye.persist.base.GpPrecInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="gp_code" property="gpCode" jdbcType="VARCHAR" />
+    <result column="gp_name" property="gpName" jdbcType="VARCHAR" />
+    <result column="datetime" property="datetime" jdbcType="TIMESTAMP" />
+    <result column="gp_prec_price" property="gpPrecPrice" jdbcType="VARCHAR" />
+    <result column="gp_open" property="gpOpen" jdbcType="VARCHAR" />
+    <result column="gp_close" property="gpClose" jdbcType="VARCHAR" />
+    <result column="gp_high" property="gpHigh" jdbcType="VARCHAR" />
+    <result column="gp_low" property="gpLow" jdbcType="VARCHAR" />
+    <result column="gp_ex1" property="gpEx1" jdbcType="VARCHAR" />
+    <result column="gp_ex2" property="gpEx2" jdbcType="VARCHAR" />
+    <result column="gp_volume" property="gpVolume" jdbcType="VARCHAR" />
+    <result column="gp_wp" property="gpWp" jdbcType="VARCHAR" />
+    <result column="gp_np" property="gpNp" jdbcType="VARCHAR" />
+    <result column="gp_amount" property="gpAmount" jdbcType="VARCHAR" />
+    <result column="gp_syl" property="gpSyl" jdbcType="VARCHAR" />
+    <result column="gp_zsz" property="gpZsz" jdbcType="VARCHAR" />
+    <result column="gp_ltsz" property="gpLtsz" jdbcType="VARCHAR" />
+    <result column="gp_qt" property="gpQt" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, gp_code, gp_name, datetime, gp_prec_price, gp_open, gp_close, gp_high, gp_low, 
+    gp_ex1, gp_ex2, gp_volume, gp_wp, gp_np, gp_amount, gp_syl, gp_zsz, gp_ltsz, gp_qt, gmt_create, gmt_modified
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from dleye_gp_prec_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from dleye_gp_prec_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.danlu.dleye.persist.base.GpPrecInfo" >
+    insert into dleye_gp_prec_info (id, gp_code, gp_name, 
+      datetime, gp_prec_price, gp_open, 
+      gp_close, gp_high, gp_low, 
+      gp_ex1, gp_ex2, gp_volume, 
+      gp_wp, gp_np, gp_amount, 
+      gp_syl, gp_zsz, gp_ltsz, gp_qt, gmt_create, 
+      gmt_modified)
+    values (#{id,jdbcType=BIGINT}, #{gpCode,jdbcType=VARCHAR}, #{gpName,jdbcType=VARCHAR}, 
+      #{datetime,jdbcType=TIMESTAMP}, #{gpPrecPrice,jdbcType=VARCHAR}, #{gpOpen,jdbcType=VARCHAR}, 
+      #{gpClose,jdbcType=VARCHAR}, #{gpHigh,jdbcType=VARCHAR}, #{gpLow,jdbcType=VARCHAR}, 
+      #{gpEx1,jdbcType=VARCHAR}, #{gpEx2,jdbcType=VARCHAR}, #{gpVolume,jdbcType=VARCHAR}, 
+      #{gpWp,jdbcType=VARCHAR}, #{gpNp,jdbcType=VARCHAR}, #{gpAmount,jdbcType=VARCHAR}, 
+      #{gpSyl,jdbcType=VARCHAR}, #{gpZsz,jdbcType=VARCHAR}, #{gpLtsz,jdbcType=VARCHAR}, #{gpQt,jdbcType=VARCHAR}, NOW(), NOW())
+  </insert>
+  <insert id="insertSelective" parameterType="com.danlu.dleye.persist.base.GpPrecInfo" >
+    insert into dleye_gp_prec_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="gpCode != null" >
+        gp_code,
+      </if>
+      <if test="gpName != null" >
+        gp_name,
+      </if>
+      <if test="datetime != null" >
+        datetime,
+      </if>
+      <if test="gpPrecPrice != null" >
+        gp_prec_price,
+      </if>
+      <if test="gpOpen != null" >
+        gp_open,
+      </if>
+      <if test="gpClose != null" >
+        gp_close,
+      </if>
+      <if test="gpHigh != null" >
+        gp_high,
+      </if>
+      <if test="gpLow != null" >
+        gp_low,
+      </if>
+      <if test="gpEx1 != null" >
+        gp_ex1,
+      </if>
+      <if test="gpEx2 != null" >
+        gp_ex2,
+      </if>
+      <if test="gpVolume != null" >
+        gp_volume,
+      </if>
+      <if test="gpWp != null" >
+        gp_wp,
+      </if>
+      <if test="gpNp != null" >
+        gp_np,
+      </if>
+      <if test="gpAmount != null" >
+        gp_amount,
+      </if>
+      <if test="gpSyl != null" >
+        gp_syl,
+      </if>
+      <if test="gpZsz != null" >
+        gp_zsz,
+      </if>
+      <if test="gpLtsz != null" >
+        gp_ltsz,
+      </if>
+      <if test="gpQt != null" >
+        gp_qt,
+      </if>
+        gmt_create,
+        gmt_modified
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="gpCode != null" >
+        #{gpCode,jdbcType=VARCHAR},
+      </if>
+      <if test="gpName != null" >
+        #{gpName,jdbcType=VARCHAR},
+      </if>
+      <if test="datetime != null" >
+        #{datetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gpPrecPrice != null" >
+        #{gpPrecPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="gpOpen != null" >
+        #{gpOpen,jdbcType=VARCHAR},
+      </if>
+      <if test="gpClose != null" >
+        #{gpClose,jdbcType=VARCHAR},
+      </if>
+      <if test="gpHigh != null" >
+        #{gpHigh,jdbcType=VARCHAR},
+      </if>
+      <if test="gpLow != null" >
+        #{gpLow,jdbcType=VARCHAR},
+      </if>
+      <if test="gpEx1 != null" >
+        #{gpEx1,jdbcType=VARCHAR},
+      </if>
+      <if test="gpEx2 != null" >
+        #{gpEx2,jdbcType=VARCHAR},
+      </if>
+      <if test="gpVolume != null" >
+        #{gpVolume,jdbcType=VARCHAR},
+      </if>
+      <if test="gpWp != null" >
+        #{gpWp,jdbcType=VARCHAR},
+      </if>
+      <if test="gpNp != null" >
+        #{gpNp,jdbcType=VARCHAR},
+      </if>
+      <if test="gpAmount != null" >
+        #{gpAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="gpSyl != null" >
+        #{gpSyl,jdbcType=VARCHAR},
+      </if>
+      <if test="gpZsz != null" >
+        #{gpZsz,jdbcType=VARCHAR},
+      </if>
+      <if test="gpLtsz != null" >
+        #{gpLtsz,jdbcType=VARCHAR},
+      </if>
+      <if test="gpQt != null" >
+        #{gpQt,jdbcType=VARCHAR},
+      </if>
+        NOW(),
+        NOW()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.danlu.dleye.persist.base.GpPrecInfo" >
+    update dleye_gp_prec_info
+    <set >
+      <if test="gpCode != null" >
+        gp_code = #{gpCode,jdbcType=VARCHAR},
+      </if>
+      <if test="gpName != null" >
+        gp_name = #{gpName,jdbcType=VARCHAR},
+      </if>
+      <if test="datetime != null" >
+        datetime = #{datetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gpPrecPrice != null" >
+        gp_prec_price = #{gpPrecPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="gpOpen != null" >
+        gp_open = #{gpOpen,jdbcType=VARCHAR},
+      </if>
+      <if test="gpClose != null" >
+        gp_close = #{gpClose,jdbcType=VARCHAR},
+      </if>
+      <if test="gpHigh != null" >
+        gp_high = #{gpHigh,jdbcType=VARCHAR},
+      </if>
+      <if test="gpLow != null" >
+        gp_low = #{gpLow,jdbcType=VARCHAR},
+      </if>
+      <if test="gpEx1 != null" >
+        gp_ex1 = #{gpEx1,jdbcType=VARCHAR},
+      </if>
+      <if test="gpEx2 != null" >
+        gp_ex2 = #{gpEx2,jdbcType=VARCHAR},
+      </if>
+      <if test="gpVolume != null" >
+        gp_volume = #{gpVolume,jdbcType=VARCHAR},
+      </if>
+      <if test="gpWp != null" >
+        gp_wp = #{gpWp,jdbcType=VARCHAR},
+      </if>
+      <if test="gpNp != null" >
+        gp_np = #{gpNp,jdbcType=VARCHAR},
+      </if>
+      <if test="gpAmount != null" >
+        gp_amount = #{gpAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="gpSyl != null" >
+        gp_syl = #{gpSyl,jdbcType=VARCHAR},
+      </if>
+      <if test="gpZsz != null" >
+        gp_zsz = #{gpZsz,jdbcType=VARCHAR},
+      </if>
+      <if test="gpLtsz != null" >
+        gp_ltsz = #{gpLtsz,jdbcType=VARCHAR},
+      </if>
+      <if test="gpQt != null" >
+        gp_qt = #{gpQt,jdbcType=VARCHAR},
+      </if>
+        gmt_modified = NOW()
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.danlu.dleye.persist.base.GpPrecInfo" >
+    update dleye_gp_prec_info
+    set gp_code = #{gpCode,jdbcType=VARCHAR},
+      gp_name = #{gpName,jdbcType=VARCHAR},
+      datetime = #{datetime,jdbcType=TIMESTAMP},
+      gp_prec_price = #{gpPrecPrice,jdbcType=VARCHAR},
+      gp_open = #{gpOpen,jdbcType=VARCHAR},
+      gp_close = #{gpClose,jdbcType=VARCHAR},
+      gp_high = #{gpHigh,jdbcType=VARCHAR},
+      gp_low = #{gpLow,jdbcType=VARCHAR},
+      gp_ex1 = #{gpEx1,jdbcType=VARCHAR},
+      gp_ex2 = #{gpEx2,jdbcType=VARCHAR},
+      gp_volume = #{gpVolume,jdbcType=VARCHAR},
+      gp_wp = #{gpWp,jdbcType=VARCHAR},
+      gp_np = #{gpNp,jdbcType=VARCHAR},
+      gp_amount = #{gpAmount,jdbcType=VARCHAR},
+      gp_syl = #{gpSyl,jdbcType=VARCHAR},
+      gp_zsz = #{gpZsz,jdbcType=VARCHAR},
+      gp_ltsz = #{gpLtsz,jdbcType=VARCHAR},
+      gp_qt = #{gpQt,jdbcType=VARCHAR},
+      gmt_modified = NOW()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

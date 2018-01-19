@@ -53,6 +53,32 @@
         <property name="jobDetail" ref="schedulerGetOilInfo" />
         <property name="cronExpression" value="0 20 6 * * ? *" />
     </bean>
+    
+    <bean name="getGpHisInfo"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="sharesUtil" />
+		<property name="targetMethod" value="addGpHisInfo" />
+	</bean>
+
+    <bean name="cronTrigger3" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="name" value="getGpHisInfo"/>
+        <property name="group" value="DEFAULT"/>
+        <property name="jobDetail" ref="getGpHisInfo" />
+        <property name="cronExpression" value="0 20 1 * * ? *" />
+    </bean>
+    
+    <bean name="getGpPrecInfo"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="sharesUtil" />
+		<property name="targetMethod" value="addGpPrecInfo" />
+	</bean>
+
+    <bean name="cronTrigger4" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="name" value="getGpPrecInfo"/>
+        <property name="group" value="DEFAULT"/>
+        <property name="jobDetail" ref="getGpPrecInfo" />
+        <property name="cronExpression" value="6 0/1 * * * ? *" />
+    </bean>
 	
 	<bean name="schedulerFactoryBean"
 		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
@@ -61,6 +87,8 @@
 				<ref bean="cronTrigger" />
 				<ref bean="cronTrigger1" />
 				<ref bean="cronTrigger2" />
+				<ref bean="cronTrigger3" />
+				<ref bean="cronTrigger4" />
 			</list>
 		</property>
 	</bean>

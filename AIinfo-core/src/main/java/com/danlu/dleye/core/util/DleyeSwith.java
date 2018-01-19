@@ -9,7 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.fastjson.TypeReference;
 import com.danlu.dleye.annotation.Switch;
 
-public class DleyeSwith {
+public class DleyeSwith
+{
 
     @Autowired
     private RedisClient redisClient;
@@ -56,140 +57,204 @@ public class DleyeSwith {
     @Switch(description = "随机数长度", name = "wisdomNum")
     private int wisdomNum = 201;
 
-    public int getBorrowDate() {
+    @Switch(description = "默认取前一天的数据", name = "num")
+    private int num = 1;
+
+    @Switch(description = "股票代码列表", name = "sharesCodes")
+    private String sharesCodes = "sh600519;sh601318;sz000858;sz000568;sz000001";
+
+    public String getSharesCodes()
+    {
+        return sharesCodes;
+    }
+
+    public void setSharesCodes(String sharesCodes)
+    {
+        this.sharesCodes = sharesCodes;
+    }
+
+    public int getNum()
+    {
+        return num;
+    }
+
+    public void setNum(int num)
+    {
+        this.num = num;
+    }
+
+    public int getBorrowDate()
+    {
         return borrowDate;
     }
 
-    public void setBorrowDate(int borrowDate) {
+    public void setBorrowDate(int borrowDate)
+    {
         this.borrowDate = borrowDate;
     }
 
-    public int getWisdomNum() {
+    public int getWisdomNum()
+    {
         return wisdomNum;
     }
 
-    public void setWisdomNum(int wisdomNum) {
+    public void setWisdomNum(int wisdomNum)
+    {
         this.wisdomNum = wisdomNum;
     }
 
-    public boolean getMakeBookList() {
+    public boolean getMakeBookList()
+    {
         return this.isMakeBookList;
     }
 
-    public void setMakeBookList(boolean isMakeBookList) {
+    public void setMakeBookList(boolean isMakeBookList)
+    {
         this.isMakeBookList = isMakeBookList;
     }
 
-    public int getBookListDate() {
+    public int getBookListDate()
+    {
         return bookListDate;
     }
 
-    public void setBookListDate(int bookListDate) {
+    public void setBookListDate(int bookListDate)
+    {
         this.bookListDate = bookListDate;
     }
 
-    public String getMember() {
+    public String getMember()
+    {
         return member;
     }
 
-    public void setMember(String member) {
+    public void setMember(String member)
+    {
         this.member = member;
     }
 
-    public String getCitys() {
+    public String getCitys()
+    {
         return citys;
     }
 
-    public void setCitys(String citys) {
+    public void setCitys(String citys)
+    {
         this.citys = citys;
     }
 
-    public String getFilePath() {
+    public String getFilePath()
+    {
         return filePath;
     }
 
-    public void setFilePath(String filePath) {
+    public void setFilePath(String filePath)
+    {
         this.filePath = filePath;
     }
 
-    public String getToken() {
+    public String getToken()
+    {
         return token;
     }
 
-    public void setToken(String token) {
+    public void setToken(String token)
+    {
         this.token = token;
     }
 
-    public int getDefaultDate() {
+    public int getDefaultDate()
+    {
         return defaultDate;
     }
 
-    public void setDefaultDate(int defaultDate) {
+    public void setDefaultDate(int defaultDate)
+    {
         this.defaultDate = defaultDate;
     }
 
-    public int getMaxPool() {
+    public int getMaxPool()
+    {
         return maxPool;
     }
 
-    public void setMaxPool(int maxPool) {
+    public void setMaxPool(int maxPool)
+    {
         this.maxPool = maxPool;
     }
 
-    public int getEffectiveTime() {
+    public int getEffectiveTime()
+    {
         return effectiveTime;
     }
 
-    public void setEffectiveTime(int effectiveTime) {
+    public void setEffectiveTime(int effectiveTime)
+    {
         this.effectiveTime = effectiveTime;
     }
 
-    public int getRequestSize() {
+    public int getRequestSize()
+    {
         return requestSize;
     }
 
-    public void setRequestSize(int requestSize) {
+    public void setRequestSize(int requestSize)
+    {
         this.requestSize = requestSize;
     }
 
-    public int getPageSize() {
+    public int getPageSize()
+    {
         return pageSize;
     }
 
-    public void setPageSize(int pageSize) {
+    public void setPageSize(int pageSize)
+    {
         this.pageSize = pageSize;
     }
 
-    public Long getTimeout() {
+    public Long getTimeout()
+    {
         return timeout;
     }
 
-    public void setTimeout(Long timeout) {
+    public void setTimeout(Long timeout)
+    {
         this.timeout = timeout;
     }
 
-    public String getWisdom() {
-        try {
+    public String getWisdom()
+    {
+        try
+        {
             int k = (int) (Math.random() * getWisdomNum());
             String key = "wisdom-" + k;
-            return redisClient.get(key, new TypeReference<String>() {
+            return redisClient.get(key, new TypeReference<String>()
+            {
             });
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.toString();
         }
         return "书中自有黄金屋，书中自有颜如玉。";
     }
 
-    public static void main(String[] args) {
-        try {
-            File file = new File("/data/file/wisdom.txt");//Text文件
-            BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
+    public static void main(String[] args)
+    {
+        try
+        {
+            File file = new File("/data/file/wisdom.txt");// Text文件
+            BufferedReader br = new BufferedReader(new FileReader(file));// 构造一个BufferedReader类来读取文件
             String s = null;
-            while ((s = br.readLine()) != null) {//使用readLine方法，一次读一行
+            while ((s = br.readLine()) != null)
+            {// 使用readLine方法，一次读一行
                 System.out.println(s);
             }
             br.close();
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.toString();
         }
     }

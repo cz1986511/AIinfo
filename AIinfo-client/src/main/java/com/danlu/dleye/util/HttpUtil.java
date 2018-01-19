@@ -1,4 +1,4 @@
-package com.danlu.web.base;
+package com.danlu.dleye.util;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -27,7 +27,8 @@ import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
 
-public class HttpUtil {
+public class HttpUtil
+{
 
     private static Logger logger = LoggerFactory.getLogger(HttpUtil.class);
     private final static String GET_STRING = "GET";
@@ -35,28 +36,32 @@ public class HttpUtil {
 
     /**
      * @ https请求方法
-     * @param 
-     *   requestUrl:请求地址
-     *   requestMethod:请求方法(GET/POST)
-     *   outputStr:
+     * 
+     * @param requestUrl:请求地址 requestMethod:请求方法(GET/POST) outputStr:
      * @return JSONObject
      */
-    public static JSONObject httpsRequest(String requestUrl, String requestMethod, String outputStr) {
+    public static JSONObject httpsRequest(String requestUrl, String requestMethod, String outputStr)
+    {
         JSONObject jsonObject = null;
-        try {
-            X509TrustManager tm = new X509TrustManager() {
+        try
+        {
+            X509TrustManager tm = new X509TrustManager()
+            {
                 @Override
                 public void checkClientTrusted(X509Certificate[] arg0, String arg1)
-                                                                                   throws CertificateException {
+                                                                                   throws CertificateException
+                {
                 }
 
                 @Override
                 public void checkServerTrusted(X509Certificate[] arg0, String arg1)
-                                                                                   throws CertificateException {
+                                                                                   throws CertificateException
+                {
                 }
 
                 @Override
-                public X509Certificate[] getAcceptedIssuers() {
+                public X509Certificate[] getAcceptedIssuers()
+                {
                     return null;
                 }
             };
@@ -70,7 +75,8 @@ public class HttpUtil {
             conn.setDoInput(true);
             conn.setUseCaches(false);
             conn.setRequestMethod(requestMethod);
-            if (null != outputStr) {
+            if (null != outputStr)
+            {
                 OutputStream outputStream = conn.getOutputStream();
                 outputStream.write(outputStr.getBytes("UTF-8"));
                 outputStream.close();
@@ -80,7 +86,8 @@ public class HttpUtil {
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String str = null;
             StringBuffer buffer = new StringBuffer();
-            while ((str = bufferedReader.readLine()) != null) {
+            while ((str = bufferedReader.readLine()) != null)
+            {
                 buffer.append(str);
             }
             bufferedReader.close();
@@ -89,9 +96,13 @@ public class HttpUtil {
             inputStream = null;
             conn.disconnect();
             jsonObject = JSONObject.parseObject(buffer.toString());
-        } catch (ConnectException ce) {
+        }
+        catch (ConnectException ce)
+        {
             logger.error("连接超时：{}", ce);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             logger.error("https请求异常：{}", e);
         }
         return jsonObject;
@@ -99,44 +110,64 @@ public class HttpUtil {
 
     /**
      * @ http请求方法
-     * @param
-     *   requestUrl:    请求地址
-     *   requestMethod: 请求方法
-     *   params:        JSONObject.toJSONString(List<T> list)
+     * 
+     * @param requestUrl: 请求地址 requestMethod: 请求方法 params:
+     *            JSONObject.toJSONString(List<T> list)
      * @return JSONObject
      */
-    public static JSONObject httpRequest(String requestUrl, String requestMethod, String params) {
+    public static JSONObject httpRequest(String requestUrl, String requestMethod, String params)
+    {
         JSONObject jsonObject = null;
-        if (!StringUtils.isBlank(requestUrl) && !StringUtils.isBlank(requestMethod)) {
-            try {
+        if (!StringUtils.isBlank(requestUrl) && !StringUtils.isBlank(requestMethod))
+        {
+            try
+            {
                 HttpClient httpClient = new HttpClient();
                 httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
                 httpClient.getHttpConnectionManager().getParams().setSoTimeout(50000);
                 Header header = new Header();
                 header.setName("X-ApiVersion");
                 header.setValue("1.0");
-                if (GET_STRING.equals(requestMethod)) {
+                if (GET_STRING.equals(requestMethod))
+                {
                     GetMethod gmethod = new GetMethod(requestUrl);
                     gmethod.addRequestHeader(header);
                     httpClient.executeMethod(gmethod);
-                    if (200 == gmethod.getStatusCode()) {
-                        return JSONObject.parseObject(gmethod.getResponseBodyAsString());
-                    } else {
+                    if (200 == gmethod.getStatusCode())
+                    {
+                        String kline = gmethod.getResponseBodyAsString();
+                        String[] arrayStrings = kline.split("=");
+                        if (arrayStrings.length > 1)
+                        {
+                            return JSONObject.parseObject(arrayStrings[1]);
+                        }
+                        else
+                        {
+                            return JSONObject.parseObject(gmethod.getResponseBodyAsString());
+                        }
+                    }
+                    else
+                    {
                         logger.error("httpRequest code:" + gmethod.getStatusCode() + " |url:"
                                      + requestUrl + " |requestMethod:" + requestMethod
                                      + " |params:" + params);
                     }
                     gmethod.releaseConnection();
-                } else if (POST_STRING.equals(requestMethod)) {
+                }
+                else if (POST_STRING.equals(requestMethod))
+                {
                     PostMethod pmethod = new PostMethod(requestUrl);
                     RequestEntity requestEntity = new StringRequestEntity(params,
                         "application/json", "utf-8");
                     pmethod.setRequestEntity(requestEntity);
                     pmethod.addRequestHeader(header);
                     httpClient.executeMethod(pmethod);
-                    if (200 == pmethod.getStatusCode()) {
+                    if (200 == pmethod.getStatusCode())
+                    {
                         return JSONObject.parseObject(pmethod.getResponseBodyAsString());
-                    } else {
+                    }
+                    else
+                    {
                         logger.error("httpRequest code:" + pmethod.getStatusCode() + " |url:"
                                      + requestUrl + " |requestMethod:" + requestMethod
                                      + " |params:" + params);
@@ -144,10 +175,14 @@ public class HttpUtil {
                     pmethod.releaseConnection();
                 }
 
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 logger.error("httpRequest is Exception:" + e.toString());
             }
-        } else {
+        }
+        else
+        {
             logger.error("httpRequest url or method is null");
         }
         return jsonObject;

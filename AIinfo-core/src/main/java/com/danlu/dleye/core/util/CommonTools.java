@@ -1,5 +1,6 @@
 package com.danlu.dleye.core.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,6 +28,34 @@ public class CommonTools
     public static String generateDbKey()
     {
         return UUID.randomUUID().toString().replace("-", "").toUpperCase();
+    }
+
+    public static Date getStringDate(String dateString)
+    {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        try
+        {
+            return formatter.parse(dateString);
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Date getStringDateToS(String dateString)
+    {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddhhmmss");
+        try
+        {
+            return formatter.parse(dateString);
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
