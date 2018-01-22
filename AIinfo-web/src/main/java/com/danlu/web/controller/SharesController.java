@@ -61,22 +61,20 @@ public class SharesController implements Serializable
                 if (!CollectionUtils.isEmpty(hisInfos))
                 {
                     Iterator<GpHisInfo> ite = hisInfos.iterator();
-                    JSONArray dateArray = new JSONArray();
-                    JSONArray openArray = new JSONArray();
-                    JSONArray closeArray = new JSONArray();
-                    JSONArray volumeArray = new JSONArray();
+                    JSONArray dataArray = new JSONArray();
+
                     while (ite.hasNext())
                     {
                         GpHisInfo temp = ite.next();
-                        dateArray.add(CalendarUtil.toString(temp.getDate(), "yyyy-MM-dd"));
-                        openArray.add(temp.getGpOpen());
-                        closeArray.add(temp.getGpClose());
-                        volumeArray.add(temp.getGpVolume());
+                        JSONArray detailArray = new JSONArray();
+                        detailArray.add(CalendarUtil.toString(temp.getDate(), "yyyy-MM-dd"));
+                        detailArray.add(temp.getGpOpen());
+                        detailArray.add(temp.getGpClose());
+                        detailArray.add(temp.getGpLow());
+                        detailArray.add(temp.getGpHigh());
+                        dataArray.add(detailArray);
                     }
-                    result.put("date", dateArray);
-                    result.put("openArray", openArray);
-                    result.put("closeArray", closeArray);
-                    result.put("volumeArray", volumeArray);
+                    result.put("data", dataArray);
                 }
                 result.put("status", 0);
             }
