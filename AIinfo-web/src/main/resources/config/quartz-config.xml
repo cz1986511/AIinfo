@@ -90,7 +90,7 @@
 	    <property name="name" value="getGpPrecInfoPM"/>
         <property name="group" value="DEFAULT"/>
         <property name="jobDetail" ref="getGpPrecInfoPM" />
-        <property name="cronExpression" value="6 0/1 13-15 ? * 2-6 *" />
+        <property name="cronExpression" value="6 0/1 13-14 ? * 2-6 *" />
     </bean>
 	
 	<bean name="schedulerFactoryBean"
