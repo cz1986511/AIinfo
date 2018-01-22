@@ -83,14 +83,14 @@
 	    <property name="name" value="getGpPrecInfoAM"/>
         <property name="group" value="DEFAULT"/>
         <property name="jobDetail" ref="getGpPrecInfoAM" />
-        <property name="cronExpression" value="6 30/1 9-11 * * ? *" />
+        <property name="cronExpression" value="6 30/1 9-11 ? * 2-6 *" />
     </bean>
     
     <bean name="cronTrigger5" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 	    <property name="name" value="getGpPrecInfoPM"/>
         <property name="group" value="DEFAULT"/>
         <property name="jobDetail" ref="getGpPrecInfoPM" />
-        <property name="cronExpression" value="6 0/1 13-15 * * ? *" />
+        <property name="cronExpression" value="6 0/1 13-15 ? * 2-6 *" />
     </bean>
 	
 	<bean name="schedulerFactoryBean"

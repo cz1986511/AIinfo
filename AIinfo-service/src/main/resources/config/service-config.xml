@@ -20,6 +20,7 @@
 	<bean id="orderService" class="com.danlu.dleye.service.impl.OrderServiceImpl" />
 	<bean id="shopService" class="com.danlu.dleye.service.impl.ShopServiceImpl" />
 	<bean id="itemService" class="com.danlu.dleye.service.impl.ItemServiceImpl" />
+	<bean id="sharesService" class="com.danlu.dleye.service.impl.SharesServiceImpl" />
 	<bean id="solrService" class="com.danlu.dleye.service.impl.SolrServiceImpl" />
 	<bean id="dleyeCommon" class="com.danlu.dleye.service.util.DmallDleyeCommon" />
 </beans>

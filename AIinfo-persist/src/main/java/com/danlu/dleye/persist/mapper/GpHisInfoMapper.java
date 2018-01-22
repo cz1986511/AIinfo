@@ -1,5 +1,8 @@
 package com.danlu.dleye.persist.mapper;
 
+import java.util.List;
+import java.util.Map;
+
 import com.danlu.dleye.persist.base.GpHisInfo;
 
 public interface GpHisInfoMapper
@@ -15,4 +18,6 @@ public interface GpHisInfoMapper
     int updateByPrimaryKeySelective(GpHisInfo gpHisInfo);
 
     int updateByPrimaryKey(GpHisInfo gpHisInfo);
+
+    List<GpHisInfo> selectByParams(Map<String, Object> map);
 }
