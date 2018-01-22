@@ -67,23 +67,29 @@
         <property name="cronExpression" value="0 20 1 ? * 3-7 *" />
     </bean>
     
-    <bean name="getGpPrecInfo"
+    <bean name="getGpPrecInfoAM"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="sharesUtil" />
+		<property name="targetMethod" value="addGpPrecInfo" />
+	</bean>
+	
+	<bean name="getGpPrecInfoPM"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="sharesUtil" />
 		<property name="targetMethod" value="addGpPrecInfo" />
 	</bean>
 
     <bean name="cronTrigger4" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-	    <property name="name" value="getGpPrecInfo"/>
+	    <property name="name" value="getGpPrecInfoAM"/>
         <property name="group" value="DEFAULT"/>
-        <property name="jobDetail" ref="getGpPrecInfo" />
+        <property name="jobDetail" ref="getGpPrecInfoAM" />
         <property name="cronExpression" value="6 30/1 9-11 * * ? *" />
     </bean>
     
     <bean name="cronTrigger5" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-	    <property name="name" value="getGpPrecInfo"/>
+	    <property name="name" value="getGpPrecInfoPM"/>
         <property name="group" value="DEFAULT"/>
-        <property name="jobDetail" ref="getGpPrecInfo" />
+        <property name="jobDetail" ref="getGpPrecInfoPM" />
         <property name="cronExpression" value="6 0/1 13-15 * * ? *" />
     </bean>
 	
