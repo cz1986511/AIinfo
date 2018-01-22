@@ -25,7 +25,7 @@ public class SharesUtil
     @Autowired
     private DleyeSwith dleyeSwith;
 
-    private static String DEFAULT_URL = "http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_dayqfq&param=PARAM,day,,,NUM,qfq&r=0.05124167136792966";
+    private static String DEFAULT_URL = "http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_dayqfq&param=PARAM,day,,,NUM,qfq&r=RANDOM";
     private ThreadPoolExecutor executor;
 
     public void init()
@@ -74,7 +74,8 @@ public class SharesUtil
             for (int i = 0; i < sharasCodes.length; i++)
             {
                 String sharasCode = sharasCodes[i];
-                String url = DEFAULT_URL.replace("PARAM", sharasCode).replace("NUM", "" + num);
+                String url = DEFAULT_URL.replace("PARAM", sharasCode).replace("NUM", "" + num)
+                    .replace("RANDOM", "" + Math.random());
                 SharesDateExecutor sharesDateExecutor = new SharesDateExecutor(gpHisInfoManager,
                     gpPrecInfoManager, num, sharasCode, url);
                 executor.execute(sharesDateExecutor);
@@ -89,10 +90,12 @@ public class SharesUtil
     public static void main(String[] args)
     {
         String pgCode = "sh600519";
-        String url = DEFAULT_URL.replace("PARAM", pgCode).replace("NUM", "" + 0);
+        String url = DEFAULT_URL.replace("PARAM", pgCode).replace("NUM", "" + 0)
+            .replace("RANDOM", "" + Math.random());
         JSONObject result = HttpUtil.httpRequest(url, "GET", null);
         System.out.println(result.getJSONObject("data").getJSONObject(pgCode).getJSONObject("qt")
             .getJSONArray(pgCode));
+        System.out.println(Math.random());
         System.out.println(CommonTools.getStringDateToS("20180119151328"));
     }
 
