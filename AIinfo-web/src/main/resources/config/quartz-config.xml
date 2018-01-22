@@ -64,7 +64,7 @@
 	    <property name="name" value="getGpHisInfo"/>
         <property name="group" value="DEFAULT"/>
         <property name="jobDetail" ref="getGpHisInfo" />
-        <property name="cronExpression" value="0 20 1 * * ? *" />
+        <property name="cronExpression" value="0 20 1 ? * 3-7 *" />
     </bean>
     
     <bean name="getGpPrecInfo"
