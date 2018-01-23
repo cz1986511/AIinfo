@@ -62,7 +62,6 @@ public class SharesController implements Serializable
                 {
                     Iterator<GpHisInfo> ite = hisInfos.iterator();
                     JSONArray dataArray = new JSONArray();
-
                     while (ite.hasNext())
                     {
                         GpHisInfo temp = ite.next();
@@ -72,9 +71,10 @@ public class SharesController implements Serializable
                         detailArray.add(temp.getGpClose());
                         detailArray.add(temp.getGpLow());
                         detailArray.add(temp.getGpHigh());
+                        detailArray.add(temp.getGpVolume());
                         dataArray.add(detailArray);
                     }
-                    result.put("data", dataArray);
+                    return dataArray.toJSONString();
                 }
                 result.put("status", 0);
             }
