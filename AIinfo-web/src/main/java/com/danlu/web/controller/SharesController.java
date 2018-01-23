@@ -67,11 +67,11 @@ public class SharesController implements Serializable
                         GpHisInfo temp = ite.next();
                         JSONArray detailArray = new JSONArray();
                         detailArray.add(CalendarUtil.toString(temp.getDate(), "yyyy-MM-dd"));
-                        detailArray.add(temp.getGpOpen());
-                        detailArray.add(temp.getGpClose());
-                        detailArray.add(temp.getGpLow());
-                        detailArray.add(temp.getGpHigh());
-                        detailArray.add(temp.getGpVolume());
+                        detailArray.add(Double.valueOf(temp.getGpOpen()));
+                        detailArray.add(Double.valueOf(temp.getGpClose()));
+                        detailArray.add(Double.valueOf(temp.getGpLow()));
+                        detailArray.add(Double.valueOf(temp.getGpHigh()));
+                        detailArray.add(Double.valueOf(temp.getGpVolume()));
                         dataArray.add(detailArray);
                     }
                     return dataArray.toJSONString();
