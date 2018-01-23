@@ -74,7 +74,7 @@ public class SharesController implements Serializable
                         detailArray.add(Double.valueOf(temp.getGpVolume()));
                         dataArray.add(detailArray);
                     }
-                    return dataArray.toJSONString();
+                    result.put("data", dataArray);
                 }
                 result.put("status", 0);
             }
