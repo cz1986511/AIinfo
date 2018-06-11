@@ -44,7 +44,7 @@
 	    </init-param>
 	    <init-param>
 	        <param-name>disabletestfilter</param-name><!-- Y:过滤无效 -->
-	        <param-value>Y</param-value>
+	        <param-value>N</param-value>
 	    </init-param>
     </filter>
     <filter-mapping>
@@ -112,7 +112,7 @@
 
 	<!-- session超时时间，单位分钟 -->
 	<session-config>
-		<session-timeout>15</session-timeout>
+		<session-timeout>60</session-timeout>
 	</session-config>
 
 </web-app>
