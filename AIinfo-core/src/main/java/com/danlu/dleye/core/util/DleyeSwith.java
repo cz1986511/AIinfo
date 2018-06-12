@@ -31,7 +31,7 @@ public class DleyeSwith
     private int maxPool = 5;
 
     @Switch(description = "默认删除180天前数据", name = "defaultDate")
-    private int defaultDate = -180;
+    private int defaultDate = -18000;
 
     @Switch(description = "借书周期", name = "borrowDate")
     private int borrowDate = 30;
