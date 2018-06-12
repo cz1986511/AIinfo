@@ -53,6 +53,13 @@
 	</if>
   </select>
   
+  <select id="selectFoodRecordStatistics" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from aiinfo_food_record
+    <include refid="selectByParamsWhere" />
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from aiinfo_food_record
     where id = #{id,jdbcType=BIGINT}
