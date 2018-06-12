@@ -36,7 +36,7 @@
 	    </init-param>
 	    <init-param>
 	        <param-name>includeStrings</param-name><!-- 只对指定过滤参数后缀进行过滤 -->
-	        <param-value>shoppingcar/list</param-value>
+	        <param-value></param-value>
 	    </init-param>
 	    <init-param>
 	        <param-name>redirectPath</param-name><!-- 未通过跳转到登录界面 -->
