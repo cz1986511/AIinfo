@@ -16,12 +16,43 @@
   <sql id="Base_Column_List" >
     id, record_time, type, number, unit, info, status, create_person, gmt_create, gmt_modify
   </sql>
+  <sql id="selectByParamsWhere">
+    <where>
+      <if test="recordTimeStartTime != null">
+	    <![CDATA[
+		  record_time >= #{recordTimeStartTime,jdbcType=TIMESTAMP} and	
+		]]>
+	  </if>
+	  <if test="recordTimeEndTime != null">
+	    <![CDATA[
+		  record_time <= #{recordTimeEndTime,jdbcType=TIMESTAMP} and	
+		]]>
+	  </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR} and
+      </if>
+        1 = 1
+    </where>
+  </sql>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from aiinfo_food_record
     where id = #{id,jdbcType=BIGINT}
   </select>
+  
+  <select id="selectFoodRecordsByParams" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from aiinfo_food_record
+    <include refid="selectByParamsWhere" />
+      order by record_time asc
+    <if test=" offset != null and limit != null">
+	  limit ${offset},${limit}
+	</if>
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from aiinfo_food_record
     where id = #{id,jdbcType=BIGINT}

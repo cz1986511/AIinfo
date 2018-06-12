@@ -44,10 +44,10 @@
 			<#if userType == 1>
 				<input class="btn btn-info" type="button" id="btn-addFood" value="新增记录" />
 			</#if>
-			<#if books??>
-			    <#list books as book>
+			<#if records??>
+			    <#list records as record>
 					  <div class="alert alert-info" role="alert">
-					    <span class="glyphicon glyphicon-book"></span> ${book.bookName}--<#if book.bookStatus == "02"><font color="red">锁定</font><#elseif book.bookStatus == "03"><font color="red">已借出</font><#else><font color="green">未借出</font><button type="button" class="btn btn-link" id="btn-bookBorrow" value="${book.bookId}"><strong>借阅</strong></button></#if>
+					    <span class="glyphicon glyphicon-book"></span> ${(record.recordTime?string('yyyy-MM-dd HH:mm'))!}--<#if record.type == "01"><font color="green">奶粉</font><#elseif record.type == "02"><font color="green">母乳</font></#if>--${record.number}--<#if record.unit == "01"><font color="green">毫升</font><#elseif record.unit == "02"><font color="green">升</font></#if><button type="button" class="btn btn-link" id="btn-delRecord" value="${record.id}"><strong>删除</strong></button>
 					  </div>
 			    </#list>
 			</#if>
@@ -93,16 +93,15 @@
 	       });
         })
 		
-		$("button").click(function(){
-		  var text = $(this).text();
-		  if ("借阅" == text) {
-		      var id = $(this).val();
+		$("#btn-delRecord").click(function(){
+		  var id = $('#btn-delRecord').val();
 		      $.ajax({
 	           type: "POST",
-               url: "bookborrow.action",
+               url: "delfoodrecord.action",
                data: {id:id},
                dataType: "json",
                success: function(data){
+			     var data = JSON.parse(data);
                  if(data.status == true){
                      location.reload(true);
                      alert("成功:" + data.msg);
@@ -112,7 +111,6 @@
                  }
                }
 	          });
-		  }
         })
 	</script>
 	<#include "/common/footer.html" />

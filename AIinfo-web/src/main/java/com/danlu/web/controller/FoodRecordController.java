@@ -1,9 +1,11 @@
 package com.danlu.web.controller;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -48,6 +51,22 @@ public class FoodRecordController implements Serializable
         {
             int userType = (int) request.getSession().getAttribute("type");
             m.addObject("userType", userType);
+            try
+            {
+                Map<String, Object> map = new HashMap<String, Object>();
+                SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
+                map.put("recordTimeStartTime", ft.parse(ft.format(new Date())));
+                map.put("recordTimeEndTime", new Date());
+                List<FoodRecord> list = foodRecordManager.getFoodRecordsByParams(map);
+                if (!CollectionUtils.isEmpty(list))
+                {
+                    m.addObject("records", list);
+                }
+            }
+            catch (Exception e)
+            {
+                logger.error(e.toString());
+            }
         }
         else
         {
@@ -169,6 +188,22 @@ public class FoodRecordController implements Serializable
             result.put("msg", "add fail");
         }
         return json.toJSONString();
+    }
+
+    public static void main(String[] args)
+    {
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
+        try
+        {
+            Date date = ft.parse(ft.format(new Date()));
+            System.out.println(date);
+        }
+        catch (ParseException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 
 }

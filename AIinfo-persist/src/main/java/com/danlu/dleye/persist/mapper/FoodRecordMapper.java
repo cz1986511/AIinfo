@@ -1,5 +1,8 @@
 package com.danlu.dleye.persist.mapper;
 
+import java.util.List;
+import java.util.Map;
+
 import com.danlu.dleye.persist.base.FoodRecord;
 
 public interface FoodRecordMapper
@@ -15,4 +18,6 @@ public interface FoodRecordMapper
     int updateByPrimaryKeySelective(FoodRecord record);
 
     int updateByPrimaryKey(FoodRecord record);
+
+    List<FoodRecord> selectFoodRecordsByParams(Map<String, Object> map);
 }
