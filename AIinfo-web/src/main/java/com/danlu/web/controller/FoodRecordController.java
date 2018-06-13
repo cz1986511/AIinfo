@@ -159,7 +159,8 @@ public class FoodRecordController implements Serializable
         String statisticsMon = request.getParameter("statisticsMon");
         String statisticsDay = request.getParameter("statisticsDay");
         String dataType = request.getParameter("datatype");
-        logger.info(statisticsYear);
+        logger.info(statisticsYear + "-" + statisticsMon + "-" + statisticsDay + "dataType:"
+                    + dataType);
         return json.toJSONString();
     }
 
