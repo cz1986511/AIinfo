@@ -76,6 +76,39 @@ public class FoodRecordController implements Serializable
         return m;
     }
 
+    @RequestMapping("historyrecord.html")
+    public ModelAndView historyFoodRecord(HttpServletRequest request)
+    {
+        ModelAndView m = new ModelAndView();
+        if (null != request.getSession().getAttribute("type"))
+        {
+            int userType = (int) request.getSession().getAttribute("type");
+            m.addObject("userType", userType);
+            try
+            {
+                Map<String, Object> map = new HashMap<String, Object>();
+                SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
+                map.put("recordTimeStartTime", ft.parse(ft.format(new Date())));
+                map.put("recordTimeEndTime", new Date());
+                List<FoodRecord> list = foodRecordManager.getFoodRecordsByParams(map);
+                if (!CollectionUtils.isEmpty(list))
+                {
+                    m.addObject("records", list);
+                }
+            }
+            catch (Exception e)
+            {
+                logger.error(e.toString());
+            }
+        }
+        else
+        {
+            m.setViewName("login");
+            return m;
+        }
+        return m;
+    }
+
     @RequestMapping("addfood.action")
     @ResponseBody
     public String actionAddFood(HttpServletRequest request, HttpServletResponse response)
@@ -113,6 +146,20 @@ public class FoodRecordController implements Serializable
             result.put("status", false);
             result.put("msg", "add fail");
         }
+        return json.toJSONString();
+    }
+
+    @RequestMapping("statisticsrecord.json")
+    @ResponseBody
+    public String getStatisticsRecord(HttpServletRequest request, HttpServletResponse response)
+    {
+        Map<String, Object> result = new HashMap<String, Object>();
+        JSONObject json = new JSONObject(result);
+        String statisticsYear = request.getParameter("statisticsYear");
+        String statisticsMon = request.getParameter("statisticsMon");
+        String statisticsDay = request.getParameter("statisticsDay");
+        String dataType = request.getParameter("datatype");
+        logger.info(statisticsYear);
         return json.toJSONString();
     }
 
