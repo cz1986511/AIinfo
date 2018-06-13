@@ -31,27 +31,27 @@
 				</select>
 				<span>月：</span>
 				<select class="form-control" id="statisticsMon" name="statisticsMon">
-				    <option value="0" "<#if statisticsMon == 0> selected='true' </#if>" >全部</option>
+				    <option value='0' "<#if statisticsMon == 0> selected='true' </#if>" >全部</option>
 				    <#list 1..13 as i>
 					  <#if i<13 >
-					    <option value="i" "<#if statisticsMon == i> selected='true' </#if>" >${i}月</option>
+					    <option value='${i}' "<#if statisticsMon == '${i}'> selected='true' </#if>" >${i}月</option>
 					  </#if>
 					</#list>
 				</select>
 				<span>日：</span>
 				<select class="form-control" id="statisticsDay" name="statisticsDay">
-				    <option value="0" "<#if statisticsDay == 0> selected='true' </#if>" >全部</option>
+				    <option value='0' "<#if statisticsDay == 0> selected='true' </#if>" >全部</option>
 				    <#list 1..31 as i>
 					  <#if i<31 >
-					    <option value="i" "<#if statisticsDay == i> selected='true' </#if>" >${i}日</option>
+					    <option value='${i}' "<#if statisticsDay == '${i}'> selected='true' </#if>" >${i}日</option>
 					  </#if>
 					</#list>
 				</select>
 				<span>类型：</span>
-				<select class="form-control" id="datatype" name="datatype">
-				    <option value="09" "<#if datatype == 09> selected='true' </#if>" >全部</option>
-					<option value="01" "<#if datatype == 01> selected='true' </#if>" >奶粉</option>
-					<option value="02" "<#if datatype == 02> selected='true' </#if>" >母乳</option>
+				<select class="form-control" id="statisticsType" name="statisticsType">
+				    <option value='09' "<#if statisticsType == '09'> selected='true' </#if>" >全部</option>
+					<option value='01' "<#if statisticsType == '01'> selected='true' </#if>" >奶粉</option>
+					<option value='02' "<#if statisticsType == '02'> selected='true' </#if>" >母乳</option>
 				</select>
 				<button id="btnSearch" type="submit" class="btn">查询</button>
 				</div>
@@ -101,11 +101,11 @@
 			var statisticsYear = $("#statisticsYear").val();
 			var statisticsMon = $("#statisticsMon").val();
 			var statisticsDay = $("#statisticsDay").val();
-			var datatype = $("#datatype").val();
+			var statisticsType = $("#statisticsType").val();
 			$.ajax({
 				type: "POST",
 				url: "statisticsrecord.json",
-				data: {statisticsYear:statisticsYear, statisticsMon:statisticsMon, statisticsDay:statisticsDay, datatype:datatype},
+				data: {statisticsYear:statisticsYear, statisticsMon:statisticsMon, statisticsDay:statisticsDay, statisticsType:statisticsType},
 				dataType: "json",
 				success: function(data){
 					if(data.status){

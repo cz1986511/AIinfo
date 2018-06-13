@@ -8,25 +8,19 @@
     <result column="statistics_data_type" property="statisticsDataType" jdbcType="VARCHAR" />
     <result column="statistics_num" property="statisticsNum" jdbcType="BIGINT" />
     <result column="statistics_unit" property="statisticsUnit" jdbcType="VARCHAR" />
+    <result column="statistics_data" property="statisticsData" jdbcType="LONGVARCHAR" />
     <result column="status" property="status" jdbcType="VARCHAR" />
     <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
     <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, statistics_time, statistics_type, statistics_data_type, statistics_num, statistics_unit, 
+    id, statistics_time, statistics_type, statistics_data_type, statistics_num, statistics_unit, statistics_data, 
     status, gmt_create, gmt_modified
   </sql>
   <sql id="selectByParamsWhere">
     <where>
-      <if test="statisticsTimeStartTime != null">
-	    <![CDATA[
-		  statistics_time >= #{statisticsTimeStartTime,jdbcType=TIMESTAMP} and	
-		]]>
-	  </if>
-	  <if test="statisticsTimeEndTime != null">
-	    <![CDATA[
-		  statistics_time <= #{statisticsTimeEndTime,jdbcType=TIMESTAMP} and	
-		]]>
+      <if test="statisticsTime != null">
+		  statistics_time = #{statisticsTime,jdbcType=VARCHAR} and	
 	  </if>
       <if test="statisticsDataType != null">
         statistics_type = #{statisticsDataType,jdbcType=VARCHAR} and
@@ -50,11 +44,11 @@
   </delete>
   <insert id="insert" parameterType="com.danlu.dleye.persist.base.FoodRecordStatistics" >
     insert into aiinfo_food_record_statistics (id, statistics_time, statistics_type, 
-      statistics_data_type, statistics_num, statistics_unit, 
+      statistics_data_type, statistics_num, statistics_unit, statistics_data, 
       status, gmt_create, gmt_modified
       )
     values (#{id,jdbcType=BIGINT}, #{statisticsTime,jdbcType=VARCHAR}, #{statisticsType,jdbcType=VARCHAR}, 
-      #{statisticsDataType,jdbcType=VARCHAR}, #{statisticsNum,jdbcType=BIGINT}, #{statisticsUnit,jdbcType=VARCHAR}, 
+      #{statisticsDataType,jdbcType=VARCHAR}, #{statisticsNum,jdbcType=BIGINT}, #{statisticsUnit,jdbcType=VARCHAR}, #{statisticsData,jdbcType=LONGVARCHAR}, 
       #{status,jdbcType=VARCHAR}, NOW(), NOW())
   </insert>
   <insert id="insertSelective" parameterType="com.danlu.dleye.persist.base.FoodRecordStatistics" >
@@ -77,6 +71,9 @@
       </if>
       <if test="statisticsUnit != null" >
         statistics_unit,
+      </if>
+      <if test="statisticsData != null" >
+        statistics_data,
       </if>
       <if test="status != null" >
         status,
@@ -103,6 +100,9 @@
       <if test="statisticsUnit != null" >
         #{statisticsUnit,jdbcType=VARCHAR},
       </if>
+      <if test="statisticsData != null" >
+        #{statisticsData,jdbcType=LONGVARCHAR},
+      </if>
       <if test="status != null" >
         #{status,jdbcType=VARCHAR},
       </if>
@@ -128,6 +128,9 @@
       <if test="statisticsUnit != null" >
         statistics_unit = #{statisticsUnit,jdbcType=VARCHAR},
       </if>
+      <if test="statisticsData != null" >
+        statistics_data = #{statisticsData,jdbcType=LONGVARCHAR},
+      </if>
       <if test="status != null" >
         status = #{status,jdbcType=VARCHAR},
       </if>
@@ -142,6 +145,7 @@
       statistics_data_type = #{statisticsDataType,jdbcType=VARCHAR},
       statistics_num = #{statisticsNum,jdbcType=BIGINT},
       statistics_unit = #{statisticsUnit,jdbcType=VARCHAR},
+      statistics_data = #{statisticsData,jdbcType=LONGVARCHAR},
       status = #{status,jdbcType=VARCHAR},
       gmt_modified = NOW()
     where id = #{id,jdbcType=BIGINT}

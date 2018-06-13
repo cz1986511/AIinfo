@@ -23,8 +23,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.danlu.dleye.core.FoodRecordManager;
-import com.danlu.dleye.core.InfoManager;
-import com.danlu.dleye.core.UserInfoManager;
 import com.danlu.dleye.persist.base.FoodRecord;
 
 @Controller
@@ -34,11 +32,6 @@ public class FoodRecordController implements Serializable
     private static final long serialVersionUID = -908534251L;
 
     private static Logger logger = LoggerFactory.getLogger(FoodRecordController.class);
-
-    @Autowired
-    private InfoManager infoManager;
-    @Autowired
-    private UserInfoManager userManager;
 
     @Autowired
     private FoodRecordManager foodRecordManager;
@@ -84,22 +77,15 @@ public class FoodRecordController implements Serializable
         {
             int userType = (int) request.getSession().getAttribute("type");
             m.addObject("userType", userType);
-            try
-            {
-                Map<String, Object> map = new HashMap<String, Object>();
-                SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
-                map.put("recordTimeStartTime", ft.parse(ft.format(new Date())));
-                map.put("recordTimeEndTime", new Date());
-                List<FoodRecord> list = foodRecordManager.getFoodRecordsByParams(map);
-                if (!CollectionUtils.isEmpty(list))
-                {
-                    m.addObject("records", list);
-                }
-            }
-            catch (Exception e)
-            {
-                logger.error(e.toString());
-            }
+
+            String statisticsYear = request.getParameter("statisticsYear");
+            String statisticsMon = request.getParameter("statisticsMon");
+            String statisticsDay = request.getParameter("statisticsDay");
+            String statisticsType = request.getParameter("statisticsType");
+            m.addObject("statisticsYear", statisticsYear);
+            m.addObject("statisticsMon", statisticsMon);
+            m.addObject("statisticsDay", statisticsDay);
+            m.addObject("statisticsType", statisticsType);
         }
         else
         {
@@ -158,9 +144,10 @@ public class FoodRecordController implements Serializable
         String statisticsYear = request.getParameter("statisticsYear");
         String statisticsMon = request.getParameter("statisticsMon");
         String statisticsDay = request.getParameter("statisticsDay");
-        String dataType = request.getParameter("datatype");
+        String statisticsType = request.getParameter("statisticsType");
+
         logger.info(statisticsYear + "-" + statisticsMon + "-" + statisticsDay + "dataType:"
-                    + dataType);
+                    + statisticsType);
         return json.toJSONString();
     }
 

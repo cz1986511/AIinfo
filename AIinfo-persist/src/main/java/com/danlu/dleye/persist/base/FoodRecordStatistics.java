@@ -16,6 +16,8 @@ public class FoodRecordStatistics
 
     private String statisticsUnit;
 
+    private String statisticsData;
+
     private String status;
 
     private Date gmtCreate;
@@ -80,6 +82,16 @@ public class FoodRecordStatistics
     public void setStatisticsUnit(String statisticsUnit)
     {
         this.statisticsUnit = statisticsUnit == null ? null : statisticsUnit.trim();
+    }
+
+    public String getStatisticsData()
+    {
+        return statisticsData;
+    }
+
+    public void setStatisticsData(String statisticsData)
+    {
+        this.statisticsData = statisticsData;
     }
 
     public String getStatus()
