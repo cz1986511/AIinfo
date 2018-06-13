@@ -43,6 +43,7 @@ public class FoodRecordUtil
                 map.put("recordTimeEndTime", calendar.getTime());
                 calendar.set(nowYear, 0, 1, 0, 0, 0);
                 map.put("recordTimeStartTime", calendar.getTime());
+                map.put("statisticsType", "01");
             }
             else if (i == 1)
             {
@@ -53,6 +54,7 @@ public class FoodRecordUtil
                 map.put("recordTimeEndTime", calendar.getTime());
                 calendar.set(nowYear, nowMonth, 1, 0, 0, 0);
                 map.put("recordTimeStartTime", calendar.getTime());
+                map.put("statisticsType", "02");
             }
             else if (i == 2)
             {
@@ -63,19 +65,19 @@ public class FoodRecordUtil
                 map.put("recordTimeEndTime", calendar.getTime());
                 calendar.set(nowYear, nowMonth, nowDay, 0, 0, 0);
                 map.put("recordTimeStartTime", calendar.getTime());
+                map.put("statisticsType", "03");
             }
             // 总和
-            addStatistics(map, "09", "01", statisticsTime);
+            addStatistics(map, "09", statisticsTime);
             // 奶粉
-            addStatistics(map, "01", "01", statisticsTime);
+            addStatistics(map, "01", statisticsTime);
             // 母乳
-            addStatistics(map, "02", "01", statisticsTime);
+            addStatistics(map, "02", statisticsTime);
             map.clear();
         }
     }
 
-    private void addStatistics(Map<String, Object> map, String dataType, String type,
-                               String statisticsTime)
+    private void addStatistics(Map<String, Object> map, String dataType, String statisticsTime)
     {
         try
         {
@@ -97,7 +99,7 @@ public class FoodRecordUtil
                 foodRecordStatistics.setStatisticsDataType(dataType);
                 foodRecordStatistics.setStatisticsNum(total);
                 foodRecordStatistics.setStatisticsTime(statisticsTime);
-                foodRecordStatistics.setStatisticsType(type);
+                foodRecordStatistics.setStatisticsType((String) map.get("statisticsType"));
                 foodRecordStatistics.setStatisticsUnit("01");
                 foodRecordStatistics.setStatus("01");
                 int result = foodRecordStatisticsManager
@@ -105,7 +107,8 @@ public class FoodRecordUtil
                 if (result <= 0)
                 {
                     logger.error("add statistics fail-{statisticsTime:" + statisticsTime
-                                 + "|dataType:" + dataType + "|total:" + total + "|type:" + type);
+                                 + "|dataType:" + dataType + "|total:" + total + "|type:"
+                                 + map.get("statisticsType"));
                 }
             }
         }
