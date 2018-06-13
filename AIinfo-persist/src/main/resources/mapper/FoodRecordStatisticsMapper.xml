@@ -3,7 +3,7 @@
 <mapper namespace="com.danlu.dleye.persist.mapper.FoodRecordStatisticsMapper" >
   <resultMap id="BaseResultMap" type="com.danlu.dleye.persist.base.FoodRecordStatistics" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="statistics_time" property="statisticsTime" jdbcType="TIMESTAMP" />
+    <result column="statistics_time" property="statisticsTime" jdbcType="VARCHAR" />
     <result column="statistics_type" property="statisticsType" jdbcType="VARCHAR" />
     <result column="statistics_data_type" property="statisticsDataType" jdbcType="VARCHAR" />
     <result column="statistics_num" property="statisticsNum" jdbcType="BIGINT" />
@@ -53,7 +53,7 @@
       statistics_data_type, statistics_num, statistics_unit, 
       status, gmt_create, gmt_modified
       )
-    values (#{id,jdbcType=BIGINT}, #{statisticsTime,jdbcType=TIMESTAMP}, #{statisticsType,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{statisticsTime,jdbcType=VARCHAR}, #{statisticsType,jdbcType=VARCHAR}, 
       #{statisticsDataType,jdbcType=VARCHAR}, #{statisticsNum,jdbcType=BIGINT}, #{statisticsUnit,jdbcType=VARCHAR}, 
       #{status,jdbcType=VARCHAR}, NOW(), NOW())
   </insert>
@@ -89,7 +89,7 @@
         #{id,jdbcType=BIGINT},
       </if>
       <if test="statisticsTime != null" >
-        #{statisticsTime,jdbcType=TIMESTAMP},
+        #{statisticsTime,jdbcType=VARCHAR},
       </if>
       <if test="statisticsType != null" >
         #{statisticsType,jdbcType=VARCHAR},
@@ -114,7 +114,7 @@
     update aiinfo_food_record_statistics
     <set >
       <if test="statisticsTime != null" >
-        statistics_time = #{statisticsTime,jdbcType=TIMESTAMP},
+        statistics_time = #{statisticsTime,jdbcType=VARCHAR},
       </if>
       <if test="statisticsType != null" >
         statistics_type = #{statisticsType,jdbcType=VARCHAR},
@@ -137,7 +137,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.danlu.dleye.persist.base.FoodRecordStatistics" >
     update aiinfo_food_record_statistics
-    set statistics_time = #{statisticsTime,jdbcType=TIMESTAMP},
+    set statistics_time = #{statisticsTime,jdbcType=VARCHAR},
       statistics_type = #{statisticsType,jdbcType=VARCHAR},
       statistics_data_type = #{statisticsDataType,jdbcType=VARCHAR},
       statistics_num = #{statisticsNum,jdbcType=BIGINT},

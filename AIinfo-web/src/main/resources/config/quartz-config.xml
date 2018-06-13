@@ -33,12 +33,18 @@
 		<property name="targetObject" ref="cleanData" />
 		<property name="targetMethod" value="cleanData" />
 	</bean>
+	
+	<bean name="schedulerStatisticsFoodRecord"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="foodRecordUtil" />
+		<property name="targetMethod" value="statisticsFoodRecord" />
+	</bean>
 
     <bean name="cronTrigger1" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-	    <property name="name" value="schedulerCleanArticle"/>
+	    <property name="name" value="schedulerStatisticsFoodRecord"/>
         <property name="group" value="DEFAULT"/>
-        <property name="jobDetail" ref="schedulerCleanArticle" />
-        <property name="cronExpression" value="0 20 0 * * ? *" />
+        <property name="jobDetail" ref="schedulerStatisticsFoodRecord" />
+        <property name="cronExpression" value="0 50 23 * * ? *" />
     </bean>
     
     <bean name="schedulerGetOilInfo"
