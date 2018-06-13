@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <#include "/common/header.html"/>
-    <title>AIinfo - 图书池</title>
+    <title>AIinfo - 记录</title>
 </head>
 <body>
     <div id="wrapper">

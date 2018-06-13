@@ -84,7 +84,9 @@
 			<tx:method name="remove*" propagation="REQUIRED" />
 			<tx:method name="do*" propagation="REQUIRED" />
 			<tx:method name="regsiter*" propagation="REQUIRED" />
+			<!-- 
 			<tx:method name="*" read-only="true" />
+			-->
 
 		</tx:attributes>
 	</tx:advice>
