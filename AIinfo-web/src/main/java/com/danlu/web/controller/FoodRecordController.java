@@ -3,6 +3,7 @@ package com.danlu.web.controller;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,6 +28,7 @@ import com.danlu.dleye.core.FoodRecordManager;
 import com.danlu.dleye.core.FoodRecordStatisticsManager;
 import com.danlu.dleye.persist.base.FoodRecord;
 import com.danlu.dleye.persist.base.FoodRecordStatistics;
+import com.danlu.web.base.StatisticsBase;
 
 @Controller
 public class FoodRecordController implements Serializable
@@ -97,6 +99,38 @@ public class FoodRecordController implements Serializable
             m.addObject("statisticsMon", statisticsMon);
             m.addObject("statisticsDay", statisticsDay);
             m.addObject("statisticsType", statisticsType);
+            try
+            {
+                Map<String, Object> map = new HashMap<String, Object>();
+                String statisticsTime = statisticsYear;
+                if (!"0".equals(statisticsMon))
+                {
+                    statisticsTime = statisticsTime + "-" + statisticsMon;
+                    if (!"0".equals(statisticsDay))
+                    {
+                        statisticsTime = statisticsTime + "-" + statisticsDay;
+                    }
+                }
+                map.put("statisticsTime", statisticsTime);
+                map.put("statisticsDataType", statisticsType);
+                map.put("statisticsType", "01");
+                List<FoodRecordStatistics> list = foodRecordStatisticsManager.getStatistics(map);
+                if (!CollectionUtils.isEmpty(list))
+                {
+                    FoodRecordStatistics temp = list.get(0);
+                    StatisticsBase statisticsBase = new StatisticsBase();
+                    statisticsBase.setDate(temp.getStatisticsData());
+                    statisticsBase.setNumber(temp.getStatisticsNum());
+                    statisticsBase.setType(temp.getStatisticsDataType());
+                    List<StatisticsBase> statisticsBases = new ArrayList<StatisticsBase>();
+                    statisticsBases.add(statisticsBase);
+                    m.addObject("statisticsBases", statisticsBases);
+                }
+            }
+            catch (Exception e)
+            {
+                logger.error("getStatisticsRecord is Exception:" + e.toString());
+            }
         }
         else
         {

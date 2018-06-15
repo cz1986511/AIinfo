@@ -76,10 +76,13 @@
 					<#list statisticsBases as statisticsBase>
 					<tr class="info">
 						<td>
-					        ${statisticsBase.department}
+					        ${statisticsBase.date}
 						</td>
 						<td>
-							${statisticsBase.employeeNum}
+							${statisticsBase.number}
+						</td>
+						<td>
+							<#if statisticsBase.type == "09">全部<#elseif statisticsBase.type == "01">奶粉<#else>母乳</#if>
 						</td>
 					</tr>
 					</#list>
