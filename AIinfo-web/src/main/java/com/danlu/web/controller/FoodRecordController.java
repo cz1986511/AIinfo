@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -51,9 +52,16 @@ public class FoodRecordController implements Serializable
                 map.put("recordTimeStartTime", ft.parse(ft.format(new Date())));
                 map.put("recordTimeEndTime", new Date());
                 List<FoodRecord> list = foodRecordManager.getFoodRecordsByParams(map);
+                int total = 0;
                 if (!CollectionUtils.isEmpty(list))
                 {
                     m.addObject("records", list);
+                    Iterator<FoodRecord> ite = list.iterator();
+                    while (ite.hasNext())
+                    {
+                        total += ite.next().getNumber();
+                    }
+                    m.addObject("count", total);
                 }
             }
             catch (Exception e)

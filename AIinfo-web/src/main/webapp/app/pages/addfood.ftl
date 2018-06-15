@@ -44,6 +44,9 @@
 			<#if userType == 1>
 				<input class="btn btn-info" type="button" id="btn-addFood" value="新增记录" />
 			</#if>
+			<span>
+			  今日总量:${count}
+			</span>
 			<#if records??>
 			    <#list records as record>
 					  <div class="alert alert-info" role="alert">

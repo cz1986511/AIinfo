@@ -1,5 +1,6 @@
 package com.danlu.dleye.core.util;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.danlu.dleye.core.FoodRecordManager;
 import com.danlu.dleye.core.FoodRecordStatisticsManager;
 import com.danlu.dleye.persist.base.FoodRecord;
@@ -32,7 +34,6 @@ public class FoodRecordUtil
         int nowYear = calendar.get(Calendar.YEAR);
         int nowMonth = calendar.get(Calendar.MONTH);
         String statisticsTime = "";
-
         for (int i = 0; i < 2; i++)
         {
             if (i == 0)
@@ -87,6 +88,101 @@ public class FoodRecordUtil
                     }
                 }
             }
+        }
+        makeYearEchartsData();
+    }
+
+    private void makeYearEchartsData()
+    {
+        // 年
+        Map<String, Object> map = new HashMap<String, Object>();
+        Calendar calendar = Calendar.getInstance();
+        int nowYear = calendar.get(Calendar.YEAR);
+        int nowMonth = calendar.get(Calendar.MONTH);
+        String statisticsTime = "";
+        Map<String, Object> result = new HashMap<String, Object>();
+        JSONObject json = new JSONObject(result);
+        List<Integer> totalNumbers = new ArrayList<Integer>();
+        List<Integer> monNumbers = new ArrayList<Integer>();
+        for (int mon = 0; mon <= nowMonth; mon++)
+        {
+            int nowMonth1 = mon + 1;
+            statisticsTime = "" + nowYear + "-" + nowMonth1;
+            map.put("statisticsTime", statisticsTime);
+            map.put("statisticsDataType", "09");
+            List<FoodRecordStatistics> list = foodRecordStatisticsManager.getStatistics(map);
+            if (!CollectionUtils.isEmpty(list))
+            {
+                Iterator<FoodRecordStatistics> iterator = list.iterator();
+                int total = 0;
+                while (iterator.hasNext())
+                {
+                    total += iterator.next().getStatisticsNum();
+                }
+                monNumbers.add(mon);
+                totalNumbers.add(total);
+            }
+            // 月
+            makeMonthEchartsData(nowYear, nowMonth1);
+        }
+        result.put("dates", monNumbers);
+        result.put("numbers", totalNumbers);
+        result.put("status", true);
+        FoodRecordStatistics foodRecordStatistics = new FoodRecordStatistics();
+        foodRecordStatistics.setStatisticsData(json.toJSONString());
+        foodRecordStatistics.setStatisticsDataType("19");
+        foodRecordStatistics.setStatisticsTime("" + nowYear);
+        foodRecordStatistics.setStatisticsType("02");
+        foodRecordStatistics.setStatisticsUnit("01");
+        foodRecordStatistics.setStatus("01");
+        int result1 = foodRecordStatisticsManager.addOrUpdateStatistics(foodRecordStatistics);
+        if (result1 < 1)
+        {
+            logger.error("makeYearEchartsData is fail:" + nowYear);
+        }
+    }
+
+    private void makeMonthEchartsData(int nowYear, int nowMonth)
+    {
+        // 月
+        Map<String, Object> map = new HashMap<String, Object>();
+        String statisticsTime = "";
+        Map<String, Object> result = new HashMap<String, Object>();
+        JSONObject json = new JSONObject(result);
+        List<Integer> totalNumbers = new ArrayList<Integer>();
+        List<Integer> dayNumbers = new ArrayList<Integer>();
+        for (int day = 1; day < 32; day++)
+        {
+            statisticsTime = "" + nowYear + "-" + nowMonth + "-" + day;
+            map.put("statisticsTime", statisticsTime);
+            map.put("statisticsDataType", "09");
+            List<FoodRecordStatistics> list = foodRecordStatisticsManager.getStatistics(map);
+            if (!CollectionUtils.isEmpty(list))
+            {
+                Iterator<FoodRecordStatistics> iterator = list.iterator();
+                int total = 0;
+                while (iterator.hasNext())
+                {
+                    total += iterator.next().getStatisticsNum();
+                }
+                dayNumbers.add(day);
+                totalNumbers.add(total);
+            }
+        }
+        result.put("dates", dayNumbers);
+        result.put("numbers", totalNumbers);
+        result.put("status", true);
+        FoodRecordStatistics foodRecordStatistics = new FoodRecordStatistics();
+        foodRecordStatistics.setStatisticsData(json.toJSONString());
+        foodRecordStatistics.setStatisticsDataType("19");
+        foodRecordStatistics.setStatisticsTime("" + nowYear + "-" + nowMonth);
+        foodRecordStatistics.setStatisticsType("02");
+        foodRecordStatistics.setStatisticsUnit("01");
+        foodRecordStatistics.setStatus("01");
+        int result1 = foodRecordStatisticsManager.addOrUpdateStatistics(foodRecordStatistics);
+        if (result1 < 1)
+        {
+            logger.error("makeMonthEchartsData is fail:" + nowYear + "-" + nowMonth);
         }
     }
 

@@ -52,4 +52,14 @@ public class FoodRecordStatisticsManagerImpl implements FoodRecordStatisticsMana
         return result;
     }
 
+    @Override
+    public List<FoodRecordStatistics> getStatistics(Map<String, Object> map)
+    {
+        if (!CollectionUtils.isEmpty(map))
+        {
+            return foodRecordStatisticsMapper.selectByParams(map);
+        }
+        return null;
+    }
+
 }
