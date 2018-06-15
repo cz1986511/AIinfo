@@ -119,7 +119,7 @@ public class FoodRecordController implements Serializable
                 {
                     FoodRecordStatistics temp = list.get(0);
                     StatisticsBase statisticsBase = new StatisticsBase();
-                    statisticsBase.setDate(temp.getStatisticsData());
+                    statisticsBase.setDate(temp.getStatisticsTime());
                     statisticsBase.setNumber(temp.getStatisticsNum());
                     statisticsBase.setType(temp.getStatisticsDataType());
                     List<StatisticsBase> statisticsBases = new ArrayList<StatisticsBase>();
