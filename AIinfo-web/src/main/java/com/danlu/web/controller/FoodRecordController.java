@@ -24,7 +24,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.danlu.dleye.core.FoodRecordManager;
+import com.danlu.dleye.core.FoodRecordStatisticsManager;
 import com.danlu.dleye.persist.base.FoodRecord;
+import com.danlu.dleye.persist.base.FoodRecordStatistics;
 
 @Controller
 public class FoodRecordController implements Serializable
@@ -36,6 +38,8 @@ public class FoodRecordController implements Serializable
 
     @Autowired
     private FoodRecordManager foodRecordManager;
+    @Autowired
+    private FoodRecordStatisticsManager foodRecordStatisticsManager;
 
     @RequestMapping("addfood.html")
     public ModelAndView addFood(HttpServletRequest request)
@@ -85,7 +89,6 @@ public class FoodRecordController implements Serializable
         {
             int userType = (int) request.getSession().getAttribute("type");
             m.addObject("userType", userType);
-
             String statisticsYear = request.getParameter("statisticsYear");
             String statisticsMon = request.getParameter("statisticsMon");
             String statisticsDay = request.getParameter("statisticsDay");
@@ -149,13 +152,40 @@ public class FoodRecordController implements Serializable
     {
         Map<String, Object> result = new HashMap<String, Object>();
         JSONObject json = new JSONObject(result);
-        String statisticsYear = request.getParameter("statisticsYear");
-        String statisticsMon = request.getParameter("statisticsMon");
-        String statisticsDay = request.getParameter("statisticsDay");
-        String statisticsType = request.getParameter("statisticsType");
-
-        logger.info(statisticsYear + "-" + statisticsMon + "-" + statisticsDay + "dataType:"
-                    + statisticsType);
+        try
+        {
+            Map<String, Object> map = new HashMap<String, Object>();
+            String statisticsYear = request.getParameter("statisticsYear");
+            String statisticsMon = request.getParameter("statisticsMon");
+            String statisticsDay = request.getParameter("statisticsDay");
+            String statisticsType = request.getParameter("statisticsType");
+            String statisticsTime = statisticsYear;
+            if (!"0".equals(statisticsMon))
+            {
+                statisticsTime = statisticsTime + "-" + statisticsMon;
+                if (!"0".equals(statisticsDay))
+                {
+                    statisticsTime = statisticsTime + "-" + statisticsDay;
+                }
+            }
+            map.put("statisticsTime", statisticsTime);
+            map.put("statisticsDataType", statisticsType);
+            map.put("statisticsType", "02");
+            List<FoodRecordStatistics> list = foodRecordStatisticsManager.getStatistics(map);
+            if (!CollectionUtils.isEmpty(list))
+            {
+                return list.get(0).getStatisticsData();
+            }
+            else
+            {
+                result.put("status", false);
+            }
+        }
+        catch (Exception e)
+        {
+            logger.error("getStatisticsRecord is Exception:" + e.toString());
+            result.put("status", false);
+        }
         return json.toJSONString();
     }
 
