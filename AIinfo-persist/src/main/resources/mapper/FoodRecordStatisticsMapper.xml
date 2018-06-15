@@ -38,6 +38,14 @@
     from aiinfo_food_record_statistics
     where id = #{id,jdbcType=BIGINT}
   </select>
+  
+  <select id="selectByParams" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from aiinfo_food_record_statistics
+    <include refid="selectByParamsWhere" />
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from aiinfo_food_record_statistics
     where id = #{id,jdbcType=BIGINT}

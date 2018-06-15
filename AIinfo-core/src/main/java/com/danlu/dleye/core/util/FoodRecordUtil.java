@@ -31,9 +31,9 @@ public class FoodRecordUtil
         Calendar calendar = Calendar.getInstance();
         int nowYear = calendar.get(Calendar.YEAR);
         int nowMonth = calendar.get(Calendar.MONTH);
-        int nowDay = calendar.get(Calendar.DAY_OF_MONTH);
         String statisticsTime = "";
-        for (int i = 0; i < 3; i++)
+
+        for (int i = 0; i < 2; i++)
         {
             if (i == 0)
             {
@@ -43,37 +43,50 @@ public class FoodRecordUtil
                 map.put("recordTimeEndTime", calendar.getTime());
                 calendar.set(nowYear, 0, 1, 0, 0, 0);
                 map.put("recordTimeStartTime", calendar.getTime());
-                map.put("statisticsType", "01");
+                // 总和
+                addStatistics(map, "09", statisticsTime);
+                // 奶粉
+                addStatistics(map, "01", statisticsTime);
+                // 母乳
+                addStatistics(map, "02", statisticsTime);
+                map.clear();
             }
             else if (i == 1)
             {
                 // 月
-                int nowMonth1 = nowMonth + 1;
-                statisticsTime = "" + nowYear + "-" + nowMonth1;
-                calendar.set(nowYear, nowMonth, 31, 23, 59, 59);
-                map.put("recordTimeEndTime", calendar.getTime());
-                calendar.set(nowYear, nowMonth, 1, 0, 0, 0);
-                map.put("recordTimeStartTime", calendar.getTime());
-                map.put("statisticsType", "02");
+                for (int mon = 0; mon <= nowMonth; mon++)
+                {
+                    int nowMonth1 = mon + 1;
+                    statisticsTime = "" + nowYear + "-" + nowMonth1;
+                    calendar.set(nowYear, mon, 31, 23, 59, 59);
+                    map.put("recordTimeEndTime", calendar.getTime());
+                    calendar.set(nowYear, mon, 1, 0, 0, 0);
+                    map.put("recordTimeStartTime", calendar.getTime());
+                    // 总和
+                    addStatistics(map, "09", statisticsTime);
+                    // 奶粉
+                    addStatistics(map, "01", statisticsTime);
+                    // 母乳
+                    addStatistics(map, "02", statisticsTime);
+                    map.clear();
+                    // 日
+                    for (int day = 1; day < 32; day++)
+                    {
+                        statisticsTime = "" + nowYear + "-" + nowMonth1 + "-" + day;
+                        calendar.set(nowYear, mon, day, 23, 59, 59);
+                        map.put("recordTimeEndTime", calendar.getTime());
+                        calendar.set(nowYear, mon, day, 0, 0, 0);
+                        map.put("recordTimeStartTime", calendar.getTime());
+                        // 总和
+                        addStatistics(map, "09", statisticsTime);
+                        // 奶粉
+                        addStatistics(map, "01", statisticsTime);
+                        // 母乳
+                        addStatistics(map, "02", statisticsTime);
+                        map.clear();
+                    }
+                }
             }
-            else if (i == 2)
-            {
-                // 日
-                int nowMonth2 = nowMonth + 1;
-                statisticsTime = "" + nowYear + "-" + nowMonth2 + "-" + nowDay;
-                calendar.set(nowYear, nowMonth, nowDay, 23, 59, 59);
-                map.put("recordTimeEndTime", calendar.getTime());
-                calendar.set(nowYear, nowMonth, nowDay, 0, 0, 0);
-                map.put("recordTimeStartTime", calendar.getTime());
-                map.put("statisticsType", "03");
-            }
-            // 总和
-            addStatistics(map, "09", statisticsTime);
-            // 奶粉
-            addStatistics(map, "01", statisticsTime);
-            // 母乳
-            addStatistics(map, "02", statisticsTime);
-            map.clear();
         }
     }
 
@@ -99,11 +112,11 @@ public class FoodRecordUtil
                 foodRecordStatistics.setStatisticsDataType(dataType);
                 foodRecordStatistics.setStatisticsNum(total);
                 foodRecordStatistics.setStatisticsTime(statisticsTime);
-                foodRecordStatistics.setStatisticsType((String) map.get("statisticsType"));
+                foodRecordStatistics.setStatisticsType("01");
                 foodRecordStatistics.setStatisticsUnit("01");
                 foodRecordStatistics.setStatus("01");
                 int result = foodRecordStatisticsManager
-                    .addFoodRecordStatistics(foodRecordStatistics);
+                    .addOrUpdateStatistics(foodRecordStatistics);
                 if (result <= 0)
                 {
                     logger.error("add statistics fail-{statisticsTime:" + statisticsTime
