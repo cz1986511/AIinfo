@@ -89,10 +89,12 @@ public class FoodRecordUtil
                 }
             }
         }
-        makeYearEchartsData();
+        makeYearEchartsData("09");
+        makeYearEchartsData("01");
+        makeYearEchartsData("02");
     }
 
-    private void makeYearEchartsData()
+    private void makeYearEchartsData(String dataType)
     {
         // 年
         Map<String, Object> map = new HashMap<String, Object>();
@@ -109,7 +111,8 @@ public class FoodRecordUtil
             int nowMonth1 = mon + 1;
             statisticsTime = "" + nowYear + "-" + nowMonth1;
             map.put("statisticsTime", statisticsTime);
-            map.put("statisticsDataType", "09");
+            map.put("statisticsDataType", dataType);
+            map.put("statisticsType", "01");
             List<FoodRecordStatistics> list = foodRecordStatisticsManager.getStatistics(map);
             if (!CollectionUtils.isEmpty(list))
             {
@@ -119,18 +122,18 @@ public class FoodRecordUtil
                 {
                     total += iterator.next().getStatisticsNum();
                 }
-                monNumbers.add(mon);
+                monNumbers.add(nowMonth1);
                 totalNumbers.add(total);
             }
             // 月
-            makeMonthEchartsData(nowYear, nowMonth1);
+            makeMonthEchartsData(nowYear, nowMonth1, dataType);
         }
         result.put("dates", monNumbers);
         result.put("numbers", totalNumbers);
         result.put("status", true);
         FoodRecordStatistics foodRecordStatistics = new FoodRecordStatistics();
         foodRecordStatistics.setStatisticsData(json.toJSONString());
-        foodRecordStatistics.setStatisticsDataType("19");
+        foodRecordStatistics.setStatisticsDataType(dataType);
         foodRecordStatistics.setStatisticsTime("" + nowYear);
         foodRecordStatistics.setStatisticsType("02");
         foodRecordStatistics.setStatisticsUnit("01");
@@ -142,7 +145,7 @@ public class FoodRecordUtil
         }
     }
 
-    private void makeMonthEchartsData(int nowYear, int nowMonth)
+    private void makeMonthEchartsData(int nowYear, int nowMonth, String dataType)
     {
         // 月
         Map<String, Object> map = new HashMap<String, Object>();
@@ -155,7 +158,8 @@ public class FoodRecordUtil
         {
             statisticsTime = "" + nowYear + "-" + nowMonth + "-" + day;
             map.put("statisticsTime", statisticsTime);
-            map.put("statisticsDataType", "09");
+            map.put("statisticsDataType", dataType);
+            map.put("statisticsType", "01");
             List<FoodRecordStatistics> list = foodRecordStatisticsManager.getStatistics(map);
             if (!CollectionUtils.isEmpty(list))
             {
@@ -174,7 +178,7 @@ public class FoodRecordUtil
         result.put("status", true);
         FoodRecordStatistics foodRecordStatistics = new FoodRecordStatistics();
         foodRecordStatistics.setStatisticsData(json.toJSONString());
-        foodRecordStatistics.setStatisticsDataType("19");
+        foodRecordStatistics.setStatisticsDataType("09");
         foodRecordStatistics.setStatisticsTime("" + nowYear + "-" + nowMonth);
         foodRecordStatistics.setStatisticsType("02");
         foodRecordStatistics.setStatisticsUnit("01");
@@ -183,6 +187,18 @@ public class FoodRecordUtil
         if (result1 < 1)
         {
             logger.error("makeMonthEchartsData is fail:" + nowYear + "-" + nowMonth);
+        }
+    }
+
+    private void addEchartsStatistics()
+    {
+        try
+        {
+
+        }
+        catch (Exception e)
+        {
+            logger.error("addEchartsStatistics is Exception:" + e.toString());
         }
     }
 

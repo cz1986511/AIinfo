@@ -22,8 +22,8 @@
       <if test="statisticsTime != null">
 		  statistics_time = #{statisticsTime,jdbcType=VARCHAR} and	
 	  </if>
-      <if test="statisticsDataType != null">
-        statistics_type = #{statisticsDataType,jdbcType=VARCHAR} and
+      <if test="statisticsType != null">
+        statistics_type = #{statisticsType,jdbcType=VARCHAR} and
       </if>
       <if test="statisticsDataType != null">
         statistics_data_type = #{statisticsDataType,jdbcType=VARCHAR} and
