@@ -108,18 +108,19 @@
 				data: {statisticsYear:statisticsYear, statisticsMon:statisticsMon, statisticsDay:statisticsDay, statisticsType:statisticsType},
 				dataType: "json",
 				success: function(data){
+				    var data = JSON.parse(data);
 					if(data.status){
 					  myChart.setOption({
 					    title: {
 						    text: "图表显示"
 						},
 						xAxis: {
-							data: data.departments
+							data: data.dates
 						},
 						series: [{
 							// 根据名字对应到相应的系列
 							name: '人数',
-							data: data.nums
+							data: data.numbers
 						}]
 					  });
 					} else {

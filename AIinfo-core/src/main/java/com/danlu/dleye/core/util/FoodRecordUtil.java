@@ -191,7 +191,7 @@ public class FoodRecordUtil
         FoodRecordStatistics foodRecordStatistics = new FoodRecordStatistics();
         foodRecordStatistics.setStatisticsData(json.toJSONString());
         foodRecordStatistics.setStatisticsNum(totalLong);
-        foodRecordStatistics.setStatisticsDataType("09");
+        foodRecordStatistics.setStatisticsDataType(dataType);
         foodRecordStatistics.setStatisticsTime("" + nowYear + "-" + nowMonth);
         foodRecordStatistics.setStatisticsType("02");
         foodRecordStatistics.setStatisticsUnit("01");
