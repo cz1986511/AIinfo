@@ -113,7 +113,7 @@ public class FoodRecordController implements Serializable
                 }
                 map.put("statisticsTime", statisticsTime);
                 map.put("statisticsDataType", statisticsType);
-                map.put("statisticsType", "01");
+                map.put("statisticsType", "02");
                 List<FoodRecordStatistics> list = foodRecordStatisticsManager.getStatistics(map);
                 if (!CollectionUtils.isEmpty(list))
                 {
