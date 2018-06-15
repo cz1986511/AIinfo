@@ -96,52 +96,62 @@ public class FoodRecordUtil
 
     private void makeYearEchartsData(String dataType)
     {
-        // 年
-        Map<String, Object> map = new HashMap<String, Object>();
-        Calendar calendar = Calendar.getInstance();
-        int nowYear = calendar.get(Calendar.YEAR);
-        int nowMonth = calendar.get(Calendar.MONTH);
-        String statisticsTime = "";
-        Map<String, Object> result = new HashMap<String, Object>();
-        JSONObject json = new JSONObject(result);
-        List<Integer> totalNumbers = new ArrayList<Integer>();
-        List<Integer> monNumbers = new ArrayList<Integer>();
-        for (int mon = 0; mon <= nowMonth; mon++)
+        try
         {
-            int nowMonth1 = mon + 1;
-            statisticsTime = "" + nowYear + "-" + nowMonth1;
-            map.put("statisticsTime", statisticsTime);
-            map.put("statisticsDataType", dataType);
-            map.put("statisticsType", "01");
-            List<FoodRecordStatistics> list = foodRecordStatisticsManager.getStatistics(map);
-            if (!CollectionUtils.isEmpty(list))
+            // 年
+            Map<String, Object> map = new HashMap<String, Object>();
+            Calendar calendar = Calendar.getInstance();
+            int nowYear = calendar.get(Calendar.YEAR);
+            int nowMonth = calendar.get(Calendar.MONTH);
+            String statisticsTime = "";
+            Map<String, Object> result = new HashMap<String, Object>();
+            JSONObject json = new JSONObject(result);
+            List<Integer> totalNumbers = new ArrayList<Integer>();
+            List<Integer> monNumbers = new ArrayList<Integer>();
+            Long totalLong = 0L;
+            for (int mon = 0; mon <= nowMonth; mon++)
             {
-                Iterator<FoodRecordStatistics> iterator = list.iterator();
-                int total = 0;
-                while (iterator.hasNext())
+                int nowMonth1 = mon + 1;
+                statisticsTime = "" + nowYear + "-" + nowMonth1;
+                map.put("statisticsTime", statisticsTime);
+                map.put("statisticsDataType", dataType);
+                map.put("statisticsType", "01");
+                List<FoodRecordStatistics> list = foodRecordStatisticsManager.getStatistics(map);
+                if (!CollectionUtils.isEmpty(list))
                 {
-                    total += iterator.next().getStatisticsNum();
+                    Iterator<FoodRecordStatistics> iterator = list.iterator();
+                    int total = 0;
+                    while (iterator.hasNext())
+                    {
+                        total += iterator.next().getStatisticsNum();
+                    }
+                    monNumbers.add(nowMonth1);
+                    totalNumbers.add(total);
+                    totalLong += total;
                 }
-                monNumbers.add(nowMonth1);
-                totalNumbers.add(total);
+                // 月
+                makeMonthEchartsData(nowYear, nowMonth1, dataType);
             }
-            // 月
-            makeMonthEchartsData(nowYear, nowMonth1, dataType);
+            result.put("dates", monNumbers);
+            result.put("numbers", totalNumbers);
+            result.put("status", true);
+            FoodRecordStatistics foodRecordStatistics = new FoodRecordStatistics();
+            foodRecordStatistics.setStatisticsData(json.toJSONString());
+            foodRecordStatistics.setStatisticsNum(totalLong);
+            foodRecordStatistics.setStatisticsDataType(dataType);
+            foodRecordStatistics.setStatisticsTime("" + nowYear);
+            foodRecordStatistics.setStatisticsType("02");
+            foodRecordStatistics.setStatisticsUnit("01");
+            foodRecordStatistics.setStatus("01");
+            int result1 = foodRecordStatisticsManager.addOrUpdateStatistics(foodRecordStatistics);
+            if (result1 < 1)
+            {
+                logger.error("makeYearEchartsData is fail:" + nowYear);
+            }
         }
-        result.put("dates", monNumbers);
-        result.put("numbers", totalNumbers);
-        result.put("status", true);
-        FoodRecordStatistics foodRecordStatistics = new FoodRecordStatistics();
-        foodRecordStatistics.setStatisticsData(json.toJSONString());
-        foodRecordStatistics.setStatisticsDataType(dataType);
-        foodRecordStatistics.setStatisticsTime("" + nowYear);
-        foodRecordStatistics.setStatisticsType("02");
-        foodRecordStatistics.setStatisticsUnit("01");
-        foodRecordStatistics.setStatus("01");
-        int result1 = foodRecordStatisticsManager.addOrUpdateStatistics(foodRecordStatistics);
-        if (result1 < 1)
+        catch (Exception e)
         {
-            logger.error("makeYearEchartsData is fail:" + nowYear);
+            logger.error("makeYearEchartsData is Exception:" + e.toString());
         }
     }
 
@@ -154,6 +164,7 @@ public class FoodRecordUtil
         JSONObject json = new JSONObject(result);
         List<Integer> totalNumbers = new ArrayList<Integer>();
         List<Integer> dayNumbers = new ArrayList<Integer>();
+        Long totalLong = 0L;
         for (int day = 1; day < 32; day++)
         {
             statisticsTime = "" + nowYear + "-" + nowMonth + "-" + day;
@@ -171,6 +182,7 @@ public class FoodRecordUtil
                 }
                 dayNumbers.add(day);
                 totalNumbers.add(total);
+                totalLong += total;
             }
         }
         result.put("dates", dayNumbers);
@@ -178,6 +190,7 @@ public class FoodRecordUtil
         result.put("status", true);
         FoodRecordStatistics foodRecordStatistics = new FoodRecordStatistics();
         foodRecordStatistics.setStatisticsData(json.toJSONString());
+        foodRecordStatistics.setStatisticsNum(totalLong);
         foodRecordStatistics.setStatisticsDataType("09");
         foodRecordStatistics.setStatisticsTime("" + nowYear + "-" + nowMonth);
         foodRecordStatistics.setStatisticsType("02");
@@ -187,18 +200,6 @@ public class FoodRecordUtil
         if (result1 < 1)
         {
             logger.error("makeMonthEchartsData is fail:" + nowYear + "-" + nowMonth);
-        }
-    }
-
-    private void addEchartsStatistics()
-    {
-        try
-        {
-
-        }
-        catch (Exception e)
-        {
-            logger.error("addEchartsStatistics is Exception:" + e.toString());
         }
     }
 
