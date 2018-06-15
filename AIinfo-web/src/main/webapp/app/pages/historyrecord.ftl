@@ -119,7 +119,7 @@
 						},
 						series: [{
 							// 根据名字对应到相应的系列
-							name: '人数',
+							name: '数量',
 							data: data.numbers
 						}]
 					  });

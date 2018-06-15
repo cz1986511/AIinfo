@@ -1,5 +1,6 @@
 package com.danlu.dleye.core.util;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -184,6 +185,7 @@ public class FoodRecordUtil
                 totalNumbers.add(total);
                 totalLong += total;
             }
+            makeDayEchartsData(nowYear, nowMonth, day, dataType);
         }
         result.put("dates", dayNumbers);
         result.put("numbers", totalNumbers);
@@ -200,6 +202,55 @@ public class FoodRecordUtil
         if (result1 < 1)
         {
             logger.error("makeMonthEchartsData is fail:" + nowYear + "-" + nowMonth);
+        }
+    }
+
+    private void makeDayEchartsData(int nowYear, int nowMonth, int nowDay, String dataType)
+    {
+        // 天
+        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<String, Object>();
+        JSONObject json = new JSONObject(result);
+        List<Integer> totalNumbers = new ArrayList<Integer>();
+        List<String> timeNumbers = new ArrayList<String>();
+        Long totalLong = 0L;
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(nowYear, nowMonth, nowDay, 0, 0, 0);
+        map.put("recordTimeStartTime", calendar.getTime());
+        calendar.set(nowYear, nowMonth, nowDay, 23, 59, 59);
+        map.put("recordTimeEndTime", calendar.getTime());
+        if (!"09".equals(dataType))
+        {
+            map.put("type", dataType);
+        }
+        List<FoodRecord> list = foodRecordManager.getFoodRecordsByParams(map);
+        if (!CollectionUtils.isEmpty(list))
+        {
+            SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Iterator<FoodRecord> ite = list.iterator();
+            while (ite.hasNext())
+            {
+                FoodRecord temp = ite.next();
+                totalNumbers.add(temp.getNumber());
+                timeNumbers.add(ft.format(temp.getRecordTime()));
+                totalLong += temp.getNumber();
+            }
+        }
+        result.put("dates", timeNumbers);
+        result.put("numbers", totalNumbers);
+        result.put("status", true);
+        FoodRecordStatistics foodRecordStatistics = new FoodRecordStatistics();
+        foodRecordStatistics.setStatisticsData(json.toJSONString());
+        foodRecordStatistics.setStatisticsNum(totalLong);
+        foodRecordStatistics.setStatisticsDataType(dataType);
+        foodRecordStatistics.setStatisticsTime("" + nowYear + "-" + nowMonth + "-" + nowDay);
+        foodRecordStatistics.setStatisticsType("02");
+        foodRecordStatistics.setStatisticsUnit("01");
+        foodRecordStatistics.setStatus("01");
+        int result1 = foodRecordStatisticsManager.addOrUpdateStatistics(foodRecordStatistics);
+        if (result1 < 1)
+        {
+            logger.error("makeDayEchartsData is fail:" + nowYear + "-" + nowMonth + "-" + nowDay);
         }
     }
 
