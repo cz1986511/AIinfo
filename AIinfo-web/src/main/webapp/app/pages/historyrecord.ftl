@@ -93,7 +93,7 @@
 			</#if>
 			</form>
 		    </div>
-			<div id="echarts" style="width: 1600px;height:400px;"></div>
+			<div id="echarts" style="width: 800px;height:200px;"></div>
 	      </div>
         </div>
 	  </div>
