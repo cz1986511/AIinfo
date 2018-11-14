@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.danlu.dleye.persist.mapper.ArticleInfoMapper" >
-  <resultMap id="BaseResultMap" type="com.danlu.dleye.persist.base.ArticleInfo" >
+<mapper namespace="xiaozhuo.info.persist.mapper.ArticleInfoMapper" >
+  <resultMap id="BaseResultMap" type="xiaozhuo.info.persist.base.ArticleInfo" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="introduction" property="introduction" jdbcType="VARCHAR" />
@@ -75,7 +75,7 @@
     delete from dleye_article_info
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.danlu.dleye.persist.base.ArticleInfo" >
+  <insert id="insert" parameterType="xiaozhuo.info.persist.base.ArticleInfo" >
     insert into dleye_article_info (title, introduction, 
       link_url, pic_url, date, 
       author, source, tag, 
@@ -85,7 +85,7 @@
       #{author,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, 
       NOW(), NOW())
   </insert>
-  <insert id="insertSelective" parameterType="com.danlu.dleye.persist.base.ArticleInfo" >
+  <insert id="insertSelective" parameterType="xiaozhuo.info.persist.base.ArticleInfo" >
     insert into dleye_article_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="title != null" >
@@ -144,7 +144,7 @@
         NOW()
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.danlu.dleye.persist.base.ArticleInfo" >
+  <update id="updateByPrimaryKeySelective" parameterType="xiaozhuo.info.persist.base.ArticleInfo" >
     update dleye_article_info
     <set >
       <if test="title != null" >
@@ -175,7 +175,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.danlu.dleye.persist.base.ArticleInfo" >
+  <update id="updateByPrimaryKey" parameterType="xiaozhuo.info.persist.base.ArticleInfo" >
     update dleye_article_info
     set title = #{title,jdbcType=VARCHAR},
       introduction = #{introduction,jdbcType=VARCHAR},

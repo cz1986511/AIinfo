@@ -10,7 +10,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -48,19 +47,9 @@ public class AIInfoController implements Serializable {
 	public String getArticleList(HttpServletRequest request) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		JSONObject json = new JSONObject(result);
-		String source = request.getParameter("source");
-		String tag = request.getParameter("tag");
 		String defaultKey = "dKey";
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
-			if (!StringUtils.isBlank(source)) {
-				map.put("source", source);
-				defaultKey += source;
-			}
-			if (!StringUtils.isBlank(tag)) {
-				map.put("tag", tag);
-				defaultKey += tag;
-			}
 			map.put("offset", 0);
 			map.put("limit", 100);
 			List<ArticleInfo> resultList = (List<ArticleInfo>) RedisClient.get(
