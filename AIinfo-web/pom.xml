@@ -50,7 +50,7 @@
 				<executions>
 					<execution>
 						<configuration>
-							<mainClass>xiaozhuo.info.web.AIinfoWebApplication</mainClass>
+							<mainClass>xiaozhuo.info.AIinfoWebApplication</mainClass>
 						</configuration>
 						<goals>
 							<goal>repackage</goal>
