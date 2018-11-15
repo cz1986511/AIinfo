@@ -1,6 +1,5 @@
 package xiaozhuo.info.web.controller;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import xiaozhuo.info.persist.base.ArticleInfo;
@@ -34,15 +34,15 @@ import com.alibaba.fastjson.TypeReference;
 
 @SuppressWarnings("deprecation")
 @Controller
-public class AIInfoController implements Serializable {
+@RequestMapping("/api")
+public class AIInfoController {
 
-	private static final long serialVersionUID = -90859094251L;
 	private static Logger logger = LoggerFactory
 			.getLogger(AIInfoController.class);
 	@Autowired
 	private ArticleInfoService articleInfoService;
 
-	@RequestMapping(value = "art_list", produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/art/list", method = RequestMethod.POST)
 	@ResponseBody
 	public String getArticleList(HttpServletRequest request) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -74,7 +74,7 @@ public class AIInfoController implements Serializable {
 		return json.toJSONString();
 	}
 
-	@RequestMapping(value = "weather", produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/weather", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String getWeather(HttpServletRequest request) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -109,7 +109,7 @@ public class AIInfoController implements Serializable {
 		return json.toJSONString();
 	}
 
-	@RequestMapping(value = "oilinfo", produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/oilinfo", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String getOilInfo(HttpServletRequest request) {
 		Map<String, Object> result = new HashMap<String, Object>();

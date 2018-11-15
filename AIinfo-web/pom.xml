@@ -30,13 +30,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
-		</dependency>
-		<!-- 安全框架 Spring Security -->
-		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-		
+		</dependency>	
 	<!-- swagger dependencies start -->
 		<dependency>
 			<groupId>com.spring4all</groupId>
@@ -47,15 +41,6 @@
 		  <artifactId>swagger-bootstrap-ui</artifactId>
 		</dependency>
 		<!-- swagger dependencies end -->
-		<dependency>
-		  <groupId>de.codecentric</groupId>
-		  <artifactId>spring-boot-admin-starter-client</artifactId>
-		</dependency>
-		<!-- springboot websocket -->
-		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-websocket</artifactId>
-		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -65,7 +50,7 @@
 				<executions>
 					<execution>
 						<configuration>
-							<mainClass>xiaozhuo.info.web.base.AIinfoWebApplication</mainClass>
+							<mainClass>xiaozhuo.info.web.AIinfoWebApplication</mainClass>
 						</configuration>
 						<goals>
 							<goal>repackage</goal>

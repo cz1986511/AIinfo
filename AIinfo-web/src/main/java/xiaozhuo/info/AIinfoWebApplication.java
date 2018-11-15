@@ -1,4 +1,4 @@
-package xiaozhuo.info.web.base;
+package xiaozhuo.info;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;

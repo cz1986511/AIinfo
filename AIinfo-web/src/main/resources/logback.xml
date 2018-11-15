@@ -15,7 +15,7 @@
 <configuration debug="false">
 	<!-- 引入properties配置文件 -->
     <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->  
-    <property name="LOG_HOME" value="${log.path}/xiaozhuo" />  
+    <property name="LOG_HOME" value="${logging.path}/xiaozhuo" />  
     <!-- 控制台输出 -->   
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"> 
@@ -38,7 +38,7 @@
     </appender> 
        
     <!-- 日志输出级别 -->
-    <root level="${log.level}">
+    <root level="${logging.level.root}">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </root> 
