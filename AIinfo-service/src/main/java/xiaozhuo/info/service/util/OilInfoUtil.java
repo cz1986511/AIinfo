@@ -12,6 +12,10 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import xiaozhuo.info.persist.base.OilInfo;
 import xiaozhuo.info.service.OilInfoService;
@@ -20,6 +24,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 @SuppressWarnings("deprecation")
+@Component
+@Configurable
+@EnableScheduling
 public class OilInfoUtil {
 
 	private static Logger logger = LoggerFactory.getLogger(OilInfoUtil.class);
@@ -27,6 +34,7 @@ public class OilInfoUtil {
 	private OilInfoService oilInfoService;
 
 	@SuppressWarnings({ "resource" })
+	@Scheduled(cron = "0 20 6 * * ?")
 	public void getTodayOilInfo() {
 		HttpClient httpClient = new DefaultHttpClient();
 		try {
