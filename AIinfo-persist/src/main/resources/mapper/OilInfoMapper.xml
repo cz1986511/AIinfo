@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.danlu.dleye.persist.mapper.OilInfoMapper" >
-  <resultMap id="BaseResultMap" type="com.danlu.dleye.persist.base.OilInfo" >
+<mapper namespace="xiaozhuo.info.persist.mapper.OilInfoMapper" >
+  <resultMap id="BaseResultMap" type="xiaozhuo.info.persist.base.OilInfo" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="province" property="province" jdbcType="VARCHAR" />
     <result column="oil89" property="oil89" jdbcType="VARCHAR" />
@@ -29,7 +29,7 @@
     delete from dleye_oil_info
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.danlu.dleye.persist.base.OilInfo" >
+  <insert id="insert" parameterType="xiaozhuo.info.persist.base.OilInfo" >
     insert into dleye_oil_info (province, oil89, 
       oil92, oil95, oil0, 
       oil90, oil93, oil97, 
@@ -41,7 +41,7 @@
       #{updateTime,jdbcType=TIMESTAMP}, NOW(), NOW()
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.danlu.dleye.persist.base.OilInfo" >
+  <insert id="insertSelective" parameterType="xiaozhuo.info.persist.base.OilInfo" >
     insert into dleye_oil_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="province != null" >
@@ -106,7 +106,7 @@
         NOW()
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.danlu.dleye.persist.base.OilInfo" >
+  <update id="updateByPrimaryKeySelective" parameterType="xiaozhuo.info.persist.base.OilInfo" >
     update dleye_oil_info
     <set >
       <if test="province != null" >
@@ -140,7 +140,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.danlu.dleye.persist.base.OilInfo" >
+  <update id="updateByPrimaryKey" parameterType="xiaozhuo.info.persist.base.OilInfo" >
     update dleye_oil_info
     set province = #{province,jdbcType=VARCHAR},
       oil89 = #{oil89,jdbcType=VARCHAR},
