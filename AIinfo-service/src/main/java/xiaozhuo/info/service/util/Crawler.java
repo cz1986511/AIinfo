@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import xiaozhuo.info.service.ArticleInfoService;
 import xiaozhuo.info.service.util.crawler.BaiduBaijiaCrawler;
@@ -29,6 +30,7 @@ import xiaozhuo.info.service.util.crawler.TmtPostCrawler;
 @Component
 @Configurable
 @EnableScheduling
+@Service
 public class Crawler {
 
 	private static Logger logger = LoggerFactory.getLogger(Crawler.class);

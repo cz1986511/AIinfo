@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import xiaozhuo.info.persist.base.OilInfo;
 import xiaozhuo.info.service.OilInfoService;
@@ -27,6 +28,7 @@ import com.alibaba.fastjson.JSONObject;
 @Component
 @Configurable
 @EnableScheduling
+@Service
 public class OilInfoUtil {
 
 	private static Logger logger = LoggerFactory.getLogger(OilInfoUtil.class);

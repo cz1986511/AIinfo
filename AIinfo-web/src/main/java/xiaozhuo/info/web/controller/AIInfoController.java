@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import xiaozhuo.info.persist.base.ArticleInfo;
 import xiaozhuo.info.service.ArticleInfoService;
+import xiaozhuo.info.service.util.Crawler;
+import xiaozhuo.info.service.util.OilInfoUtil;
 import xiaozhuo.info.service.util.RedisClient;
 
 import com.alibaba.fastjson.JSON;
@@ -41,6 +43,10 @@ public class AIInfoController {
 			.getLogger(AIInfoController.class);
 	@Autowired
 	private ArticleInfoService articleInfoService;
+	@Autowired
+	private Crawler crawler;
+	@Autowired
+	private OilInfoUtil oilInfoUtil;
 
 	@RequestMapping(value = "/art/list", method = RequestMethod.POST)
 	@ResponseBody
@@ -131,6 +137,23 @@ public class AIInfoController {
 			result.put("status", 1);
 			result.put("msg", "程序小哥跟老板娘跑了");
 			logger.error("getOilInfo is exception:" + e.toString());
+		}
+		return json.toJSONString();
+	}
+
+	@RequestMapping(value = "/data", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String makeData(HttpServletRequest request) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		JSONObject json = new JSONObject(result);
+		try {
+			crawler.crawlerInfo();
+			oilInfoUtil.getTodayOilInfo();
+			result.put("status", 0);
+		} catch (Exception e) {
+			result.put("status", 1);
+			result.put("msg", "程序小哥跟老板娘跑了");
+			logger.error("makeData is exception:" + e.toString());
 		}
 		return json.toJSONString();
 	}
