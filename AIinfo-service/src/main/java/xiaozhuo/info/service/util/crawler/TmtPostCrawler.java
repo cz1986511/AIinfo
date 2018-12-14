@@ -54,7 +54,8 @@ public class TmtPostCrawler implements Runnable {
 							.getByXPath(".//a[@class='pic']/img");
 					if (!CollectionUtils.isEmpty(picImageList)) {
 						HtmlImage picImage = (HtmlImage) picImageList.get(0);
-						articleInfo.setPicUrl(picImage.getAttribute("src"));
+						articleInfo.setPicUrl(picImage
+								.getAttribute("data-original"));
 					} else {
 						articleInfo.setPicUrl(DEFAULT_PIC);
 					}
