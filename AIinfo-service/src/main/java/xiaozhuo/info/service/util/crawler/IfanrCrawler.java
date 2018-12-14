@@ -16,8 +16,8 @@ import xiaozhuo.info.service.ArticleInfoService;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
-import com.gargoylesoftware.htmlunit.html.HtmlHeading3;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlSpan;
 import com.gargoylesoftware.htmlunit.html.HtmlUnknownElement;
 
 public class IfanrCrawler implements Runnable {
@@ -25,7 +25,7 @@ public class IfanrCrawler implements Runnable {
 	private static final Logger logger = LoggerFactory
 			.getLogger(IfanrCrawler.class);
 	private static final String IFANR = "爱范儿";
-	private static final String URL_STRING = "http://www.ifanr.com";
+	private static final String URL_STRING = "https://www.ifanr.com";
 	private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
 
 	private WebClient webClient;
@@ -41,7 +41,7 @@ public class IfanrCrawler implements Runnable {
 	public void run() {
 		try {
 			Calendar calendar = Calendar.getInstance();
-			String xPath = "//div[@class='article-item article-item--card ']";
+			String xPath = "//div[@class='collection-list']";
 			HtmlPage page = webClient.getPage(URL_STRING);
 			List<Object> list = (List<Object>) page.getByXPath(xPath);
 			Iterator<Object> ite = list.iterator();
@@ -50,29 +50,31 @@ public class IfanrCrawler implements Runnable {
 					ArticleInfo articleInfo = new ArticleInfo();
 					articleInfo.setSource(IFANR);
 					HtmlDivision division = (HtmlDivision) ite.next();
-					List<Object> tagAnchorList = (List<Object>) division
-							.getByXPath(".//a[@class='article-label']");
-					if (!CollectionUtils.isEmpty(tagAnchorList)) {
-						HtmlAnchor tagAnchor = (HtmlAnchor) tagAnchorList
+					List<Object> authorHtmlSpanList = (List<Object>) division
+							.getByXPath(".//div[@class='article-info js-transform']/div[@class='article-meta']/div[@class='author-info']/span");
+					if (!CollectionUtils.isEmpty(authorHtmlSpanList)) {
+						HtmlSpan authorSpan = (HtmlSpan) authorHtmlSpanList
 								.get(0);
-						articleInfo.setTag(tagAnchor.asText());
+						articleInfo.setAuthor(authorSpan.asText());
 					}
-					List<Object> urlAnchorList = (List<Object>) division
-							.getByXPath(".//a[@class!='article-label']");
-					if (!CollectionUtils.isEmpty(urlAnchorList)) {
-						HtmlAnchor urlAnchor = (HtmlAnchor) urlAnchorList
+					List<Object> titleHtmlAnchorList = (List<Object>) division
+							.getByXPath(".//div[@class='article-info js-transform']/h3/a");
+					if (!CollectionUtils.isEmpty(titleHtmlAnchorList)) {
+						HtmlAnchor titleAnchor = (HtmlAnchor) titleHtmlAnchorList
 								.get(0);
-						articleInfo.setLinkUrl(urlAnchor.getAttribute("href"));
+						articleInfo.setTitle(titleAnchor.asText());
+						articleInfo
+								.setLinkUrl(titleAnchor.getAttribute("href"));
 					}
-					List<Object> titleH3List = (List<Object>) division
-							.getByXPath(".//h3");
-					if (!CollectionUtils.isEmpty(titleH3List)) {
-						HtmlHeading3 titleHeading3 = (HtmlHeading3) titleH3List
+					List<Object> descHtmlDivisionList = (List<Object>) division
+							.getByXPath(".//div[@class='article-info js-transform']/div[@class='article-summary']");
+					if (!CollectionUtils.isEmpty(descHtmlDivisionList)) {
+						HtmlDivision descDivision = (HtmlDivision) descHtmlDivisionList
 								.get(0);
-						articleInfo.setTitle(titleHeading3.asText());
+						articleInfo.setIntroduction(descDivision.asText());
 					}
 					List<Object> timeSpanList = (List<Object>) division
-							.getByXPath(".//time");
+							.getByXPath(".//div[@class='article-info js-transform']/div[@class='article-meta']/time");
 					if (!CollectionUtils.isEmpty(timeSpanList)) {
 						HtmlUnknownElement timeSpan = (HtmlUnknownElement) timeSpanList
 								.get(0);
@@ -95,16 +97,23 @@ public class IfanrCrawler implements Runnable {
 						}
 						articleInfo.setDate(date);
 					}
-					List<Object> picDivisionList = (List<Object>) division
-							.getByXPath(".//div[@class='article-image cover-image']");
-					if (!CollectionUtils.isEmpty(picDivisionList)) {
-						HtmlDivision picDivision = (HtmlDivision) picDivisionList
+					List<Object> picAnchorList = (List<Object>) division
+							.getByXPath(".//div[@class='article-image cover-image']/a[@class='article-link cover-block']");
+					if (!CollectionUtils.isEmpty(picAnchorList)) {
+						HtmlAnchor picAnchor = (HtmlAnchor) picAnchorList
 								.get(0);
-						String picUrls = picDivision.getAttribute("style");
+						String picUrls = picAnchor.getAttribute("style");
 						String[] picUrlArray = picUrls.split("'");
 						articleInfo.setPicUrl(picUrlArray[1]);
 					} else {
 						articleInfo.setPicUrl(DEFAULT_PIC);
+					}
+					List<Object> tagAnchorList = (List<Object>) division
+							.getByXPath(".//div[@class='article-image cover-image']/a[@class='article-label']");
+					if (!CollectionUtils.isEmpty(tagAnchorList)) {
+						HtmlAnchor tagAnchor = (HtmlAnchor) tagAnchorList
+								.get(0);
+						articleInfo.setTag(tagAnchor.asText());
 					}
 					saveArticle(articleInfo);
 				} catch (Exception e) {

@@ -18,13 +18,14 @@ import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlSpan;
 
 public class SinaTechnologyCrawler implements Runnable {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(SinaTechnologyCrawler.class);
 	private static final String SINA_TECHNOLOGY = "新浪科技";
-	private static final String URL_STRING = "http://tech.sina.com.cn";
+	private static final String URL_STRING = "https://tech.sina.com.cn";
 	private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
 
 	private WebClient webClient;
@@ -40,7 +41,7 @@ public class SinaTechnologyCrawler implements Runnable {
 	public void run() {
 		try {
 			Calendar calendar = Calendar.getInstance();
-			String xPath = "//div[@class='feed-card-item']";
+			String xPath = "//div[@class='cardlist-a__list']";
 			HtmlPage page = webClient.getPage(URL_STRING);
 			List<Object> list = (List<Object>) page.getByXPath(xPath);
 			Iterator<Object> ite = list.iterator();
@@ -50,16 +51,15 @@ public class SinaTechnologyCrawler implements Runnable {
 					articleInfo.setSource(SINA_TECHNOLOGY);
 					HtmlDivision division = (HtmlDivision) ite.next();
 					List<Object> picImageList = (List<Object>) division
-							.getByXPath(".//div[@class='feed-card-img']/a/img");
+							.getByXPath(".//div[@class='ty-card-thumb-w']/a/img");
 					if (!CollectionUtils.isEmpty(picImageList)) {
 						HtmlImage picImage = (HtmlImage) picImageList.get(0);
-						articleInfo
-								.setPicUrl(picImage.getAttribute("data-src"));
+						articleInfo.setPicUrl(picImage.getAttribute("src"));
 					} else {
 						articleInfo.setPicUrl(DEFAULT_PIC);
 					}
 					List<Object> titleAnchorList = (List<Object>) division
-							.getByXPath(".//div[@class='tech-feed-right']/h2/a");
+							.getByXPath(".//div[@class='ty-card-r']/h3/a");
 					if (!CollectionUtils.isEmpty(titleAnchorList)) {
 						HtmlAnchor titleAnchor = (HtmlAnchor) titleAnchorList
 								.get(0);
@@ -68,21 +68,20 @@ public class SinaTechnologyCrawler implements Runnable {
 						articleInfo.setTitle(titleAnchor.asText());
 					}
 					List<Object> tagAnchorList = (List<Object>) division
-							.getByXPath(".//div[@class='tech-feed-right']/div[@class='feed-card-tags tech-feed-card-tags']/span[@class='feed-card-tags-col']/a");
+							.getByXPath(".//div[@class='ty-card-r']/p[@class='ty-card-tip2 clearfix']/span[@class='ty-card-tip2-i ty-card-tags']/span[@class='ty-card-tag']/a");
 					if (!CollectionUtils.isEmpty(tagAnchorList)) {
 						HtmlAnchor tagAnchor = (HtmlAnchor) tagAnchorList
 								.get(0);
 						articleInfo.setTag(tagAnchor.asText());
 					}
-					List<Object> timeDivisionList = (List<Object>) division
-							.getByXPath(".//div[@class='tech-feed-right']/div[@class='feed-card-a feed-card-clearfix']/div[@class='feed-card-time']");
-					if (!CollectionUtils.isEmpty(timeDivisionList)) {
-						HtmlDivision timeDivision = (HtmlDivision) timeDivisionList
-								.get(0);
-						String time = timeDivision.asText();
+					List<Object> timeHtmlSpanList = (List<Object>) division
+							.getByXPath("..//div[@class='ty-card-r']/p[@class='ty-card-tip2 clearfix']/span[@class='ty-card-tip2-i ty-card-time']");
+					if (!CollectionUtils.isEmpty(timeHtmlSpanList)) {
+						HtmlSpan timeSpan = (HtmlSpan) timeHtmlSpanList.get(0);
+						String time = timeSpan.asText();
 						String date = "";
 						String[] timeArray = time.split(" ");
-						if (timeArray.length == 1) {
+						if ("今天".equals(timeArray[0])) {
 							String day = (calendar.get(Calendar.MONTH) + 1) > 9 ? ("" + (calendar
 									.get(Calendar.MONTH) + 1))
 									: ("0" + (calendar.get(Calendar.MONTH) + 1));

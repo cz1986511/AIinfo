@@ -25,7 +25,7 @@ public class HuxiuCrawler implements Runnable {
 	private static final Logger logger = LoggerFactory
 			.getLogger(HuxiuCrawler.class);
 	private static final String HUXIU = "虎嗅";
-	private static final String URL_STRING = "http://www.huxiu.com";
+	private static final String URL_STRING = "https://www.huxiu.com";
 	private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
 
 	private WebClient webClient;
@@ -41,7 +41,7 @@ public class HuxiuCrawler implements Runnable {
 	public void run() {
 		try {
 			Calendar calendar = Calendar.getInstance();
-			String xPath = "//div[@class='mod-b mod-art ']";
+			String xPath = "//div[@class='mod-info-flow']";
 			HtmlPage page = webClient.getPage(URL_STRING);
 			List<Object> list = (List<Object>) page.getByXPath(xPath);
 			Iterator<Object> ite = list.iterator();
