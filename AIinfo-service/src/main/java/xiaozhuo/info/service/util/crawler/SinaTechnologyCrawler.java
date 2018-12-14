@@ -41,7 +41,7 @@ public class SinaTechnologyCrawler implements Runnable {
 	public void run() {
 		try {
 			Calendar calendar = Calendar.getInstance();
-			String xPath = "//div[@class='cardlist-a__list']";
+			String xPath = "//div[@class='ty-card ty-card-type1 clearfix']";
 			HtmlPage page = webClient.getPage(URL_STRING);
 			List<Object> list = (List<Object>) page.getByXPath(xPath);
 			Iterator<Object> ite = list.iterator();
@@ -51,7 +51,7 @@ public class SinaTechnologyCrawler implements Runnable {
 					articleInfo.setSource(SINA_TECHNOLOGY);
 					HtmlDivision division = (HtmlDivision) ite.next();
 					List<Object> picImageList = (List<Object>) division
-							.getByXPath(".//div[@class='ty-card-thumb-w']/a/img");
+							.getByXPath(".//div[@class='ty-card-l']/div[@class='ty-card-thumb-w']/a/img");
 					if (!CollectionUtils.isEmpty(picImageList)) {
 						HtmlImage picImage = (HtmlImage) picImageList.get(0);
 						articleInfo.setPicUrl(picImage.getAttribute("src"));

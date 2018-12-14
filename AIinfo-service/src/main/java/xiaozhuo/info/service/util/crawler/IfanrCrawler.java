@@ -41,7 +41,7 @@ public class IfanrCrawler implements Runnable {
 	public void run() {
 		try {
 			Calendar calendar = Calendar.getInstance();
-			String xPath = "//div[@class='collection-list']";
+			String xPath = "//div[@class='article-item article-item--list ']";
 			HtmlPage page = webClient.getPage(URL_STRING);
 			List<Object> list = (List<Object>) page.getByXPath(xPath);
 			Iterator<Object> ite = list.iterator();

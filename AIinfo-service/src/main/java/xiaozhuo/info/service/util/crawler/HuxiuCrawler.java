@@ -41,7 +41,7 @@ public class HuxiuCrawler implements Runnable {
 	public void run() {
 		try {
 			Calendar calendar = Calendar.getInstance();
-			String xPath = "//div[@class='mod-info-flow']";
+			String xPath = "//div[@class='mod-b mod-art clearfix ']";
 			HtmlPage page = webClient.getPage(URL_STRING);
 			List<Object> list = (List<Object>) page.getByXPath(xPath);
 			Iterator<Object> ite = list.iterator();
@@ -53,12 +53,16 @@ public class HuxiuCrawler implements Runnable {
 					List<Object> tagAnchorList = (List<Object>) division
 							.getByXPath(".//div[@class='column-link-box']/a");
 					if (!CollectionUtils.isEmpty(tagAnchorList)) {
-						HtmlAnchor tagAnchor = (HtmlAnchor) tagAnchorList
-								.get(0);
-						articleInfo.setTag(tagAnchor.asText());
+						Iterator<Object> iteTag = tagAnchorList.iterator();
+						String tag = "";
+						while (iteTag.hasNext()) {
+							HtmlAnchor tagAnchor = (HtmlAnchor) iteTag.next();
+							tag = tag + tagAnchor.asText() + " ";
+						}
+						articleInfo.setTag(tag);
 					}
 					List<Object> titleAnchorList = (List<Object>) division
-							.getByXPath(".//div[@class='mob-ctt']/h2/a");
+							.getByXPath(".//div[@class='mob-ctt index-article-list-yh']/h2/a");
 					if (!CollectionUtils.isEmpty(titleAnchorList)) {
 						HtmlAnchor titleAnchor = (HtmlAnchor) titleAnchorList
 								.get(0);
@@ -67,7 +71,7 @@ public class HuxiuCrawler implements Runnable {
 								+ titleAnchor.getAttribute("href"));
 					}
 					List<Object> picImageList = (List<Object>) division
-							.getByXPath(".//div[@class='mod-thumb']/a/img");
+							.getByXPath(".//div[@class='mod-thumb pull-left ']/a/img");
 					if (!CollectionUtils.isEmpty(picImageList)) {
 						HtmlImage picImage = (HtmlImage) picImageList.get(0);
 						articleInfo.setPicUrl(picImage
@@ -76,13 +80,13 @@ public class HuxiuCrawler implements Runnable {
 						articleInfo.setPicUrl(DEFAULT_PIC);
 					}
 					List<Object> authorSpanList = (List<Object>) division
-							.getByXPath(".//div[@class='mob-ctt']/div[@class='mob-author']/a/span[@class='author-name ']");
+							.getByXPath(".//div[@class='mob-ctt index-article-list-yh']/div[@class='mob-author']/a/span[@class='author-name ']");
 					if (!CollectionUtils.isEmpty(authorSpanList)) {
 						HtmlSpan authorSpan = (HtmlSpan) authorSpanList.get(0);
 						articleInfo.setAuthor(authorSpan.asText());
 					}
 					List<Object> timeSpanList = (List<Object>) division
-							.getByXPath(".//div[@class='mob-ctt']/div[@class='mob-author']/span[@class='time']");
+							.getByXPath(".//div[@class='mob-ctt index-article-list-yh']/div[@class='mob-author']/span[@class='time']");
 					if (!CollectionUtils.isEmpty(timeSpanList)) {
 						HtmlSpan timeSpan = (HtmlSpan) timeSpanList.get(0);
 						String time = timeSpan.asText();
@@ -105,7 +109,7 @@ public class HuxiuCrawler implements Runnable {
 						articleInfo.setDate(date);
 					}
 					List<Object> descDivisionList = (List<Object>) division
-							.getByXPath(".//div[@class='mob-ctt']/div[@class='mob-sub']");
+							.getByXPath(".//div[@class='mob-ctt index-article-list-yh']/div[@class='mob-sub']");
 					if (!CollectionUtils.isEmpty(descDivisionList)) {
 						HtmlDivision descDivision = (HtmlDivision) descDivisionList
 								.get(0);
