@@ -22,88 +22,98 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class PintuCrawler implements Runnable {
 
-    private static final Logger logger = LoggerFactory.getLogger(PintuCrawler.class);
-    private static final String PINTU = "品途";
-    private static final String URL_STRING = "http://www.pintu360.com";
-    private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
+	private static final Logger logger = LoggerFactory
+			.getLogger(PintuCrawler.class);
+	private static final String PINTU = "品途";
+	private static final String URL_STRING = "http://www.pintu360.com";
+	private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
 
-    private WebClient webClient;
-    private ArticleInfoService articleInfoManager;
+	private WebClient webClient;
+	private ArticleInfoService articleInfoManager;
 
-    public PintuCrawler(ArticleInfoService articleInfoManager) {
-        super();
-        this.webClient = initWebClient();
-        this.articleInfoManager = articleInfoManager;
-    }
+	public PintuCrawler(ArticleInfoService articleInfoManager) {
+		super();
+		this.webClient = initWebClient();
+		this.articleInfoManager = articleInfoManager;
+	}
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public void run() {
-        try {
-            String xPath = "//div[@class='mixin-article-item big']";
-            HtmlPage page = webClient.getPage(URL_STRING);
-            List<HtmlDivision> list = (List<HtmlDivision>) page.getByXPath(xPath);
-            Iterator<HtmlDivision> ite = list.iterator();
-            while (ite.hasNext()) {
-                try {
-                    ArticleInfo articleInfo = new ArticleInfo();
-                    articleInfo.setSource(PINTU);
-                    HtmlDivision division = ite.next();
-                    Date dateTime = new Date(Long.valueOf(division.getAttribute("data-time")));
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    articleInfo.setDate(sdf.format(dateTime));
-                    List<HtmlAnchor> titleAnchorList = (List<HtmlAnchor>) division
-                        .getByXPath(".//h2[@class='title-wrap']/a[@class='title']");
-                    if (!CollectionUtils.isEmpty(titleAnchorList)) {
-                        articleInfo.setLinkUrl(titleAnchorList.get(0).getAttribute("href"));
-                        articleInfo.setTitle(titleAnchorList.get(0).asText());
-                    }
-                    List<HtmlDivision> descDivisionList = (List<HtmlDivision>) division
-                        .getByXPath(".//div[@class='note']");
-                    if (!CollectionUtils.isEmpty(descDivisionList)) {
-                        articleInfo.setIntroduction(descDivisionList.get(0).asText());
-                    }
-                    List<HtmlImage> picImageList = (List<HtmlImage>) division
-                        .getByXPath(".//a[@class='banner']/img");
-                    if (!CollectionUtils.isEmpty(picImageList)) {
-                        articleInfo.setPicUrl(picImageList.get(0).getAttribute("data-original"));
-                    } else {
-                        articleInfo.setPicUrl(DEFAULT_PIC);
-                    }
-                    saveArticle(articleInfo);
-                } catch (Exception e) {
-                    logger.error("pintuCrawler is exception:" + e.toString());
-                }
-            }
-        } catch (Exception e) {
-            logger.error("pintuCrawler is exception:" + e.toString());
-        }
-        webClient.closeAllWindows();
-    }
+	@Override
+	public void run() {
+		try {
+			String xPath = "//div[@class='mixin-article-item big']";
+			HtmlPage page = webClient.getPage(URL_STRING);
+			List<Object> list = (List<Object>) page.getByXPath(xPath);
+			Iterator<Object> ite = list.iterator();
+			while (ite.hasNext()) {
+				try {
+					ArticleInfo articleInfo = new ArticleInfo();
+					articleInfo.setSource(PINTU);
+					HtmlDivision division = (HtmlDivision) ite.next();
+					Date dateTime = new Date(Long.valueOf(division
+							.getAttribute("data-time")));
+					SimpleDateFormat sdf = new SimpleDateFormat(
+							"yyyy-MM-dd HH:mm:ss");
+					articleInfo.setDate(sdf.format(dateTime));
+					List<Object> titleAnchorList = (List<Object>) division
+							.getByXPath(".//h2[@class='title-wrap']/a[@class='title']");
+					if (!CollectionUtils.isEmpty(titleAnchorList)) {
+						HtmlAnchor titleAnchor = (HtmlAnchor) titleAnchorList
+								.get(0);
+						articleInfo
+								.setLinkUrl(titleAnchor.getAttribute("href"));
+						articleInfo.setTitle(titleAnchor.asText());
+					}
+					List<Object> descDivisionList = (List<Object>) division
+							.getByXPath(".//div[@class='note']");
+					if (!CollectionUtils.isEmpty(descDivisionList)) {
+						HtmlDivision descDivision = (HtmlDivision) descDivisionList
+								.get(0);
+						articleInfo.setIntroduction(descDivision.asText());
+					}
+					List<Object> picImageList = (List<Object>) division
+							.getByXPath(".//a[@class='banner']/img");
+					if (!CollectionUtils.isEmpty(picImageList)) {
+						HtmlImage picImage = (HtmlImage) picImageList.get(0);
+						articleInfo.setPicUrl(picImage
+								.getAttribute("data-original"));
+					} else {
+						articleInfo.setPicUrl(DEFAULT_PIC);
+					}
+					saveArticle(articleInfo);
+				} catch (Exception e) {
+					logger.error("pintuCrawler is exception:" + e.toString());
+				}
+			}
+		} catch (Exception e) {
+			logger.error("pintuCrawler is exception:" + e.toString());
+		}
+		webClient.close();
+	}
 
-    private void saveArticle(ArticleInfo articleInfo) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("title", articleInfo.getTitle());
-        map.put("source", articleInfo.getSource());
-        map.put("offset", 0);
-        map.put("limit", 200);
-        List<ArticleInfo> result = articleInfoManager.getArticleInfosByParams(map);
-        if (CollectionUtils.isEmpty(result)) {
-            articleInfoManager.addArticleInfo(articleInfo);
-        }
-    }
+	private void saveArticle(ArticleInfo articleInfo) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", articleInfo.getTitle());
+		map.put("source", articleInfo.getSource());
+		map.put("offset", 0);
+		map.put("limit", 200);
+		List<ArticleInfo> result = articleInfoManager
+				.getArticleInfosByParams(map);
+		if (CollectionUtils.isEmpty(result)) {
+			articleInfoManager.addArticleInfo(articleInfo);
+		}
+	}
 
-    private WebClient initWebClient() {
-        WebClient webClient = new WebClient();
-        webClient.getOptions().setUseInsecureSSL(true);
-        webClient.getOptions().setCssEnabled(false);
-        webClient.getOptions().setAppletEnabled(false);
-        webClient.getOptions().setJavaScriptEnabled(true);
-        webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
-        webClient.getOptions().setThrowExceptionOnScriptError(false);
-        int timeout = webClient.getOptions().getTimeout();
-        webClient.getOptions().setTimeout(timeout * 10);
-        return webClient;
-    }
+	private WebClient initWebClient() {
+		WebClient webClient = new WebClient();
+		webClient.getOptions().setUseInsecureSSL(true);
+		webClient.getOptions().setCssEnabled(false);
+		webClient.getOptions().setAppletEnabled(false);
+		webClient.getOptions().setJavaScriptEnabled(true);
+		webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
+		webClient.getOptions().setThrowExceptionOnScriptError(false);
+		int timeout = webClient.getOptions().getTimeout();
+		webClient.getOptions().setTimeout(timeout * 10);
+		return webClient;
+	}
 
 }
