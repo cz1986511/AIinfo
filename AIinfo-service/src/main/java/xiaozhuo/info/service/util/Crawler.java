@@ -22,7 +22,6 @@ import xiaozhuo.info.service.util.crawler.LeiPhoneCrawler;
 import xiaozhuo.info.service.util.crawler.NetTechnologyCrawler;
 import xiaozhuo.info.service.util.crawler.PintuCrawler;
 import xiaozhuo.info.service.util.crawler.QdailyCrawler;
-import xiaozhuo.info.service.util.crawler.SinaTechnologyCrawler;
 import xiaozhuo.info.service.util.crawler.TechWebCrawler;
 import xiaozhuo.info.service.util.crawler.TmtPostCrawler;
 
@@ -81,10 +80,6 @@ public class Crawler {
 			LeiPhoneCrawler leiPhoneCrawler = new LeiPhoneCrawler(
 					articleInfoService);
 			executor.execute(leiPhoneCrawler);
-			// 新浪科技数据抓取
-			SinaTechnologyCrawler sinaTechnologyCrawler = new SinaTechnologyCrawler(
-					articleInfoService);
-			executor.execute(sinaTechnologyCrawler);
 			// 钛媒体数据抓取
 			TmtPostCrawler tmtPostCrawler = new TmtPostCrawler(
 					articleInfoService);
