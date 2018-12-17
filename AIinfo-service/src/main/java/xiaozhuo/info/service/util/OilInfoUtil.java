@@ -36,7 +36,7 @@ public class OilInfoUtil {
 	private OilInfoService oilInfoService;
 
 	@SuppressWarnings({ "resource" })
-	@Scheduled(cron = "0 20 6 * * ?")
+	@Scheduled(cron = "0 17 7 * * ?")
 	public void getTodayOilInfo() {
 		HttpClient httpClient = new DefaultHttpClient();
 		try {
