@@ -50,6 +50,12 @@ public class OilInfoUtil {
 							response.getEntity(), "UTF-8");
 					JSONObject jsonObject = (JSONObject) JSON.parseObject(
 							responseBody).get("result");
+
+					String dateString = jsonObject.getString("updatetime");
+					if (null != dateString) {
+						jsonObject.put("updatetime",
+								dateString.substring(0, 10));
+					}
 					String oilKey = "oilKey";
 					RedisClient.set(oilKey, jsonObject, 86400);
 					OilInfo oilInfo = new OilInfo();
@@ -61,8 +67,7 @@ public class OilInfoUtil {
 					oilInfo.setOil95(jsonObject.getString("oil95"));
 					oilInfo.setOil97(jsonObject.getString("oil97"));
 					oilInfo.setProvince("四川");
-					oilInfo.setUpdateTime(getDateString(jsonObject
-							.getString("updatetime")));
+					oilInfo.setUpdateTime(getDateString(dateString));
 					oilInfoService.addOilInfo(oilInfo);
 				}
 			}
@@ -77,10 +82,13 @@ public class OilInfoUtil {
 	private Date getDateString(String dateString) {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			return formatter.parse(dateString);
+			if (null != dateString) {
+				return formatter.parse(dateString);
+			}
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
+
 }
