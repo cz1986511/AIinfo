@@ -14,6 +14,7 @@ import org.springframework.util.CollectionUtils;
 import xiaozhuo.info.persist.base.ArticleInfo;
 import xiaozhuo.info.service.ArticleInfoService;
 
+import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
@@ -104,7 +105,7 @@ public class PintuCrawler implements Runnable {
 	}
 
 	private WebClient initWebClient() {
-		WebClient webClient = new WebClient();
+		WebClient webClient = new WebClient(BrowserVersion.CHROME);
 		webClient.getOptions().setUseInsecureSSL(true);
 		webClient.getOptions().setCssEnabled(false);
 		webClient.getOptions().setAppletEnabled(false);
