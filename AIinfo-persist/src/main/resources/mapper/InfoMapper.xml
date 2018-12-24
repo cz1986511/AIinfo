@@ -16,30 +16,30 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from dleye_info
+    from aiinfo_info
     where id = #{id,jdbcType=BIGINT}
   </select>
   
   <select id="selectAllInfos" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
     select 
     <include refid="Base_Column_List" />
-    from dleye_info
+    from aiinfo_info
     limit ${offset}, ${limit}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from dleye_info
+    delete from aiinfo_info
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="xiaozhuo.info.persist.base.Info" >
-    insert into dleye_info (id, ip, name, 
+    insert into aiinfo_info (id, ip, name, 
       port, info_desc, gmt_create, 
       gmt_modified)
     values (#{id,jdbcType=BIGINT}, #{ip,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{port,jdbcType=INTEGER}, #{infoDesc,jdbcType=VARCHAR}, NOW(), NOW())
   </insert>
   <insert id="insertSelective" parameterType="xiaozhuo.info.persist.base.Info" >
-    insert into dleye_info
+    insert into aiinfo_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -80,7 +80,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="xiaozhuo.info.persist.base.Info" >
-    update dleye_info
+    update aiinfo_info
     <set >
       <if test="ip != null" >
         ip = #{ip,jdbcType=VARCHAR},
@@ -99,7 +99,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="xiaozhuo.info.persist.base.Info" >
-    update dleye_info
+    update aiinfo_info
     set ip = #{ip,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
       port = #{port,jdbcType=INTEGER},

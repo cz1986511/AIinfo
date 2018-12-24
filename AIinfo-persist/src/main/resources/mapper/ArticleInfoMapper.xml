@@ -43,14 +43,14 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from dleye_article_info
+    from aiinfo_article_info
     where id = #{id,jdbcType=BIGINT}
   </select>
   
   <select id="selectArticlesByParams" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select 
     <include refid="Base_Column_List" />
-    from dleye_article_info
+    from aiinfo_article_info
     <include refid="selectByParamsWhere" />
       order by gmt_create desc
     <if test=" offset != null and limit != null">
@@ -61,7 +61,7 @@
   <select id="selectArticlesByGmtCreate" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select 
     <include refid="Base_Column_List" />
-    from dleye_article_info
+    from aiinfo_article_info
     where
     <![CDATA[
 	    gmt_create <= #{createTime,jdbcType=TIMESTAMP}	
@@ -72,11 +72,11 @@
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from dleye_article_info
+    delete from aiinfo_article_info
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="xiaozhuo.info.persist.base.ArticleInfo" >
-    insert into dleye_article_info (title, introduction, 
+    insert into aiinfo_article_info (title, introduction, 
       link_url, pic_url, date, 
       author, source, tag, 
       gmt_create, gmt_modified)
@@ -86,7 +86,7 @@
       NOW(), NOW())
   </insert>
   <insert id="insertSelective" parameterType="xiaozhuo.info.persist.base.ArticleInfo" >
-    insert into dleye_article_info
+    insert into aiinfo_article_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="title != null" >
         title,
@@ -145,7 +145,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="xiaozhuo.info.persist.base.ArticleInfo" >
-    update dleye_article_info
+    update aiinfo_article_info
     <set >
       <if test="title != null" >
         title = #{title,jdbcType=VARCHAR},
@@ -176,7 +176,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="xiaozhuo.info.persist.base.ArticleInfo" >
-    update dleye_article_info
+    update aiinfo_article_info
     set title = #{title,jdbcType=VARCHAR},
       introduction = #{introduction,jdbcType=VARCHAR},
       link_url = #{linkUrl,jdbcType=VARCHAR},
