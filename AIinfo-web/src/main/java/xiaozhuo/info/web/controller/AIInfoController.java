@@ -52,6 +52,7 @@ public class AIInfoController {
 	@ResponseBody
 	public String getArticleList(HttpServletRequest request) {
 		logger.error(request.getRemoteAddr());
+		logger.error(request.getLocalAddr());
 		Map<String, Object> result = new HashMap<String, Object>();
 		JSONObject json = new JSONObject(result);
 		String defaultKey = "dKey";
