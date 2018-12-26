@@ -51,6 +51,7 @@ public class AIInfoController {
 	@RequestMapping(value = "/art/list", method = RequestMethod.POST)
 	@ResponseBody
 	public String getArticleList(HttpServletRequest request) {
+		logger.error(request.getRemoteAddr());
 		logger.error(request.getHeader("x-forwarded-for"));
 		Map<String, Object> result = new HashMap<String, Object>();
 		JSONObject json = new JSONObject(result);
