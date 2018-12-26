@@ -51,6 +51,7 @@ public class AIInfoController {
 	@RequestMapping(value = "/art/list", method = RequestMethod.POST)
 	@ResponseBody
 	public String getArticleList(HttpServletRequest request) {
+		logger.error(request.getRemoteAddr());
 		Map<String, Object> result = new HashMap<String, Object>();
 		JSONObject json = new JSONObject(result);
 		String defaultKey = "dKey";

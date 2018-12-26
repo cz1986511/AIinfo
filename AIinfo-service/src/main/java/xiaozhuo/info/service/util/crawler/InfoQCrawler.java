@@ -51,7 +51,6 @@ public class InfoQCrawler implements Runnable {
 					ArticleInfo articleInfo = new ArticleInfo();
 					articleInfo.setSource(INFOQ);
 					HtmlDivision division = (HtmlDivision) ite.next();
-
 					List<Object> timeDivisionList = (List<Object>) division
 							.getByXPath(".//div[@class='info']/div[@class='extra']/div[@class='date']");
 					if (!CollectionUtils.isEmpty(timeDivisionList)) {
@@ -77,7 +76,6 @@ public class InfoQCrawler implements Runnable {
 							articleInfo.setDate(timeString);
 						}
 					}
-
 					List<Object> titleAnchorList = (List<Object>) division
 							.getByXPath(".//div[@class='info']/h6[@class='favorite with-image']/a[@class='com-article-title']");
 					if (!CollectionUtils.isEmpty(titleAnchorList)) {
@@ -123,11 +121,11 @@ public class InfoQCrawler implements Runnable {
 					}
 					saveArticle(articleInfo);
 				} catch (Exception e) {
-					logger.error("pintuCrawler is exception:" + e.toString());
+					logger.error("infoQCrawler is exception:" + e.toString());
 				}
 			}
 		} catch (Exception e) {
-			logger.error("pintuCrawler is exception:" + e.toString());
+			logger.error("infoQCrawler is exception:" + e.toString());
 		}
 		webClient.close();
 	}
