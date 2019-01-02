@@ -27,7 +27,7 @@ public class IfanrCrawler implements Runnable {
 			.getLogger(IfanrCrawler.class);
 	private static final String IFANR = "爱范儿";
 	private static final String URL_STRING = "https://www.ifanr.com";
-	private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
+	private static final String DEFAULT_PIC = "http://chenzhuo.info/default.png";
 
 	private WebClient webClient;
 	private ArticleInfoService articleInfoManager;

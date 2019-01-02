@@ -28,7 +28,7 @@ public class TmtPostCrawler implements Runnable {
 			.getLogger(TmtPostCrawler.class);
 	private static final String TMTPOST = "钛媒体";
 	private static final String URL_STRING = "http://www.tmtpost.com";
-	private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
+	private static final String DEFAULT_PIC = "http://chenzhuo.info/default.png";
 
 	private WebClient webClient;
 	private ArticleInfoService articleInfoManager;

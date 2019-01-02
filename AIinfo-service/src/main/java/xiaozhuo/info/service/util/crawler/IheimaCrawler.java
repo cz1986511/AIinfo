@@ -27,7 +27,7 @@ public class IheimaCrawler implements Runnable {
 			.getLogger(IheimaCrawler.class);
 	private static final String IHEIMA = "i黑马";
 	private static final String URL_STRING = "http://www.iheima.com";
-	private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
+	private static final String DEFAULT_PIC = "http://chenzhuo.info/default.png";
 
 	private WebClient webClient;
 	private ArticleInfoService articleInfoManager;

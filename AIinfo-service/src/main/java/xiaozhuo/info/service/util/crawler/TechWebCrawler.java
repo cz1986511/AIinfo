@@ -27,7 +27,7 @@ public class TechWebCrawler implements Runnable {
 			.getLogger(TechWebCrawler.class);
 	private static final String TECHWEB = "techweb";
 	private static final String URL_STRING = "http://mi.techweb.com.cn";
-	private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
+	private static final String DEFAULT_PIC = "http://chenzhuo.info/default.png";
 
 	private WebClient webClient;
 	private ArticleInfoService articleInfoManager;

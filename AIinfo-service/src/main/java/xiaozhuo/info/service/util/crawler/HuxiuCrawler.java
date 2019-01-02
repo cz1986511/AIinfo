@@ -27,7 +27,7 @@ public class HuxiuCrawler implements Runnable {
 			.getLogger(HuxiuCrawler.class);
 	private static final String HUXIU = "虎嗅";
 	private static final String URL_STRING = "https://www.huxiu.com";
-	private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
+	private static final String DEFAULT_PIC = "http://chenzhuo.info/default.png";
 
 	private WebClient webClient;
 	private ArticleInfoService articleInfoManager;

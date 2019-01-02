@@ -27,7 +27,7 @@ public class PintuCrawler implements Runnable {
 			.getLogger(PintuCrawler.class);
 	private static final String PINTU = "品途";
 	private static final String URL_STRING = "http://www.pintu360.com";
-	private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
+	private static final String DEFAULT_PIC = "http://chenzhuo.info/default.png";
 
 	private WebClient webClient;
 	private ArticleInfoService articleInfoManager;

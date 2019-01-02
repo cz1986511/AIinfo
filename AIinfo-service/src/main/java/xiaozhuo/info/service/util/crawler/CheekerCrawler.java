@@ -27,7 +27,7 @@ public class CheekerCrawler implements Runnable {
 			.getLogger(CheekerCrawler.class);
 	private static final String CHEEKR = "粹客网";
 	private static final String URL_STRING = "http://www.cheekr.com";
-	private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
+	private static final String DEFAULT_PIC = "http://chenzhuo.info/default.png";
 
 	private WebClient webClient;
 	private ArticleInfoService articleInfoManager;

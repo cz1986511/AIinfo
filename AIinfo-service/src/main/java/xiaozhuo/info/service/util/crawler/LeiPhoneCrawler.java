@@ -27,7 +27,7 @@ public class LeiPhoneCrawler implements Runnable {
 			.getLogger(LeiPhoneCrawler.class);
 	private static final String LEIPHONE = "雷锋网";
 	private static final String URL_STRING = "http://www.leiphone.com";
-	private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
+	private static final String DEFAULT_PIC = "http://chenzhuo.info/default.png";
 
 	private WebClient webClient;
 	private ArticleInfoService articleInfoManager;

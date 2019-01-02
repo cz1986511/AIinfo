@@ -27,7 +27,7 @@ public class NetTechnologyCrawler implements Runnable {
 			.getLogger(NetTechnologyCrawler.class);
 	private static final String NET_TECHNOLOGY = "网易科技";
 	private static final String URL_STRING = "http://tech.163.com/internet";
-	private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
+	private static final String DEFAULT_PIC = "http://chenzhuo.info/default.png";
 
 	private WebClient webClient;
 	private ArticleInfoService articleInfoManager;

@@ -28,7 +28,7 @@ public class InfoQCrawler implements Runnable {
 			.getLogger(InfoQCrawler.class);
 	private static final String INFOQ = "InfoQ";
 	private static final String URL_STRING = "https://www.infoq.cn/";
-	private static final String DEFAULT_PIC = "http://chenzhuo.pub/default.png";
+	private static final String DEFAULT_PIC = "http://chenzhuo.info/default.png";
 
 	private WebClient webClient;
 	private ArticleInfoService articleInfoManager;
