@@ -41,7 +41,7 @@ public class TechWebCrawler implements Runnable {
 	@Override
 	public void run() {
 		try {
-			String xPath = "//div[@class='con_one bg_grag']";
+			String xPath = "//div[@class='picture_text']";
 			HtmlPage page = webClient.getPage(URL_STRING);
 			List<Object> list = (List<Object>) page.getByXPath(xPath);
 			Iterator<Object> ite = list.iterator();
@@ -51,7 +51,7 @@ public class TechWebCrawler implements Runnable {
 					articleInfo.setSource(TECHWEB);
 					HtmlDivision division = (HtmlDivision) ite.next();
 					List<Object> titleAnchorList = (List<Object>) division
-							.getByXPath(".//h2/a");
+							.getByXPath(".//div[@class='text']/a/h4");
 					if (!CollectionUtils.isEmpty(titleAnchorList)) {
 						HtmlAnchor titleAnchor = (HtmlAnchor) titleAnchorList
 								.get(0);

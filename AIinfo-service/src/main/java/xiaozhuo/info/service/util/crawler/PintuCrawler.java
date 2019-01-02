@@ -20,13 +20,14 @@ import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlParagraph;
 
 public class PintuCrawler implements Runnable {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(PintuCrawler.class);
 	private static final String PINTU = "品途";
-	private static final String URL_STRING = "http://www.pintu360.com";
+	private static final String URL_STRING = "https://www.pintu360.com";
 	private static final String DEFAULT_PIC = "http://chenzhuo.info/default.png";
 
 	private WebClient webClient;
@@ -41,7 +42,7 @@ public class PintuCrawler implements Runnable {
 	@Override
 	public void run() {
 		try {
-			String xPath = "//div[@class='mixin-article-item big']";
+			String xPath = "//div[@class='article-list']";
 			HtmlPage page = webClient.getPage(URL_STRING);
 			List<Object> list = (List<Object>) page.getByXPath(xPath);
 			Iterator<Object> ite = list.iterator();
@@ -56,27 +57,26 @@ public class PintuCrawler implements Runnable {
 							"yyyy-MM-dd HH:mm:ss");
 					articleInfo.setDate(sdf.format(dateTime));
 					List<Object> titleAnchorList = (List<Object>) division
-							.getByXPath(".//h2[@class='title-wrap']/a[@class='title']");
+							.getByXPath(".//div[@class='article-text']/h2[@class='article-title']/a");
 					if (!CollectionUtils.isEmpty(titleAnchorList)) {
 						HtmlAnchor titleAnchor = (HtmlAnchor) titleAnchorList
 								.get(0);
-						articleInfo
-								.setLinkUrl(titleAnchor.getAttribute("href"));
+						articleInfo.setLinkUrl(URL_STRING
+								+ titleAnchor.getAttribute("href"));
 						articleInfo.setTitle(titleAnchor.asText());
 					}
-					List<Object> descDivisionList = (List<Object>) division
-							.getByXPath(".//div[@class='note']");
-					if (!CollectionUtils.isEmpty(descDivisionList)) {
-						HtmlDivision descDivision = (HtmlDivision) descDivisionList
+					List<Object> descParagraphList = (List<Object>) division
+							.getByXPath(".//div[@class='article-text']/p[@class='article-content']");
+					if (!CollectionUtils.isEmpty(descParagraphList)) {
+						HtmlParagraph descParagraph = (HtmlParagraph) descParagraphList
 								.get(0);
-						articleInfo.setIntroduction(descDivision.asText());
+						articleInfo.setIntroduction(descParagraph.asText());
 					}
 					List<Object> picImageList = (List<Object>) division
-							.getByXPath(".//a[@class='banner']/img");
+							.getByXPath(".//div[@class='article-photo']/a/img");
 					if (!CollectionUtils.isEmpty(picImageList)) {
 						HtmlImage picImage = (HtmlImage) picImageList.get(0);
-						articleInfo.setPicUrl(picImage
-								.getAttribute("data-original"));
+						articleInfo.setPicUrl(picImage.getAttribute("src"));
 					} else {
 						articleInfo.setPicUrl(DEFAULT_PIC);
 					}

@@ -21,18 +21,18 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlParagraph;
 import com.gargoylesoftware.htmlunit.html.HtmlSpan;
 
-public class CheekerCrawler implements Runnable {
+public class GuoKrCrawler implements Runnable {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(CheekerCrawler.class);
-	private static final String CHEEKR = "粹客网";
-	private static final String URL_STRING = "http://www.cheekr.com";
+			.getLogger(GuoKrCrawler.class);
+	private static final String GUOKR = "果壳网";
+	private static final String URL_STRING = "https://www.guokr.com/scientific/";
 	private static final String DEFAULT_PIC = "http://chenzhuo.info/default.png";
 
 	private WebClient webClient;
 	private ArticleInfoService articleInfoManager;
 
-	public CheekerCrawler(ArticleInfoService articleInfoManager) {
+	public GuoKrCrawler(ArticleInfoService articleInfoManager) {
 		super();
 		this.webClient = initWebClient();
 		this.articleInfoManager = articleInfoManager;
@@ -41,17 +41,17 @@ public class CheekerCrawler implements Runnable {
 	@Override
 	public void run() {
 		try {
-			String xPath = "//div[@class='media']";
+			String xPath = "//div[@class='article']";
 			HtmlPage page = webClient.getPage(URL_STRING);
 			List<Object> list = (List<Object>) page.getByXPath(xPath);
 			Iterator<Object> ite = list.iterator();
 			while (ite.hasNext()) {
 				try {
 					ArticleInfo articleInfo = new ArticleInfo();
-					articleInfo.setSource(CHEEKR);
+					articleInfo.setSource(GUOKR);
 					HtmlDivision division = (HtmlDivision) ite.next();
 					List<Object> titleAnchorList = (List<Object>) division
-							.getByXPath(".//div[@class='media_text']/h2[@class='indexmediatitle']/a");
+							.getByXPath(".//h3/a[@class='article-title']");
 					if (!CollectionUtils.isEmpty(titleAnchorList)) {
 						HtmlAnchor titleAnchor = (HtmlAnchor) titleAnchorList
 								.get(0);
@@ -60,32 +60,26 @@ public class CheekerCrawler implements Runnable {
 						articleInfo.setTitle(titleAnchor.asText());
 					}
 					List<Object> descParagraphList = (List<Object>) division
-							.getByXPath(".//div[@class='media_text']/span[@class='abstract']/p");
+							.getByXPath(".//p[@class='article-summary']");
 					if (!CollectionUtils.isEmpty(descParagraphList)) {
 						HtmlParagraph descParagraph = (HtmlParagraph) descParagraphList
 								.get(0);
 						articleInfo.setIntroduction(descParagraph.asText());
 					}
-					List<Object> authorAnchorList = (List<Object>) division
-							.getByXPath(".//div[@class='media_text']/div[@class='author_and_time']/span[@class='author']/a");
-					if (!CollectionUtils.isEmpty(authorAnchorList)) {
-						HtmlAnchor authorAnchor = (HtmlAnchor) authorAnchorList
-								.get(0);
-						articleInfo.setAuthor(authorAnchor.asText());
+					List<Object> authorSpanList = (List<Object>) division
+							.getByXPath(".//div[@class='article-info']/span[@class='article-author-os']");
+					if (!CollectionUtils.isEmpty(authorSpanList)) {
+						HtmlSpan authorSpan = (HtmlSpan) authorSpanList.get(0);
+						articleInfo.setAuthor(authorSpan.asText());
 					}
 					List<Object> tagSpanList = (List<Object>) division
-							.getByXPath(".//div[@class='media_text']/span[@class='tags']");
+							.getByXPath(".//a[@class='label label-common']");
 					if (!CollectionUtils.isEmpty(tagSpanList)) {
-						String tags = "";
-						Iterator<Object> tagIterator = tagSpanList.iterator();
-						while (tagIterator.hasNext()) {
-							HtmlSpan span = (HtmlSpan) tagIterator.next();
-							tags += span.asText() + " ";
-						}
-						articleInfo.setTag(tags);
+						HtmlAnchor tagAnchor = (HtmlAnchor) tagSpanList.get(0);
+						articleInfo.setTag(tagAnchor.asText());
 					}
 					List<Object> picImageList = (List<Object>) division
-							.getByXPath(".//a[@class='mediaimg_a']/img");
+							.getByXPath(".//a/img");
 					if (!CollectionUtils.isEmpty(picImageList)) {
 						HtmlImage picImage = (HtmlImage) picImageList.get(0);
 						articleInfo.setPicUrl(picImage.getAttribute("src"));
@@ -94,11 +88,11 @@ public class CheekerCrawler implements Runnable {
 					}
 					saveArticle(articleInfo);
 				} catch (Exception e) {
-					logger.error("cheekerCrawler is exception:" + e.toString());
+					logger.error("guoKrCrawler is exception:" + e.toString());
 				}
 			}
 		} catch (Exception e) {
-			logger.error("cheekerCrawler is exception:" + e.toString());
+			logger.error("guoKrCrawler is exception:" + e.toString());
 		}
 		webClient.close();
 	}

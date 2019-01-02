@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import xiaozhuo.info.service.ArticleInfoService;
-import xiaozhuo.info.service.util.crawler.CheekerCrawler;
+import xiaozhuo.info.service.util.crawler.GuoKrCrawler;
 import xiaozhuo.info.service.util.crawler.HuxiuCrawler;
 import xiaozhuo.info.service.util.crawler.IfanrCrawler;
 import xiaozhuo.info.service.util.crawler.IheimaCrawler;
@@ -53,10 +53,9 @@ public class Crawler {
 			// i黑马数据抓取
 			IheimaCrawler iheimaCrawler = new IheimaCrawler(articleInfoService);
 			executor.execute(iheimaCrawler);
-			// 粹客网数据抓取
-			CheekerCrawler cheekerCrawler = new CheekerCrawler(
-					articleInfoService);
-			executor.execute(cheekerCrawler);
+			// 果壳数据抓取
+			GuoKrCrawler guoKrCrawler = new GuoKrCrawler(articleInfoService);
+			executor.execute(guoKrCrawler);
 			// techweb数据抓取
 			TechWebCrawler techWebCrawler = new TechWebCrawler(
 					articleInfoService);
@@ -85,7 +84,7 @@ public class Crawler {
 			TmtPostCrawler tmtPostCrawler = new TmtPostCrawler(
 					articleInfoService);
 			executor.execute(tmtPostCrawler);
-			// 钛媒体数据抓取
+			// InfoQ数据抓取
 			InfoQCrawler infoQCrawler = new InfoQCrawler(articleInfoService);
 			executor.execute(infoQCrawler);
 		} catch (Exception e) {
