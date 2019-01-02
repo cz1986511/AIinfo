@@ -24,6 +24,7 @@ import xiaozhuo.info.service.util.crawler.NetTechnologyCrawler;
 import xiaozhuo.info.service.util.crawler.PintuCrawler;
 import xiaozhuo.info.service.util.crawler.QdailyCrawler;
 import xiaozhuo.info.service.util.crawler.TechWebCrawler;
+import xiaozhuo.info.service.util.crawler.ThirtySixKrCrawler;
 import xiaozhuo.info.service.util.crawler.TmtPostCrawler;
 
 @Component
@@ -56,6 +57,10 @@ public class Crawler {
 			// 果壳数据抓取
 			GuoKrCrawler guoKrCrawler = new GuoKrCrawler(articleInfoService);
 			executor.execute(guoKrCrawler);
+			// 36氪数据抓取
+			ThirtySixKrCrawler thritySixCrawler = new ThirtySixKrCrawler(
+					articleInfoService);
+			executor.execute(thritySixCrawler);
 			// techweb数据抓取
 			TechWebCrawler techWebCrawler = new TechWebCrawler(
 					articleInfoService);

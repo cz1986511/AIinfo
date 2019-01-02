@@ -16,24 +16,21 @@ import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
-import com.gargoylesoftware.htmlunit.html.HtmlHeading4;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlParagraph;
-import com.gargoylesoftware.htmlunit.html.HtmlSpan;
 
-public class TechWebCrawler implements Runnable {
+public class ThirtySixKrCrawler implements Runnable {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(TechWebCrawler.class);
-	private static final String TECHWEB = "techweb";
-	private static final String URL_STRING = "http://mi.techweb.com.cn";
+			.getLogger(ThirtySixKrCrawler.class);
+	private static final String TSKR = "36氪";
+	private static final String URL_STRING = "https://www.36kr.com/";
 	private static final String DEFAULT_PIC = "http://chenzhuo.info/default.png";
 
 	private WebClient webClient;
 	private ArticleInfoService articleInfoManager;
 
-	public TechWebCrawler(ArticleInfoService articleInfoManager) {
+	public ThirtySixKrCrawler(ArticleInfoService articleInfoManager) {
 		super();
 		this.webClient = initWebClient();
 		this.articleInfoManager = articleInfoManager;
@@ -42,66 +39,47 @@ public class TechWebCrawler implements Runnable {
 	@Override
 	public void run() {
 		try {
-			String xPath = "//div[@class='picture_text']";
+			String xPath = "//div[@class='kr-home-flow-item']";
 			HtmlPage page = webClient.getPage(URL_STRING);
 			List<Object> list = (List<Object>) page.getByXPath(xPath);
 			Iterator<Object> ite = list.iterator();
 			while (ite.hasNext()) {
 				try {
 					ArticleInfo articleInfo = new ArticleInfo();
-					articleInfo.setSource(TECHWEB);
+					articleInfo.setSource(TSKR);
 					HtmlDivision division = (HtmlDivision) ite.next();
-					List<Object> titleHeading4List = (List<Object>) division
-							.getByXPath(".//div[@class='text']/a/h4");
-					if (!CollectionUtils.isEmpty(titleHeading4List)) {
-						HtmlHeading4 titleHeading4 = (HtmlHeading4) titleHeading4List
-								.get(0);
-						articleInfo.setTitle(titleHeading4.asText());
-
-					}
 					List<Object> titleAnchorList = (List<Object>) division
-							.getByXPath(".//div[@class='text']/a");
+							.getByXPath(".//div[@class='kr-shadow-wrapper']/div[@class='kr-shadow-content']/div[@class='article-item-info clearfloat']/a[@class='article-item-title ellipsis-2 weight-bold']");
 					if (!CollectionUtils.isEmpty(titleAnchorList)) {
 						HtmlAnchor titleAnchor = (HtmlAnchor) titleAnchorList
 								.get(0);
-						articleInfo
-								.setLinkUrl(titleAnchor.getAttribute("href"));
+						articleInfo.setLinkUrl(URL_STRING
+								+ titleAnchor.getAttribute("href"));
+						articleInfo.setTitle(titleAnchor.asText());
+					}
+					List<Object> descDivisionList = (List<Object>) division
+							.getByXPath(".//div[@class='kr-shadow-wrapper']/div[@class='kr-shadow-content']/div[@class='article-item-info clearfloat']/div[@class='article-item-description ellipsis-2']");
+					if (!CollectionUtils.isEmpty(descDivisionList)) {
+						HtmlDivision descDivision = (HtmlDivision) descDivisionList
+								.get(0);
+						articleInfo.setIntroduction(descDivision.asText());
 					}
 					List<Object> picImageList = (List<Object>) division
-							.getByXPath(".//div[@class='picture']/a/img");
+							.getByXPath(".//div[@class='kr-shadow-wrapper']/div[@class='kr-shadow-content']/a[@class='article-item-pic']/img");
 					if (!CollectionUtils.isEmpty(picImageList)) {
 						HtmlImage picImage = (HtmlImage) picImageList.get(0);
 						articleInfo.setPicUrl(picImage.getAttribute("src"));
 					} else {
 						articleInfo.setPicUrl(DEFAULT_PIC);
 					}
-					List<Object> descParagraphList = (List<Object>) division
-							.getByXPath(".//div[@class='text']/p");
-					if (!CollectionUtils.isEmpty(descParagraphList)) {
-						HtmlParagraph descParagraph = (HtmlParagraph) descParagraphList
-								.get(0);
-						articleInfo.setIntroduction(descParagraph.asText());
-					}
-					List<Object> dateSpanList = (List<Object>) division
-							.getByXPath(".//div[@class='text']/div[@class='time_tag']/span");
-					if (!CollectionUtils.isEmpty(dateSpanList)) {
-						HtmlSpan dateSpan = (HtmlSpan) dateSpanList.get(0);
-						articleInfo.setDate(dateSpan.asText());
-					}
-					List<Object> tagAnchorList = (List<Object>) division
-							.getByXPath(".//div[@class='text']/div[@class='time_tag']/span[@class='tag']/a");
-					if (!CollectionUtils.isEmpty(tagAnchorList)) {
-						HtmlAnchor tagAnchor = (HtmlAnchor) tagAnchorList
-								.get(0);
-						articleInfo.setTag(tagAnchor.asText());
-					}
 					saveArticle(articleInfo);
 				} catch (Exception e) {
-					logger.error("techwebCrawler is exception:" + e.toString());
+					logger.error("thirtySixKrCrawler is exception:"
+							+ e.toString());
 				}
 			}
 		} catch (Exception e) {
-			logger.error("techwebCrawler is exception:" + e.toString());
+			logger.error("thirtySixKrCrawler is exception:" + e.toString());
 		}
 		webClient.close();
 	}

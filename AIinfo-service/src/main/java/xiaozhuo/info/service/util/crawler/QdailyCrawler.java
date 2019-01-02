@@ -15,6 +15,7 @@ import xiaozhuo.info.service.ArticleInfoService;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import com.gargoylesoftware.htmlunit.html.HtmlDivision;
 import com.gargoylesoftware.htmlunit.html.HtmlHeading3;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -40,7 +41,7 @@ public class QdailyCrawler implements Runnable {
 	@Override
 	public void run() {
 		try {
-			String xPath = "//div[@class='packery-item article']/a";
+			String xPath = "//div[@class='packery-item article animated fadeIn']";
 			HtmlPage page = webClient.getPage(URL_STRING);
 			List<Object> list = (List<Object>) page.getByXPath(xPath);
 			Iterator<Object> ite = list.iterator();
@@ -48,11 +49,16 @@ public class QdailyCrawler implements Runnable {
 				try {
 					ArticleInfo articleInfo = new ArticleInfo();
 					articleInfo.setSource(QDAILY);
-					HtmlAnchor anchor = (HtmlAnchor) ite.next();
-					articleInfo.setLinkUrl("http://www.qdaily.com"
-							+ anchor.getAttribute("href"));
-					List<Object> picImageList = (List<Object>) anchor
-							.getByXPath(".//div[@class='grid-article-hd']/div[@class='pic imgcover']/img");
+					HtmlDivision division = (HtmlDivision) ite.next();
+					List<Object> titleAnchorList = division.getByXPath(".//a");
+					if (!CollectionUtils.isEmpty(titleAnchorList)) {
+						HtmlAnchor titleAnchor = (HtmlAnchor) titleAnchorList
+								.get(0);
+						articleInfo.setLinkUrl("http://www.qdaily.com"
+								+ titleAnchor.getAttribute("href"));
+					}
+					List<Object> picImageList = (List<Object>) division
+							.getByXPath(".//a/div[@class='grid-article-hd']/div[@class='pic imgcover']/img");
 					if (!CollectionUtils.isEmpty(picImageList)) {
 						HtmlImage picImage = (HtmlImage) picImageList.get(0);
 						articleInfo
@@ -60,15 +66,15 @@ public class QdailyCrawler implements Runnable {
 					} else {
 						articleInfo.setPicUrl(DEFAULT_PIC);
 					}
-					List<Object> h3TitleList = (List<Object>) anchor
-							.getByXPath(".//div[@class='grid-article-bd']/h3");
+					List<Object> h3TitleList = (List<Object>) division
+							.getByXPath(".//a/div[@class='grid-article-bd']/h3");
 					if (!CollectionUtils.isEmpty(h3TitleList)) {
 						HtmlHeading3 heading3 = (HtmlHeading3) h3TitleList
 								.get(0);
 						articleInfo.setTitle(heading3.asText());
 					}
-					List<Object> timeSpanList = (List<Object>) anchor
-							.getByXPath(".//div[@class='grid-article-ft clearfix']/span");
+					List<Object> timeSpanList = (List<Object>) division
+							.getByXPath(".//a/div[@class='grid-article-ft clearfix']/span");
 					if (!CollectionUtils.isEmpty(timeSpanList)) {
 						HtmlSpan timeSpan = (HtmlSpan) timeSpanList.get(0);
 						articleInfo.setDate(timeSpan.getAttribute(
