@@ -66,7 +66,7 @@ public class Crawler {
 			ThirtySixKrCrawler thritySixCrawler = new ThirtySixKrCrawler(
 					articleInfoService);
 			executor.execute(thritySixCrawler);
-			// techweb数据抓取
+			// 移动互联数据抓取
 			TechWebCrawler techWebCrawler = new TechWebCrawler(
 					articleInfoService);
 			executor.execute(techWebCrawler);

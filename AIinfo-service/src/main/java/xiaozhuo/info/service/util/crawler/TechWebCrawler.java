@@ -26,7 +26,7 @@ public class TechWebCrawler implements Runnable {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(TechWebCrawler.class);
-	private static final String TECHWEB = "techweb";
+	private static final String TECHWEB = "移动互联";
 	private static final String URL_STRING = "http://mi.techweb.com.cn";
 	private static final String DEFAULT_PIC = "http://chenzhuo.info/default.png";
 
@@ -66,6 +66,18 @@ public class TechWebCrawler implements Runnable {
 								.get(0);
 						articleInfo
 								.setLinkUrl(titleAnchor.getAttribute("href"));
+					}
+					List<Object> tagAnchorList = (List<Object>) division
+							.getByXPath(".//div[@class='text']/div[@class='time_tag']/span[@class='tags']/a");
+					if (!CollectionUtils.isEmpty(tagAnchorList)) {
+						Iterator<Object> tagIterator = tagAnchorList.iterator();
+						String tag = "";
+						while (tagIterator.hasNext()) {
+							HtmlAnchor tagAnchor = (HtmlAnchor) tagIterator
+									.next();
+							tag = tag + tagAnchor.asText() + " ";
+						}
+						articleInfo.setTag(tag);
 					}
 					List<Object> picImageList = (List<Object>) division
 							.getByXPath(".//div[@class='picture']/a/img");
