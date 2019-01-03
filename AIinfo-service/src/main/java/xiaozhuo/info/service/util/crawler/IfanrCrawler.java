@@ -79,7 +79,7 @@ public class IfanrCrawler implements Runnable {
 					if (!CollectionUtils.isEmpty(timeList)) {
 						HtmlTime timeSpan = (HtmlTime) timeList.get(0);
 						String time = timeSpan.getAttribute("data-timestamp");
-						Date nDate = new Date(Long.valueOf(time));
+						Date nDate = new Date(Long.valueOf(time) * 1000L);
 						SimpleDateFormat sdf = new SimpleDateFormat(
 								"yyyy-MM-dd HH:mm:ss");
 						articleInfo.setDate(sdf.format(nDate));
