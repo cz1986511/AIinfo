@@ -100,13 +100,6 @@ public class TechWebCrawler implements Runnable {
 						HtmlSpan dateSpan = (HtmlSpan) dateSpanList.get(0);
 						articleInfo.setDate(dateSpan.asText());
 					}
-					List<Object> tagAnchorList = (List<Object>) division
-							.getByXPath(".//div[@class='text']/div[@class='time_tag']/span[@class='tag']/a");
-					if (!CollectionUtils.isEmpty(tagAnchorList)) {
-						HtmlAnchor tagAnchor = (HtmlAnchor) tagAnchorList
-								.get(0);
-						articleInfo.setTag(tagAnchor.asText());
-					}
 					saveArticle(articleInfo);
 				} catch (Exception e) {
 					logger.error("techwebCrawler is exception:" + e.toString());
