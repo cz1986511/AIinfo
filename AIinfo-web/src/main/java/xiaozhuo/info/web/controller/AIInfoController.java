@@ -57,7 +57,7 @@ public class AIInfoController {
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("offset", 0);
-			map.put("limit", 100);
+			map.put("limit", 200);
 			List<ArticleInfo> resultList = (List<ArticleInfo>) RedisClient.get(
 					defaultKey, new TypeReference<List<ArticleInfo>>() {
 					});

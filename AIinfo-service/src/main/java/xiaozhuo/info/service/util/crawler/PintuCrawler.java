@@ -62,6 +62,25 @@ public class PintuCrawler implements Runnable {
 								"yyyy-MM-dd HH:mm:ss");
 						articleInfo.setDate(sdf.format(dateTime));
 					}
+					List<Object> authorList = division
+							.getByXPath(".//div[@class='article-text']/ul[@class='article-data']/li[@class='article-writer']");
+					if (!CollectionUtils.isEmpty(authorList)) {
+						HtmlListItem authorItem = (HtmlListItem) timeList
+								.get(0);
+						articleInfo.setAuthor(authorItem.asText());
+					}
+					List<Object> tagAnchorList = division
+							.getByXPath(".//div[@class='article-text']/ul[@class='article-data']/li[@class='article-lable']/a");
+					if (!CollectionUtils.isEmpty(tagAnchorList)) {
+						String tag = "";
+						Iterator<Object> tagIterator = tagAnchorList.iterator();
+						while (tagIterator.hasNext()) {
+							HtmlAnchor tagAnchor = (HtmlAnchor) tagIterator
+									.next();
+							tag = tag + tagAnchor.asText() + " ";
+						}
+						articleInfo.setTag(tag);
+					}
 					List<Object> titleAnchorList = (List<Object>) division
 							.getByXPath(".//div[@class='article-text']/h2[@class='article-title']/a");
 					if (!CollectionUtils.isEmpty(titleAnchorList)) {

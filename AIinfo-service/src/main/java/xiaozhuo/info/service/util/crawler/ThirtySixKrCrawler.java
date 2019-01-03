@@ -1,5 +1,7 @@
 package xiaozhuo.info.service.util.crawler;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -18,13 +20,14 @@ import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlSpan;
 
 public class ThirtySixKrCrawler implements Runnable {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(ThirtySixKrCrawler.class);
 	private static final String TSKR = "36氪";
-	private static final String URL_STRING = "https://www.36kr.com/";
+	private static final String URL_STRING = "https://www.36kr.com";
 	private static final String DEFAULT_PIC = "http://chenzhuo.info/default.png";
 
 	private WebClient webClient;
@@ -56,6 +59,45 @@ public class ThirtySixKrCrawler implements Runnable {
 						articleInfo.setLinkUrl(URL_STRING
 								+ titleAnchor.getAttribute("href"));
 						articleInfo.setTitle(titleAnchor.asText());
+					}
+					List<Object> tagAnchorList = (List<Object>) division
+							.getByXPath(".//div[@class='kr-shadow-wrapper']/div[@class='kr-shadow-content']/div[@class='article-item-info clearfloat']/a[@class='article-item-channel']");
+					if (!CollectionUtils.isEmpty(tagAnchorList)) {
+						HtmlAnchor tagAnchor = (HtmlAnchor) tagAnchorList
+								.get(0);
+						articleInfo.setTag(tagAnchor.asText());
+					}
+					List<Object> authorAnchorList = (List<Object>) division
+							.getByXPath(".//div[@class='kr-shadow-wrapper']/div[@class='kr-shadow-content']/div[@class='article-item-info clearfloat']/div[@class='kr-flow-bar']/a[@class='kr-flow-bar-author']");
+					if (!CollectionUtils.isEmpty(authorAnchorList)) {
+						HtmlAnchor authorAnchor = (HtmlAnchor) authorAnchorList
+								.get(0);
+						articleInfo.setAuthor(authorAnchor.asText());
+					}
+					List<Object> timeSpanList = (List<Object>) division
+							.getByXPath(".//div[@class='kr-shadow-wrapper']/div[@class='kr-shadow-content']/div[@class='article-item-info clearfloat']/div[@class='kr-flow-bar']/span[@class='kr-flow-bar-time']");
+					if (!CollectionUtils.isEmpty(timeSpanList)) {
+						HtmlSpan timeSpan = (HtmlSpan) timeSpanList.get(0);
+						String timeString = timeSpan.asText();
+						Long tLong = 0L;
+						Date dateTime = new Date();
+						if (timeString.contains("分钟前")) {
+							String[] timeArray = timeString.split("分");
+							int para = Integer.valueOf(timeArray[0]);
+							tLong = dateTime.getTime() - (para * 60000);
+						} else if (timeString.contains("小时前")) {
+							String[] timeArray = timeString.split("小");
+							int para = Integer.valueOf(timeArray[0]);
+							tLong = dateTime.getTime() - (para * 60 * 60000);
+						}
+						if (tLong > 0L) {
+							Date ndateTime = new Date(tLong);
+							SimpleDateFormat sdf = new SimpleDateFormat(
+									"yyyy-MM-dd HH:mm:ss");
+							articleInfo.setDate(sdf.format(ndateTime));
+						} else {
+							articleInfo.setDate(timeString);
+						}
 					}
 					List<Object> descDivisionList = (List<Object>) division
 							.getByXPath(".//div[@class='kr-shadow-wrapper']/div[@class='kr-shadow-content']/div[@class='article-item-info clearfloat']/div[@class='article-item-description ellipsis-2']");

@@ -19,6 +19,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlDivision;
 import com.gargoylesoftware.htmlunit.html.HtmlHeading3;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlParagraph;
 import com.gargoylesoftware.htmlunit.html.HtmlSpan;
 
 public class QdailyCrawler implements Runnable {
@@ -72,6 +73,13 @@ public class QdailyCrawler implements Runnable {
 						HtmlHeading3 heading3 = (HtmlHeading3) h3TitleList
 								.get(0);
 						articleInfo.setTitle(heading3.asText());
+					}
+					List<Object> tagParagraphList = (List<Object>) division
+							.getByXPath(".//a[@class='com-grid-article']/div[@class='grid-article-hd']/p[@class='category']");
+					if (!CollectionUtils.isEmpty(tagParagraphList)) {
+						HtmlParagraph tagParagraph = (HtmlParagraph) tagParagraphList
+								.get(0);
+						articleInfo.setTag(tagParagraph.asText());
 					}
 					List<Object> timeSpanList = (List<Object>) division
 							.getByXPath(".//a/div[@class='grid-article-ft clearfix']/span");
