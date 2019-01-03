@@ -17,12 +17,12 @@ import xiaozhuo.info.service.ArticleInfoService;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import com.gargoylesoftware.htmlunit.html.HtmlArticle;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
 import com.gargoylesoftware.htmlunit.html.HtmlHeading3;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlParagraph;
-import com.gargoylesoftware.htmlunit.html.HtmlUnknownElement;
 
 public class GeekParkCrawler implements Runnable {
 
@@ -52,8 +52,7 @@ public class GeekParkCrawler implements Runnable {
 				try {
 					ArticleInfo articleInfo = new ArticleInfo();
 					articleInfo.setSource(GEEKPARK);
-					HtmlUnknownElement listItem = (HtmlUnknownElement) ite
-							.next();
+					HtmlArticle listItem = (HtmlArticle) ite.next();
 					List<Object> titleHeading3List = (List<Object>) listItem
 							.getByXPath(".//div[@class='article-info']/a/h3[@class='multiline-text-overflow']");
 					if (!CollectionUtils.isEmpty(titleHeading3List)) {

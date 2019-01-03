@@ -1,6 +1,7 @@
 package xiaozhuo.info.service.util.crawler;
 
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -19,7 +20,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlSpan;
-import com.gargoylesoftware.htmlunit.html.HtmlUnknownElement;
+import com.gargoylesoftware.htmlunit.html.HtmlTime;
 
 public class IfanrCrawler implements Runnable {
 
@@ -41,7 +42,6 @@ public class IfanrCrawler implements Runnable {
 	@Override
 	public void run() {
 		try {
-			Calendar calendar = Calendar.getInstance();
 			String xPath = "//div[@class='article-item article-item--list ']";
 			HtmlPage page = webClient.getPage(URL_STRING);
 			List<Object> list = (List<Object>) page.getByXPath(xPath);
@@ -74,29 +74,15 @@ public class IfanrCrawler implements Runnable {
 								.get(0);
 						articleInfo.setIntroduction(descDivision.asText());
 					}
-					List<Object> timeSpanList = (List<Object>) division
+					List<Object> timeList = (List<Object>) division
 							.getByXPath(".//div[@class='article-info js-transform']/div[@class='article-meta']/time");
-					if (!CollectionUtils.isEmpty(timeSpanList)) {
-						HtmlUnknownElement timeSpan = (HtmlUnknownElement) timeSpanList
-								.get(0);
-						String time = timeSpan.asText();
-						String date = "";
-						String day = (calendar.get(Calendar.MONTH) + 1) > 9 ? ("" + (calendar
-								.get(Calendar.MONTH) + 1)) : ("0" + (calendar
-								.get(Calendar.MONTH) + 1));
-						if (time.contains("昨天")) {
-							date = "" + calendar.get(Calendar.YEAR) + "-" + day
-									+ "-"
-									+ (calendar.get(Calendar.DAY_OF_MONTH) - 1);
-						} else if (time.contains("前天")) {
-							date = "" + calendar.get(Calendar.YEAR) + "-" + day
-									+ "-"
-									+ (calendar.get(Calendar.DAY_OF_MONTH) - 2);
-						} else {
-							date = "" + calendar.get(Calendar.YEAR) + "-" + day
-									+ "-" + calendar.get(Calendar.DAY_OF_MONTH);
-						}
-						articleInfo.setDate(date);
+					if (!CollectionUtils.isEmpty(timeList)) {
+						HtmlTime timeSpan = (HtmlTime) timeList.get(0);
+						String time = timeSpan.getAttribute("data-timestamp");
+						Date nDate = new Date(Long.valueOf(time));
+						SimpleDateFormat sdf = new SimpleDateFormat(
+								"yyyy-MM-dd HH:mm:ss");
+						articleInfo.setDate(sdf.format(nDate));
 					}
 					List<Object> picAnchorList = (List<Object>) division
 							.getByXPath(".//div[@class='article-image cover-image']/a[@class='article-link cover-block']");
