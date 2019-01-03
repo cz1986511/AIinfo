@@ -68,14 +68,19 @@ public class GuoKrCrawler implements Runnable {
 					}
 					List<Object> authorSpanList = (List<Object>) division
 							.getByXPath(".//div[@class='article-info']/span[@class='article-author-os']");
+					if (CollectionUtils.isEmpty(authorSpanList)) {
+						authorSpanList = (List<Object>) division
+								.getByXPath(".//div[@class='article-info']/span[@class='article-author']");
+					}
 					if (!CollectionUtils.isEmpty(authorSpanList)) {
 						HtmlSpan authorSpan = (HtmlSpan) authorSpanList.get(0);
 						articleInfo.setAuthor(authorSpan.asText());
 					}
-					List<Object> tagSpanList = (List<Object>) division
+					List<Object> tagAnchorList = (List<Object>) division
 							.getByXPath(".//a[@class='label label-common']");
-					if (!CollectionUtils.isEmpty(tagSpanList)) {
-						HtmlAnchor tagAnchor = (HtmlAnchor) tagSpanList.get(0);
+					if (!CollectionUtils.isEmpty(tagAnchorList)) {
+						HtmlAnchor tagAnchor = (HtmlAnchor) tagAnchorList
+								.get(0);
 						articleInfo.setTag(tagAnchor.asText());
 					}
 					List<Object> picImageList = (List<Object>) division

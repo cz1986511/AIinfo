@@ -65,7 +65,7 @@ public class PintuCrawler implements Runnable {
 					List<Object> authorList = division
 							.getByXPath(".//div[@class='article-text']/ul[@class='article-data']/li[@class='article-writer']");
 					if (!CollectionUtils.isEmpty(authorList)) {
-						HtmlListItem authorItem = (HtmlListItem) timeList
+						HtmlListItem authorItem = (HtmlListItem) authorList
 								.get(0);
 						articleInfo.setAuthor(authorItem.asText());
 					}
