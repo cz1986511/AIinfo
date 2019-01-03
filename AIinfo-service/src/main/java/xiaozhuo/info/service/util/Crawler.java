@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import xiaozhuo.info.service.ArticleInfoService;
+import xiaozhuo.info.service.util.crawler.GeekParkCrawler;
 import xiaozhuo.info.service.util.crawler.GuoKrCrawler;
 import xiaozhuo.info.service.util.crawler.HuxiuCrawler;
 import xiaozhuo.info.service.util.crawler.IfanrCrawler;
@@ -57,6 +58,10 @@ public class Crawler {
 			// 果壳数据抓取
 			GuoKrCrawler guoKrCrawler = new GuoKrCrawler(articleInfoService);
 			executor.execute(guoKrCrawler);
+			// 极客公园数据抓取
+			GeekParkCrawler geekParkCrawler = new GeekParkCrawler(
+					articleInfoService);
+			executor.execute(geekParkCrawler);
 			// 36氪数据抓取
 			ThirtySixKrCrawler thritySixCrawler = new ThirtySixKrCrawler(
 					articleInfoService);

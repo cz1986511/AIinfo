@@ -19,7 +19,6 @@ import com.gargoylesoftware.htmlunit.html.HtmlDivision;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlSpan;
-import com.gargoylesoftware.htmlunit.html.HtmlUnknownElement;
 
 public class IheimaCrawler implements Runnable {
 
@@ -41,7 +40,7 @@ public class IheimaCrawler implements Runnable {
 	@Override
 	public void run() {
 		try {
-			String xPath = "//article[@class='item-wrap cf']";
+			String xPath = "//div[@class='item-wrap clearfix']";
 			HtmlPage page = webClient.getPage(URL_STRING);
 			List<Object> list = (List<Object>) page.getByXPath(xPath);
 			Iterator<Object> ite = list.iterator();
@@ -49,38 +48,37 @@ public class IheimaCrawler implements Runnable {
 				try {
 					ArticleInfo articleInfo = new ArticleInfo();
 					articleInfo.setSource(IHEIMA);
-					HtmlUnknownElement listItem = (HtmlUnknownElement) ite
-							.next();
+					HtmlDivision listItem = (HtmlDivision) ite.next();
 					List<Object> titleAnchorList = (List<Object>) listItem
-							.getByXPath(".//div[@class='desc']/div[@class='title-wrap']/a[@class='title']");
+							.getByXPath(".//div[@class='desc distable-cell']/a[@class='title']");
 					if (!CollectionUtils.isEmpty(titleAnchorList)) {
 						HtmlAnchor titleAnchor = (HtmlAnchor) titleAnchorList
 								.get(0);
 						articleInfo.setTitle(titleAnchor.asText());
-						articleInfo
-								.setLinkUrl(titleAnchor.getAttribute("href"));
+						articleInfo.setLinkUrl(URL_STRING
+								+ titleAnchor.getAttribute("href"));
 					}
 					List<Object> descDivisionList = (List<Object>) listItem
-							.getByXPath(".//div[@class='desc']/div[@class='brief']");
+							.getByXPath(".//div[@class='desc distable-cell']/div[@class='brief']");
 					if (!CollectionUtils.isEmpty(descDivisionList)) {
 						HtmlDivision descDivision = (HtmlDivision) descDivisionList
 								.get(0);
 						articleInfo.setIntroduction(descDivision.asText());
 					}
 					List<Object> dateSpanList = (List<Object>) listItem
-							.getByXPath(".//div[@class='desc']/div[@class='author']/span[@class='time-wrap fl']/span[@class='timeago']");
+							.getByXPath(".//div[@class='desc distable-cell']/div[@class='author']/span[@class='timewarp']/span[@class='time']");
 					if (!CollectionUtils.isEmpty(dateSpanList)) {
 						HtmlSpan dateSpan = (HtmlSpan) dateSpanList.get(0);
 						articleInfo.setDate(dateSpan.asText());
 					}
 					List<Object> authorSpanList = (List<Object>) listItem
-							.getByXPath(".//div[@class='desc']/div[@class='author']/a[@class='fr']/span[@class='name']");
+							.getByXPath(".//div[@class='desc distable-cell']/div[@class='author']/a/span[@class='name']");
 					if (!CollectionUtils.isEmpty(authorSpanList)) {
 						HtmlSpan authorSpan = (HtmlSpan) authorSpanList.get(0);
 						articleInfo.setAuthor(authorSpan.asText());
 					}
 					List<Object> picImageList = (List<Object>) listItem
-							.getByXPath(".//div[@class='desc']/div[@class='brief hasimg']/a[@class='cf']/img");
+							.getByXPath(".//a[@class='pic distable-cell']/img");
 					if (!CollectionUtils.isEmpty(picImageList)) {
 						HtmlImage picImage = (HtmlImage) picImageList.get(0);
 						articleInfo.setPicUrl(picImage.getAttribute("src"));

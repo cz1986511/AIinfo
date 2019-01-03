@@ -18,23 +18,24 @@ import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
+import com.gargoylesoftware.htmlunit.html.HtmlHeading3;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
-import com.gargoylesoftware.htmlunit.html.HtmlListItem;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlParagraph;
+import com.gargoylesoftware.htmlunit.html.HtmlUnknownElement;
 
-public class PintuCrawler implements Runnable {
+public class GeekParkCrawler implements Runnable {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(PintuCrawler.class);
-	private static final String PINTU = "品途";
-	private static final String URL_STRING = "https://www.pintu360.com";
+			.getLogger(GeekParkCrawler.class);
+	private static final String GEEKPARK = "极客公园";
+	private static final String URL_STRING = "http://www.geekpark.net/";
 	private static final String DEFAULT_PIC = "http://chenzhuo.info/default.png";
 
 	private WebClient webClient;
 	private ArticleInfoService articleInfoManager;
 
-	public PintuCrawler(ArticleInfoService articleInfoManager) {
+	public GeekParkCrawler(ArticleInfoService articleInfoManager) {
 		super();
 		this.webClient = initWebClient();
 		this.articleInfoManager = articleInfoManager;
@@ -43,43 +44,67 @@ public class PintuCrawler implements Runnable {
 	@Override
 	public void run() {
 		try {
-			String xPath = "//div[@class='article-list']";
+			String xPath = "//article[@class='article-item']";
 			HtmlPage page = webClient.getPage(URL_STRING);
 			List<Object> list = (List<Object>) page.getByXPath(xPath);
 			Iterator<Object> ite = list.iterator();
 			while (ite.hasNext()) {
 				try {
 					ArticleInfo articleInfo = new ArticleInfo();
-					articleInfo.setSource(PINTU);
-					HtmlDivision division = (HtmlDivision) ite.next();
-					List<Object> timeList = division
-							.getByXPath(".//div[@class='article-text']/ul[@class='article-data']/li[@class='article-time']");
-					if (!CollectionUtils.isEmpty(timeList)) {
-						HtmlListItem timeLabel = (HtmlListItem) timeList.get(0);
-						Date dateTime = new Date(Long.valueOf(timeLabel
-								.getAttribute("createtime")));
-						SimpleDateFormat sdf = new SimpleDateFormat(
-								"yyyy-MM-dd HH:mm:ss");
-						articleInfo.setDate(sdf.format(dateTime));
+					articleInfo.setSource(GEEKPARK);
+					HtmlUnknownElement listItem = (HtmlUnknownElement) ite
+							.next();
+					List<Object> titleHeading3List = (List<Object>) listItem
+							.getByXPath(".//div[@class='article-info']/a/h3[@class='multiline-text-overflow']");
+					if (!CollectionUtils.isEmpty(titleHeading3List)) {
+						HtmlHeading3 titleHeading3 = (HtmlHeading3) titleHeading3List
+								.get(0);
+						articleInfo.setTitle(titleHeading3.asText());
 					}
-					List<Object> titleAnchorList = (List<Object>) division
-							.getByXPath(".//div[@class='article-text']/h2[@class='article-title']/a");
-					if (!CollectionUtils.isEmpty(titleAnchorList)) {
-						HtmlAnchor titleAnchor = (HtmlAnchor) titleAnchorList
+					List<Object> linkAnchorList = (List<Object>) listItem
+							.getByXPath(".//a[@class='img-cover-wrap']");
+					if (!CollectionUtils.isEmpty(linkAnchorList)) {
+						HtmlAnchor linkAnchor = (HtmlAnchor) linkAnchorList
 								.get(0);
 						articleInfo.setLinkUrl(URL_STRING
-								+ titleAnchor.getAttribute("href"));
-						articleInfo.setTitle(titleAnchor.asText());
+								+ linkAnchor.getAttribute("href"));
 					}
-					List<Object> descParagraphList = (List<Object>) division
-							.getByXPath(".//div[@class='article-text']/p[@class='article-content']");
+					List<Object> descParagraphList = (List<Object>) listItem
+							.getByXPath(".//div[@class='article-info']/p[@class='multiline-text-overflow']");
 					if (!CollectionUtils.isEmpty(descParagraphList)) {
 						HtmlParagraph descParagraph = (HtmlParagraph) descParagraphList
 								.get(0);
 						articleInfo.setIntroduction(descParagraph.asText());
 					}
-					List<Object> picImageList = (List<Object>) division
-							.getByXPath(".//div[@class='article-photo']/a/img");
+					List<Object> dateDivisionList = (List<Object>) listItem
+							.getByXPath(".//div[@class='article-info']/div[@class='article-time']");
+					if (!CollectionUtils.isEmpty(dateDivisionList)) {
+						HtmlDivision dateSpan = (HtmlDivision) dateDivisionList
+								.get(0);
+						String timeString = dateSpan.asText();
+						String[] timeArray = timeString.split(" ");
+						if (timeArray.length > 1) {
+							Long tLong = 0L;
+							int param = Integer.valueOf(timeArray[0]);
+							Date dateTime = new Date();
+							tLong = dateTime.getTime() - param * 60 * 60000;
+							Date ndateTime = new Date(tLong);
+							SimpleDateFormat sdf = new SimpleDateFormat(
+									"yyyy-MM-dd HH:mm:ss");
+							articleInfo.setDate(sdf.format(ndateTime));
+						} else {
+							articleInfo.setDate(timeString);
+						}
+					}
+					List<Object> authorAnchorList = (List<Object>) listItem
+							.getByXPath(".//div[@class='article-meta hidden-xs']/a[@class='article-author']");
+					if (!CollectionUtils.isEmpty(authorAnchorList)) {
+						HtmlAnchor authorAnchor = (HtmlAnchor) authorAnchorList
+								.get(0);
+						articleInfo.setAuthor(authorAnchor.asText());
+					}
+					List<Object> picImageList = (List<Object>) listItem
+							.getByXPath(".//a[@class='img-cover-wrap']/div[@class='img-cover']/img");
 					if (!CollectionUtils.isEmpty(picImageList)) {
 						HtmlImage picImage = (HtmlImage) picImageList.get(0);
 						articleInfo.setPicUrl(picImage.getAttribute("src"));
@@ -88,11 +113,11 @@ public class PintuCrawler implements Runnable {
 					}
 					saveArticle(articleInfo);
 				} catch (Exception e) {
-					logger.error("pintuCrawler is exception:" + e.toString());
+					logger.error("GeekParkCrawler is exception:" + e.toString());
 				}
 			}
 		} catch (Exception e) {
-			logger.error("pintuCrawler is exception:" + e.toString());
+			logger.error("GeekParkCrawler is exception:" + e.toString());
 		}
 		webClient.close();
 	}
