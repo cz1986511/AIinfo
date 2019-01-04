@@ -1,7 +1,6 @@
 package xiaozhuo.info.web.controller;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -9,11 +8,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +22,11 @@ import xiaozhuo.info.service.ArticleInfoService;
 import xiaozhuo.info.service.util.Crawler;
 import xiaozhuo.info.service.util.OilInfoUtil;
 import xiaozhuo.info.service.util.RedisClient;
+import xiaozhuo.info.service.util.WeatherUtil;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 
-@SuppressWarnings("deprecation")
 @Controller
 @RequestMapping("/api")
 public class AIInfoController {
@@ -47,6 +39,9 @@ public class AIInfoController {
 	private Crawler crawler;
 	@Autowired
 	private OilInfoUtil oilInfoUtil;
+	@Autowired
+	private WeatherUtil weatherUtil;
+	private static String DEFAULTKEY = "tl9ml0o784jsrc4h";
 
 	@RequestMapping(value = "/art/list", method = RequestMethod.POST)
 	@ResponseBody
@@ -92,21 +87,13 @@ public class AIInfoController {
 					new TypeReference<List<JSONObject>>() {
 					});
 			if (!CollectionUtils.isEmpty(list)) {
+				result.put("status", 0);
 				result.put("data", list);
 			} else {
-				list = new ArrayList<JSONObject>();
-				String citys = "chengdu";
-				String[] cityStrings = citys.split(",");
-				for (int i = 0; i < cityStrings.length; i++) {
-					JSONObject jsonObject = getWeatherNext(cityStrings[i]);
-					jsonObject.put("now", getWeatherNow(cityStrings[i]));
-					jsonObject.put("suggestion", getSuggestion(cityStrings[i]));
-					list.add(jsonObject);
-				}
-				result.put("data", list);
-				RedisClient.set(weather, list, 3600);
+				weatherUtil.getTodayWeatherInfo();
+				result.put("status", 1);
+				result.put("msg", "程序小哥跟老板娘跑了");
 			}
-			result.put("status", 0);
 		} catch (Exception e) {
 			result.put("status", 1);
 			result.put("msg", "程序小哥跟老板娘跑了");
@@ -127,12 +114,12 @@ public class AIInfoController {
 					new TypeReference<JSONObject>() {
 					});
 			if (!CollectionUtils.isEmpty(oilJson)) {
+				result.put("status", 0);
 				result.put("data", oilJson);
 			} else {
 				result.put("status", 1);
 				result.put("msg", "程序小哥跟老板娘跑了");
 			}
-			result.put("status", 0);
 		} catch (Exception e) {
 			result.put("status", 1);
 			result.put("msg", "程序小哥跟老板娘跑了");
@@ -144,96 +131,26 @@ public class AIInfoController {
 	@RequestMapping(value = "/data", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String makeData(HttpServletRequest request) {
+		String token = (String) request.getAttribute("token");
 		Map<String, Object> result = new HashMap<String, Object>();
 		JSONObject json = new JSONObject(result);
-		try {
-			crawler.crawlerInfo();
-			oilInfoUtil.getTodayOilInfo();
-			result.put("status", 0);
-		} catch (Exception e) {
+		if (DEFAULTKEY.equals(token)) {
+			try {
+				crawler.crawlerInfo();
+				oilInfoUtil.getTodayOilInfo();
+				weatherUtil.getTodayWeatherInfo();
+				result.put("status", 0);
+				result.put("msg", "数据更新成功");
+			} catch (Exception e) {
+				result.put("status", 1);
+				result.put("msg", "程序小哥跟老板娘跑了");
+				logger.error("makeData is exception:" + e.toString());
+			}
+		} else {
 			result.put("status", 1);
-			result.put("msg", "程序小哥跟老板娘跑了");
-			logger.error("makeData is exception:" + e.toString());
+			result.put("msg", "程序小哥跟老板娘跑了!");
 		}
 		return json.toJSONString();
-	}
-
-	@SuppressWarnings({ "resource" })
-	private JSONObject getSuggestion(String city) {
-		HttpClient httpClient = new DefaultHttpClient();
-		try {
-			String restUrl = "https://api.seniverse.com/v3/life/suggestion.json?key=tl9ml0o784jsrc4h&language=zh-Hans&location=";
-			HttpGet getMethod = new HttpGet(restUrl + city);
-			HttpResponse response = httpClient.execute(getMethod);
-			if (null != response) {
-				int statusCode = response.getStatusLine().getStatusCode();
-				if (statusCode < 300) {
-					String responseBody = EntityUtils.toString(
-							response.getEntity(), "UTF-8");
-					JSONArray array = (JSONArray) JSON
-							.parseObject(responseBody).get("results");
-					return array.getJSONObject(0).getJSONObject("suggestion");
-				}
-			}
-		} catch (Exception e) {
-			logger.error("getSuggestion is exception:" + e.toString());
-		} finally {
-			httpClient.getConnectionManager().shutdown();
-		}
-		logger.error("getSuggestion is null");
-		return null;
-	}
-
-	@SuppressWarnings({ "resource" })
-	private JSONObject getWeatherNow(String city) {
-		HttpClient httpClient = new DefaultHttpClient();
-		try {
-			String restUrl = "https://api.seniverse.com/v3/weather/now.json?key=tl9ml0o784jsrc4h&language=zh-Hans&unit=c&location=";
-			HttpGet getMethod = new HttpGet(restUrl + city);
-			HttpResponse response = httpClient.execute(getMethod);
-			if (null != response) {
-				int statusCode = response.getStatusLine().getStatusCode();
-				if (statusCode < 300) {
-					String responseBody = EntityUtils.toString(
-							response.getEntity(), "UTF-8");
-					JSONArray array = (JSONArray) JSON
-							.parseObject(responseBody).get("results");
-					return array.getJSONObject(0).getJSONObject("now");
-				}
-			}
-		} catch (Exception e) {
-			logger.error("getSuggestion is exception:" + e.toString());
-		} finally {
-			httpClient.getConnectionManager().shutdown();
-		}
-		logger.error("getSuggestion is null");
-		return null;
-	}
-
-	@SuppressWarnings({ "resource" })
-	private JSONObject getWeatherNext(String city) {
-		HttpClient httpClient = new DefaultHttpClient();
-		try {
-			String restUrl = "https://api.seniverse.com/v3/weather/daily.json?key=tl9ml0o784jsrc4h&language=zh-Hans&unit=c&start=0&days=5&location=";
-			HttpGet getMethod = new HttpGet(restUrl + city);
-			HttpResponse response = httpClient.execute(getMethod);
-			if (null != response) {
-				int statusCode = response.getStatusLine().getStatusCode();
-				if (statusCode < 300) {
-					String responseBody = EntityUtils.toString(
-							response.getEntity(), "UTF-8");
-					JSONArray array = (JSONArray) JSON
-							.parseObject(responseBody).get("results");
-					return array.getJSONObject(0);
-				}
-			}
-		} catch (Exception e) {
-			logger.error("getSuggestion is exception:" + e.toString());
-		} finally {
-			httpClient.getConnectionManager().shutdown();
-		}
-		logger.error("getSuggestion is null");
-		return null;
 	}
 
 	public static void main(String[] args) {

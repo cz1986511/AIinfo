@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xiaozhuo.info.persist.mapper.WeatherInfoMapper" >
+  <resultMap id="BaseResultMap" type="xiaozhuo.info.persist.base.WeatherInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="date_time" property="dateTime" jdbcType="VARCHAR" />
+    <result column="high_temperature" property="highTemperature" jdbcType="INTEGER" />
+    <result column="low_temperature" property="lowTemperature" jdbcType="INTEGER" />
+    <result column="text_day" property="textDay" jdbcType="VARCHAR" />
+    <result column="code_day" property="codeDay" jdbcType="VARCHAR" />
+    <result column="text_night" property="textNight" jdbcType="VARCHAR" />
+    <result column="code_night" property="codeNight" jdbcType="VARCHAR" />
+    <result column="wind_direction" property="windDirection" jdbcType="VARCHAR" />
+    <result column="suggestion" property="suggestion" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, city_name, date_time, high_temperature, low_temperature, text_day, code_day, 
+    text_night, code_night, wind_direction, suggestion, status, gmt_create, gmt_modified
+  </sql>
+  
+  <sql id="selectByParamsWhere">
+    <where>
+	  <if test="dateTime != null">
+	    date_time = #{dateTime,jdbcType=VARCHAR} and
+	  </if>
+      <if test="cityName != null">
+        city_name = #{cityName,jdbcType=VARCHAR} and
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR} and
+      </if>
+        1 = 1
+    </where>
+  </sql>
+  
+  <select id="selectWeathersByParams" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from aiinfo_weather_info
+    <include refid="selectByParamsWhere" />
+      order by gmt_create desc
+    <if test=" offset != null and limit != null">
+	  limit ${offset},${limit}
+	</if>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from aiinfo_weather_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from aiinfo_weather_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="xiaozhuo.info.persist.base.WeatherInfo" >
+    insert into aiinfo_weather_info (id, city_name, date_time, 
+      high_temperature, low_temperature, text_day, 
+      code_day, text_night, code_night, 
+      wind_direction, suggestion, status, 
+      gmt_create, gmt_modified)
+    values (#{id,jdbcType=BIGINT}, #{cityName,jdbcType=VARCHAR}, #{dateTime,jdbcType=VARCHAR}, 
+      #{highTemperature,jdbcType=INTEGER}, #{lowTemperature,jdbcType=INTEGER}, #{textDay,jdbcType=VARCHAR}, 
+      #{codeDay,jdbcType=VARCHAR}, #{textNight,jdbcType=VARCHAR}, #{codeNight,jdbcType=VARCHAR}, 
+      #{windDirection,jdbcType=VARCHAR}, #{suggestion,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      NOW(), NOW())
+  </insert>
+  <insert id="insertSelective" parameterType="xiaozhuo.info.persist.base.WeatherInfo" >
+    insert into aiinfo_weather_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="cityName != null" >
+        city_name,
+      </if>
+      <if test="dateTime != null" >
+        date_time,
+      </if>
+      <if test="highTemperature != null" >
+        high_temperature,
+      </if>
+      <if test="lowTemperature != null" >
+        low_temperature,
+      </if>
+      <if test="textDay != null" >
+        text_day,
+      </if>
+      <if test="codeDay != null" >
+        code_day,
+      </if>
+      <if test="textNight != null" >
+        text_night,
+      </if>
+      <if test="codeNight != null" >
+        code_night,
+      </if>
+      <if test="windDirection != null" >
+        wind_direction,
+      </if>
+      <if test="suggestion != null" >
+        suggestion,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+        gmt_create,
+        gmt_modified
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="cityName != null" >
+        #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="dateTime != null" >
+        #{dateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="highTemperature != null" >
+        #{highTemperature,jdbcType=INTEGER},
+      </if>
+      <if test="lowTemperature != null" >
+        #{lowTemperature,jdbcType=INTEGER},
+      </if>
+      <if test="textDay != null" >
+        #{textDay,jdbcType=VARCHAR},
+      </if>
+      <if test="codeDay != null" >
+        #{codeDay,jdbcType=VARCHAR},
+      </if>
+      <if test="textNight != null" >
+        #{textNight,jdbcType=VARCHAR},
+      </if>
+      <if test="codeNight != null" >
+        #{codeNight,jdbcType=VARCHAR},
+      </if>
+      <if test="windDirection != null" >
+        #{windDirection,jdbcType=VARCHAR},
+      </if>
+      <if test="suggestion != null" >
+        #{suggestion,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+        NOW(),
+        NOW()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="xiaozhuo.info.persist.base.WeatherInfo" >
+    update aiinfo_weather_info
+    <set >
+      <if test="cityName != null" >
+        city_name = #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="dateTime != null" >
+        date_time = #{dateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="highTemperature != null" >
+        high_temperature = #{highTemperature,jdbcType=INTEGER},
+      </if>
+      <if test="lowTemperature != null" >
+        low_temperature = #{lowTemperature,jdbcType=INTEGER},
+      </if>
+      <if test="textDay != null" >
+        text_day = #{textDay,jdbcType=VARCHAR},
+      </if>
+      <if test="codeDay != null" >
+        code_day = #{codeDay,jdbcType=VARCHAR},
+      </if>
+      <if test="textNight != null" >
+        text_night = #{textNight,jdbcType=VARCHAR},
+      </if>
+      <if test="codeNight != null" >
+        code_night = #{codeNight,jdbcType=VARCHAR},
+      </if>
+      <if test="windDirection != null" >
+        wind_direction = #{windDirection,jdbcType=VARCHAR},
+      </if>
+      <if test="suggestion != null" >
+        suggestion = #{suggestion,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+        gmt_modified = NOW()
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="xiaozhuo.info.persist.base.WeatherInfo" >
+    update aiinfo_weather_info
+    set city_name = #{cityName,jdbcType=VARCHAR},
+      date_time = #{dateTime,jdbcType=VARCHAR},
+      high_temperature = #{highTemperature,jdbcType=INTEGER},
+      low_temperature = #{lowTemperature,jdbcType=INTEGER},
+      text_day = #{textDay,jdbcType=VARCHAR},
+      code_day = #{codeDay,jdbcType=VARCHAR},
+      text_night = #{textNight,jdbcType=VARCHAR},
+      code_night = #{codeNight,jdbcType=VARCHAR},
+      wind_direction = #{windDirection,jdbcType=VARCHAR},
+      suggestion = #{suggestion,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      gmt_modified = NOW()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
