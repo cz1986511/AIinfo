@@ -44,9 +44,9 @@ public class WeatherUtil {
 	private static String DEFAULTCITY = "chengdu";
 
 	@Scheduled(cron = "0 5 0 * * ?")
-	public void getTodayWeatherInfo() {
+	public List<JSONObject> getTodayWeatherInfo() {
+		List<JSONObject> list = new ArrayList<JSONObject>();
 		try {
-			List<JSONObject> list = new ArrayList<JSONObject>();
 			JSONObject jsonObject = getWeatherNext(DEFAULTCITY);
 			jsonObject.put("now", getWeatherNow(DEFAULTCITY));
 			jsonObject.put("suggestion", getSuggestion(DEFAULTCITY));
@@ -56,6 +56,7 @@ public class WeatherUtil {
 		} catch (Exception e) {
 			log.error("getTodayWeatherInfo is exception:" + e.toString());
 		}
+		return list;
 	}
 
 	private void saveWeatherInfo(JSONObject weatherInfoJsonObject) {

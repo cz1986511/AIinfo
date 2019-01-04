@@ -87,13 +87,11 @@ public class AIInfoController {
 					new TypeReference<List<JSONObject>>() {
 					});
 			if (!CollectionUtils.isEmpty(list)) {
-				result.put("status", 0);
 				result.put("data", list);
 			} else {
-				weatherUtil.getTodayWeatherInfo();
-				result.put("status", 1);
-				result.put("msg", "程序小哥跟老板娘跑了");
+				result.put("data", weatherUtil.getTodayWeatherInfo());
 			}
+			result.put("status", 0);
 		} catch (Exception e) {
 			result.put("status", 1);
 			result.put("msg", "程序小哥跟老板娘跑了");
@@ -131,13 +129,10 @@ public class AIInfoController {
 	@RequestMapping(value = "/data", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String makeData(HttpServletRequest request) {
-		String token1 = (String) request.getAttribute("token");
-		String token2 = request.getParameter("token");
-		logger.info("token1:" + token1);
-		logger.info("token2:" + token2);
+		String token = request.getParameter("token");
 		Map<String, Object> result = new HashMap<String, Object>();
 		JSONObject json = new JSONObject(result);
-		if (DEFAULTKEY.equals(token2)) {
+		if (DEFAULTKEY.equals(token)) {
 			try {
 				crawler.crawlerInfo();
 				oilInfoUtil.getTodayOilInfo();
