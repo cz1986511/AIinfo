@@ -131,10 +131,13 @@ public class AIInfoController {
 	@RequestMapping(value = "/data", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String makeData(HttpServletRequest request) {
-		String token = (String) request.getAttribute("token");
+		String token1 = (String) request.getAttribute("token");
+		String token2 = request.getParameter("token");
+		logger.info("token1:" + token1);
+		logger.info("token2:" + token2);
 		Map<String, Object> result = new HashMap<String, Object>();
 		JSONObject json = new JSONObject(result);
-		if (DEFAULTKEY.equals(token)) {
+		if (DEFAULTKEY.equals(token2)) {
 			try {
 				crawler.crawlerInfo();
 				oilInfoUtil.getTodayOilInfo();
