@@ -71,7 +71,7 @@ public class YiCaiCrawler implements Runnable {
 						articleInfo.setIntroduction(descParagraph.asText());
 					}
 					List<Object> timeSpanList = (List<Object>) anchor
-							.getByXPath(".//div[@class='m-list m-list-1 f-cb']/div[@class='author']/span");
+							.getByXPath(".//div[@class='m-list m-list-1 f-cb']/div/div[@class='author']/span");
 					if (!CollectionUtils.isEmpty(timeSpanList)) {
 						HtmlSpan timeSpan = (HtmlSpan) timeSpanList.get(0);
 						articleInfo.setDate(timeSpan.asText());
