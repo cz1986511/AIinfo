@@ -27,6 +27,7 @@ import xiaozhuo.info.service.util.crawler.QdailyCrawler;
 import xiaozhuo.info.service.util.crawler.TechWebCrawler;
 import xiaozhuo.info.service.util.crawler.ThirtySixKrCrawler;
 import xiaozhuo.info.service.util.crawler.TmtPostCrawler;
+import xiaozhuo.info.service.util.crawler.YiCaiCrawler;
 
 @Component
 @Configurable
@@ -52,6 +53,9 @@ public class Crawler {
 			if (null == executor) {
 				init();
 			}
+			// 第一财经数据抓取
+			YiCaiCrawler yiCaiCrawler = new YiCaiCrawler(articleInfoService);
+			executor.execute(yiCaiCrawler);
 			// i黑马数据抓取
 			IheimaCrawler iheimaCrawler = new IheimaCrawler(articleInfoService);
 			executor.execute(iheimaCrawler);
