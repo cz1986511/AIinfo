@@ -29,7 +29,7 @@ public class GeekParkCrawler implements Runnable {
 	private static final Logger logger = LoggerFactory
 			.getLogger(GeekParkCrawler.class);
 	private static final String GEEKPARK = "极客公园";
-	private static final String URL_STRING = "http://www.geekpark.net/";
+	private static final String URL_STRING = "http://www.geekpark.net";
 	private static final String DEFAULT_PIC = "http://chenzhuo.info/default.png";
 
 	private WebClient webClient;
