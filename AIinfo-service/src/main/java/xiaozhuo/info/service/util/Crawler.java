@@ -19,7 +19,6 @@ import xiaozhuo.info.service.util.crawler.GuoKrCrawler;
 import xiaozhuo.info.service.util.crawler.HuxiuCrawler;
 import xiaozhuo.info.service.util.crawler.IfanrCrawler;
 import xiaozhuo.info.service.util.crawler.IheimaCrawler;
-import xiaozhuo.info.service.util.crawler.InfoQCrawler;
 import xiaozhuo.info.service.util.crawler.LeiPhoneCrawler;
 import xiaozhuo.info.service.util.crawler.NetTechnologyCrawler;
 import xiaozhuo.info.service.util.crawler.PintuCrawler;
@@ -98,9 +97,6 @@ public class Crawler {
 			TmtPostCrawler tmtPostCrawler = new TmtPostCrawler(
 					articleInfoService);
 			executor.execute(tmtPostCrawler);
-			// InfoQ数据抓取
-			InfoQCrawler infoQCrawler = new InfoQCrawler(articleInfoService);
-			executor.execute(infoQCrawler);
 		} catch (Exception e) {
 			logger.error("crawlerInfo is exception:" + e.toString());
 		}
