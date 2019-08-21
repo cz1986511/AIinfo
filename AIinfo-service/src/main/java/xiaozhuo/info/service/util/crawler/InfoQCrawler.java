@@ -155,5 +155,5 @@ public class InfoQCrawler implements Runnable {
 		webClient.getOptions().setTimeout(timeout * 10);
 		return webClient;
 	}
-
+	
 }
