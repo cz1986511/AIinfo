@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xiaozhuo.info.persist.mapper.RemindTaskInfoMapper" >
+  <resultMap id="BaseResultMap" type="xiaozhuo.info.persist.base.RemindTaskInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="remind_name" property="remindName" jdbcType="VARCHAR" />
+    <result column="remind_content_time" property="remindContentTime" jdbcType="TIMESTAMP" />
+    <result column="remind_task_type" property="remindTaskType" jdbcType="INTEGER" />
+    <result column="remind_cycle" property="remindCycle" jdbcType="INTEGER" />
+    <result column="remind_date_time" property="remindDateTime" jdbcType="TIMESTAMP" />
+    <result column="template_id" property="templateId" jdbcType="BIGINT" />
+    <result column="remind_person" property="remindPerson" jdbcType="VARCHAR" />
+    <result column="remind_person_tel" property="remindPersonTel" jdbcType="VARCHAR" />
+    <result column="remind_person_email" property="remindPersonEmail" jdbcType="VARCHAR" />
+    <result column="remind_status" property="remindStatus" jdbcType="INTEGER" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, remind_name, remind_content_time, remind_task_type, remind_cycle, remind_date_time, 
+    template_id, remind_person, remind_person_tel, remind_person_email, remind_status, 
+    gmt_create, gmt_modified
+  </sql>
+  
+  <sql id="selectByParamsWhere">
+    <trim suffixOverrides=" and | or">
+      <where>
+        <if test="remindTaskType != null">
+          remind_task_type = #{remindTaskType ,jdbcType=INTEGER} and
+        </if>
+        <if test="remindCycle != null">
+          remind_cycle = #{remindCycle ,jdbcType=INTEGER} and
+        </if>
+        <if test="remindStatus != null">
+          remind_status = #{remindStatus ,jdbcType=INTEGER} and
+        </if>
+        1 = 1
+      </where>
+    </trim>
+  </sql>
+  
+  <select id="selectRemindTasksByParams" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from aiinfo_remind_task_info
+    <include refid="selectByParamsWhere" />
+      order by gmt_create desc
+    <if test=" offset != null and limit != null">
+	  limit ${offset},${limit}
+	</if>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from aiinfo_remind_task_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from aiinfo_remind_task_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="xiaozhuo.info.persist.base.RemindTaskInfo" >
+    insert into aiinfo_remind_task_info (id, remind_name, remind_content_time, 
+      remind_task_type, remind_cycle, remind_date_time, 
+      template_id, remind_person, remind_person_tel, 
+      remind_person_email, remind_status, gmt_create, 
+      gmt_modified)
+    values (#{id,jdbcType=BIGINT}, #{remindName,jdbcType=VARCHAR}, #{remindContentTime,jdbcType=TIMESTAMP}, 
+      #{remindTaskType,jdbcType=INTEGER}, #{remindCycle,jdbcType=INTEGER}, #{remindDateTime,jdbcType=TIMESTAMP}, 
+      #{templateId,jdbcType=BIGINT}, #{remindPerson,jdbcType=VARCHAR}, #{remindPersonTel,jdbcType=VARCHAR}, 
+      #{remindPersonEmail,jdbcType=VARCHAR}, #{remindStatus,jdbcType=INTEGER}, NOW(), NOW())
+  </insert>
+  <insert id="insertSelective" parameterType="xiaozhuo.info.persist.base.RemindTaskInfo" >
+    insert into aiinfo_remind_task_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="remindName != null" >
+        remind_name,
+      </if>
+      <if test="remindContentTime != null" >
+        remind_content_time,
+      </if>
+      <if test="remindTaskType != null" >
+        remind_task_type,
+      </if>
+      <if test="remindCycle != null" >
+        remind_cycle,
+      </if>
+      <if test="remindDateTime != null" >
+        remind_date_time,
+      </if>
+      <if test="templateId != null" >
+        template_id,
+      </if>
+      <if test="remindPerson != null" >
+        remind_person,
+      </if>
+      <if test="remindPersonTel != null" >
+        remind_person_tel,
+      </if>
+      <if test="remindPersonEmail != null" >
+        remind_person_email,
+      </if>
+      <if test="remindStatus != null" >
+        remind_status,
+      </if>
+        gmt_create,
+        gmt_modified
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="remindName != null" >
+        #{remindName,jdbcType=VARCHAR},
+      </if>
+      <if test="remindContentTime != null" >
+        #{remindContentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remindTaskType != null" >
+        #{remindTaskType,jdbcType=INTEGER},
+      </if>
+      <if test="remindCycle != null" >
+        #{remindCycle,jdbcType=INTEGER},
+      </if>
+      <if test="remindDateTime != null" >
+        #{remindDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="templateId != null" >
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="remindPerson != null" >
+        #{remindPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="remindPersonTel != null" >
+        #{remindPersonTel,jdbcType=VARCHAR},
+      </if>
+      <if test="remindPersonEmail != null" >
+        #{remindPersonEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="remindStatus != null" >
+        #{remindStatus,jdbcType=INTEGER},
+      </if>
+        NOW(),
+        NOW()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="xiaozhuo.info.persist.base.RemindTaskInfo" >
+    update aiinfo_remind_task_info
+    <set >
+      <if test="remindName != null" >
+        remind_name = #{remindName,jdbcType=VARCHAR},
+      </if>
+      <if test="remindContentTime != null" >
+        remind_content_time = #{remindContentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remindTaskType != null" >
+        remind_task_type = #{remindTaskType,jdbcType=INTEGER},
+      </if>
+      <if test="remindCycle != null" >
+        remind_cycle = #{remindCycle,jdbcType=INTEGER},
+      </if>
+      <if test="remindDateTime != null" >
+        remind_date_time = #{remindDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="templateId != null" >
+        template_id = #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="remindPerson != null" >
+        remind_person = #{remindPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="remindPersonTel != null" >
+        remind_person_tel = #{remindPersonTel,jdbcType=VARCHAR},
+      </if>
+      <if test="remindPersonEmail != null" >
+        remind_person_email = #{remindPersonEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="remindStatus != null" >
+        remind_status = #{remindStatus,jdbcType=INTEGER},
+      </if>
+        gmt_modified = NOW()
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="xiaozhuo.info.persist.base.RemindTaskInfo" >
+    update aiinfo_remind_task_info
+    set remind_name = #{remindName,jdbcType=VARCHAR},
+      remind_content_time = #{remindContentTime,jdbcType=TIMESTAMP},
+      remind_task_type = #{remindTaskType,jdbcType=INTEGER},
+      remind_cycle = #{remindCycle,jdbcType=INTEGER},
+      remind_date_time = #{remindDateTime,jdbcType=TIMESTAMP},
+      template_id = #{templateId,jdbcType=BIGINT},
+      remind_person = #{remindPerson,jdbcType=VARCHAR},
+      remind_person_tel = #{remindPersonTel,jdbcType=VARCHAR},
+      remind_person_email = #{remindPersonEmail,jdbcType=VARCHAR},
+      remind_status = #{remindStatus,jdbcType=INTEGER},
+      gmt_modified = NOW()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

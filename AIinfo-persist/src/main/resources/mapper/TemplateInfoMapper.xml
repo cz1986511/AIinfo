@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xiaozhuo.info.persist.mapper.TemplateInfoMapper" >
+  <resultMap id="BaseResultMap" type="xiaozhuo.info.persist.base.TemplateInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="template_title" property="templateTitle" jdbcType="VARCHAR" />
+    <result column="template_content" property="templateContent" jdbcType="VARCHAR" />
+    <result column="template_type" property="templateType" jdbcType="INTEGER" />
+    <result column="template_status" property="templateStatus" jdbcType="INTEGER" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modifed" property="gmtModifed" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, template_title, template_content, template_type, template_status, gmt_create, 
+    gmt_modifed
+  </sql>
+  
+  <sql id="selectByParamsWhere">
+    <where>
+	  <if test="templateType != null">
+	    template_type = #{templateType,jdbcType=INTEGER} and
+	  </if>
+      <if test="templateStatus != null">
+        template_status = #{templateStatus,jdbcType=INTEGER} and
+      </if>
+        1 = 1
+    </where>
+  </sql>
+  
+  <select id="selectTemplatesByParams" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from aiinfo_template_info
+    <include refid="selectByParamsWhere" />
+      order by gmt_create desc
+    <if test=" offset != null and limit != null">
+	  limit ${offset},${limit}
+	</if>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from aiinfo_template_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from aiinfo_template_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="xiaozhuo.info.persist.base.TemplateInfo" >
+    insert into aiinfo_template_info (id, template_title, template_content, 
+      template_type, template_status, gmt_create, 
+      gmt_modifed)
+    values (#{id,jdbcType=BIGINT}, #{templateTitle,jdbcType=VARCHAR}, #{templateContent,jdbcType=VARCHAR}, 
+      #{templateType,jdbcType=INTEGER}, #{templateStatus,jdbcType=INTEGER}, NOW(), NOW())
+  </insert>
+  <insert id="insertSelective" parameterType="xiaozhuo.info.persist.base.TemplateInfo" >
+    insert into aiinfo_template_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="templateTitle != null" >
+        template_title,
+      </if>
+      <if test="templateContent != null" >
+        template_content,
+      </if>
+      <if test="templateType != null" >
+        template_type,
+      </if>
+      <if test="templateStatus != null" >
+        template_status,
+      </if>
+        gmt_create,
+        gmt_modifed
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="templateTitle != null" >
+        #{templateTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="templateContent != null" >
+        #{templateContent,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null" >
+        #{templateType,jdbcType=INTEGER},
+      </if>
+      <if test="templateStatus != null" >
+        #{templateStatus,jdbcType=INTEGER},
+      </if>
+        NOW(),
+        NOW()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="xiaozhuo.info.persist.base.TemplateInfo" >
+    update aiinfo_template_info
+    <set >
+      <if test="templateTitle != null" >
+        template_title = #{templateTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="templateContent != null" >
+        template_content = #{templateContent,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null" >
+        template_type = #{templateType,jdbcType=INTEGER},
+      </if>
+      <if test="templateStatus != null" >
+        template_status = #{templateStatus,jdbcType=INTEGER},
+      </if>
+        gmt_modifed = NOW()
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="xiaozhuo.info.persist.base.TemplateInfo" >
+    update aiinfo_template_info
+    set template_title = #{templateTitle,jdbcType=VARCHAR},
+      template_content = #{templateContent,jdbcType=VARCHAR},
+      template_type = #{templateType,jdbcType=INTEGER},
+      template_status = #{templateStatus,jdbcType=INTEGER},
+      gmt_modifed = NOW()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
