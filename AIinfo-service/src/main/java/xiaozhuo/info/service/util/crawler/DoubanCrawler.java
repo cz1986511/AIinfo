@@ -43,88 +43,20 @@ public class DoubanCrawler implements Runnable {
 	@Override
 	public void run() {
 		try {
-			Calendar calendar = Calendar.getInstance();
-			String xPath = "//div[@class='mod-b mod-art clearfix ']";
+			String xPath = "//table[@class='coming_list']/tbody/tr";
 			HtmlPage page = webClient.getPage(URL_STRING);
 			List<Object> list = (List<Object>) page.getByXPath(xPath);
-			Iterator<Object> ite = list.iterator();
-			while (ite.hasNext()) {
-				try {
-					ArticleInfo articleInfo = new ArticleInfo();
-					articleInfo.setSource(DOUBAN);
-					HtmlDivision division = (HtmlDivision) ite.next();
-					List<Object> tagAnchorList = (List<Object>) division
-							.getByXPath(".//div[@class='column-link-box']/a");
-					if (!CollectionUtils.isEmpty(tagAnchorList)) {
-						Iterator<Object> iteTag = tagAnchorList.iterator();
-						String tag = "";
-						while (iteTag.hasNext()) {
-							HtmlAnchor tagAnchor = (HtmlAnchor) iteTag.next();
-							tag = tag + tagAnchor.asText() + " ";
-						}
-						articleInfo.setTag(tag);
-					}
-					List<Object> titleAnchorList = (List<Object>) division
-							.getByXPath(".//div[@class='mob-ctt index-article-list-yh']/h2/a");
-					if (!CollectionUtils.isEmpty(titleAnchorList)) {
-						HtmlAnchor titleAnchor = (HtmlAnchor) titleAnchorList
-								.get(0);
-						articleInfo.setTitle(titleAnchor.asText());
-						articleInfo.setLinkUrl(URL_STRING
-								+ titleAnchor.getAttribute("href"));
-					}
-					List<Object> picImageList = (List<Object>) division
-							.getByXPath(".//div[@class='mod-thumb pull-left ']/a/img");
-					if (!CollectionUtils.isEmpty(picImageList)) {
-						HtmlImage picImage = (HtmlImage) picImageList.get(0);
-						articleInfo.setPicUrl(picImage
-								.getAttribute("data-original"));
-					} else {
-						articleInfo.setPicUrl(DEFAULT_PIC);
-					}
-					List<Object> authorSpanList = (List<Object>) division
-							.getByXPath(".//div[@class='mob-ctt index-article-list-yh']/div[@class='mob-author']/a/span[@class='author-name ']");
-					if (!CollectionUtils.isEmpty(authorSpanList)) {
-						HtmlSpan authorSpan = (HtmlSpan) authorSpanList.get(0);
-						articleInfo.setAuthor(authorSpan.asText());
-					}
-					List<Object> timeSpanList = (List<Object>) division
-							.getByXPath(".//div[@class='mob-ctt index-article-list-yh']/div[@class='mob-author']/span[@class='time']");
-					if (!CollectionUtils.isEmpty(timeSpanList)) {
-						HtmlSpan timeSpan = (HtmlSpan) timeSpanList.get(0);
-						String time = timeSpan.asText();
-						String date = "";
-						String day = (calendar.get(Calendar.MONTH) + 1) > 9 ? ("" + (calendar
-								.get(Calendar.MONTH) + 1)) : ("0" + (calendar
-								.get(Calendar.MONTH) + 1));
-						if ("1天前".equals(time)) {
-							date = "" + calendar.get(Calendar.YEAR) + "-" + day
-									+ "-"
-									+ (calendar.get(Calendar.DAY_OF_MONTH) - 1);
-						} else if ("2天前".equals(time)) {
-							date = "" + calendar.get(Calendar.YEAR) + "-" + day
-									+ "-"
-									+ (calendar.get(Calendar.DAY_OF_MONTH) - 2);
-						} else {
-							date = "" + calendar.get(Calendar.YEAR) + "-" + day
-									+ "-" + calendar.get(Calendar.DAY_OF_MONTH);
-						}
-						articleInfo.setDate(date);
-					}
-					List<Object> descDivisionList = (List<Object>) division
-							.getByXPath(".//div[@class='mob-ctt index-article-list-yh']/div[@class='mob-sub']");
-					if (!CollectionUtils.isEmpty(descDivisionList)) {
-						HtmlDivision descDivision = (HtmlDivision) descDivisionList
-								.get(0);
-						articleInfo.setIntroduction(descDivision.asText());
-					}
-					saveArticle(articleInfo);
-				} catch (Exception e) {
-					logger.error("huxiuCrawler is exception:" + e.toString());
-				}
+			if (null != list) {
+				list.forEach(obj ->{
+					HtmlTableRow row = (HtmlTableRow) obj;
+					HtmlTableCell cell = row.getCells().get(1);
+					HtmlAnchor anchor = (HtmlAnchor) cell.getChildNodes().get(1);
+					System.out.println(row.getCells().get(0).asText()+ anchor.getHrefAttribute() + anchor.asText() + 
+							row.getCells().get(2).asText() + row.getCells().get(3).asText() + row.getCells().get(4).asText());
+				});
 			}
 		} catch (Exception e) {
-			logger.error("huxiuCrawler is exception:" + e.toString());
+			e.printStackTrace();
 		}
 		webClient.close();
 	}
@@ -156,34 +88,75 @@ public class DoubanCrawler implements Runnable {
 	}
 	
 	public static void main(String[] args) {
-		WebClient webClient = new WebClient(BrowserVersion.CHROME);
-		webClient.getOptions().setUseInsecureSSL(true);
-		webClient.getOptions().setCssEnabled(false);
-		webClient.getOptions().setAppletEnabled(false);
-		webClient.getOptions().setJavaScriptEnabled(true);
-		webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
-		webClient.getOptions().setThrowExceptionOnScriptError(false);
-		int timeout = webClient.getOptions().getTimeout();
-		webClient.getOptions().setTimeout(timeout * 10);
+		String s = "abcdefghijklmnopqrstuvwxyz";
 		
-		try {
-			String xPath = "//table[@class='coming_list']/tbody/tr";
-			HtmlPage page = webClient.getPage(URL_STRING);
-			List<Object> list = (List<Object>) page.getByXPath(xPath);
-			if (null != list) {
-				list.forEach(obj ->{
-					HtmlTableRow row = (HtmlTableRow) obj;
-					HtmlTableCell cell = row.getCells().get(1);
-					HtmlAnchor anchor = (HtmlAnchor) cell.getChildNodes().get(1);
-					System.out.println(row.getCells().get(0).asText()+ anchor.getHrefAttribute() + anchor.asText() + 
-							row.getCells().get(2).asText() + row.getCells().get(3).asText() + row.getCells().get(4).asText());
-				});
-				
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		long start1 = System.currentTimeMillis();
+		for (int i = 0; i < 5000000; i++) {
+			reverse1(s);
 		}
-		webClient.close();
+		long end1 = System.currentTimeMillis();
+		System.out.println("递归:" + (end1 - start1));
+		
+		long start2 = System.currentTimeMillis();
+		for (int i = 0; i < 5000000; i++) {
+			reverse2(s);
+		}
+		long end2 = System.currentTimeMillis();
+		System.out.println("倒序拼接:" + (end2 - start2));
+		
+		long start3 = System.currentTimeMillis();
+		for (int i = 0; i < 5000000; i++) {
+			reverse3(s);
+		}
+		long end3 = System.currentTimeMillis();
+		System.out.println("冒泡对调:" + (end3 - start3));
+		
+		long start4 = System.currentTimeMillis();
+		for (int i = 0; i < 5000000; i++) {
+			reverse4(s);
+		}
+		long end4 = System.currentTimeMillis();
+		System.out.println("StringBuffer.reverse():" + (end4 - start4));
+		
+		
+	}
+	
+	//递归
+	private static String reverse1(String s) {
+		int length = s.length();
+		if (length <= 1) {
+			return s;
+		}
+		String left = s.substring(0, length / 2);
+		String right = s.substring(length / 2, length);
+		return reverse1(right) + reverse1(left);
+	}
+	//倒序拼接
+	private static String reverse2(String s) {
+		int length = s.length();
+		char[] array = s.toCharArray();
+		StringBuffer sb = new StringBuffer();
+		for(int i = length - 1; i >= 0; i--) {
+			sb.append(array[i]);
+		}
+		return sb.toString();
+	}
+	//冒泡对调
+	private static String reverse3(String s) {
+		int length = s.length();
+		int n = length -1;
+		char[] array = s.toCharArray();
+		int half = length / 2;
+		for(int i = 0 ; i <= half; i++) {
+			char temp = array[i];
+			array[i] = array[n - i];
+			array[n - i] = temp;
+		}
+		return new String(array);
+	}
+	//StringBuffer.reverse()
+	private static String reverse4(String s) {
+		return new StringBuffer(s).reverse().toString();
 	}
 
 }
