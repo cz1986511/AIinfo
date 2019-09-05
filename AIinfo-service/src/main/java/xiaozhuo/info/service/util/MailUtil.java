@@ -55,13 +55,13 @@ public class MailUtil
             // 设置消息体
             MimeBodyPart text = new MimeBodyPart();
             text.setContent("<img src='cid:a'>" + content, "text/html;charset=utf-8");
-            MimeBodyPart img = new MimeBodyPart();
-            DataHandler dh = new DataHandler(new FileDataSource("/data/dleye/img/rz.png"));
-            img.setDataHandler(dh);
-            img.setContentID("a");
+            //MimeBodyPart img = new MimeBodyPart();
+            //DataHandler dh = new DataHandler(new FileDataSource("/data/dleye/img/rz.png"));
+            //img.setDataHandler(dh);
+            //img.setContentID("a");
             MimeMultipart mm = new MimeMultipart();
             mm.addBodyPart(text);
-            mm.addBodyPart(img);
+            //mm.addBodyPart(img);
             mm.setSubType("related");
             MimeBodyPart all = new MimeBodyPart();
             all.setContent(mm);

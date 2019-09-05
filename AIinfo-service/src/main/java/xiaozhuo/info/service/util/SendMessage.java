@@ -39,19 +39,36 @@ public class SendMessage {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("remindTaskType", 1);
 			List<RemindTaskInfo> remindTasks = remindTaskInfoMapper.selectRemindTasksByParams(map);
-			if (!CollectionUtils.isEmpty(remindTasks)) {
+			if(!CollectionUtils.isEmpty(remindTasks)) {
 				remindTasks.forEach(remindTaskInfo ->{
 					LocalDate localDate = LocalDate.now();
 					LocalDate remindContentDate = remindTaskInfo.getRemindContentTime();
-					TemplateInfo templateInfo = templateInfoMapper.selectByPrimaryKey(remindTaskInfo.getTemplateId());
-					if (null != templateInfo) {
-						
+					if(localDate.getMonthValue() == remindContentDate.getMonthValue() && localDate.getDayOfMonth() == remindContentDate.getDayOfMonth()) {
+						TemplateInfo templateInfo = templateInfoMapper.selectByPrimaryKey(remindTaskInfo.getTemplateId());
+						if (null != templateInfo) {
+							int number = localDate.getYear() - remindContentDate.getYear();
+							String[] params = {remindTaskInfo.getRemindPerson(), number+""};
+							MailUtil.sendMail(remindTaskInfo.getRemindFrom(), remindTaskInfo.getRemindFromPass(), remindTaskInfo.getRemindPersonEmail(),
+									templateInfo.getTemplateContent(), templateInfo.getTemplateTitle(), params);
+						}
 					}
+					
 				});
 			}
 		} catch(Exception e) {
 			logger.error("sendAnniversary is Exception:" + e.toString());
 		}
+	}
+	
+	public static void main(String[] args) {
+		LocalDate localDate = LocalDate.now();
+		System.out.println(localDate.getYear() + "/" + localDate.getMonthValue() + "/" + localDate.getDayOfMonth());
+		String s = "123456";
+		String md5s = MD5Util.md5(s);
+		System.out.println(md5s);
+		System.out.println(MD5Util.md5(md5s));
+		String[] params = {"陈卓", "3"};
+		String content = "亲爱的%s,今天是你结婚%s周年纪念日";
 	}
 
 }

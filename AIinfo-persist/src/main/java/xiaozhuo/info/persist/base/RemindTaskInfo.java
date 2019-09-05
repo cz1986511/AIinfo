@@ -28,6 +28,10 @@ public class RemindTaskInfo {
     private String remindPersonEmail;
 
     private Integer remindStatus;
+    
+    private String remindFrom;
+    
+    private String remindFromPass;
 
     private LocalDate gmtCreate;
 
@@ -121,7 +125,23 @@ public class RemindTaskInfo {
         this.remindStatus = remindStatus;
     }
 
-    public LocalDate getGmtCreate() {
+    public String getRemindFrom() {
+		return remindFrom;
+	}
+
+	public void setRemindFrom(String remindFrom) {
+		this.remindFrom = remindFrom;
+	}
+
+	public String getRemindFromPass() {
+		return remindFromPass;
+	}
+
+	public void setRemindFromPass(String remindFromPass) {
+		this.remindFromPass = remindFromPass;
+	}
+
+	public LocalDate getGmtCreate() {
         return gmtCreate;
     }
 

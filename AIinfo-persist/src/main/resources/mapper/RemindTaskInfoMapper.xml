@@ -13,12 +13,14 @@
     <result column="remind_person_tel" property="remindPersonTel" jdbcType="VARCHAR" />
     <result column="remind_person_email" property="remindPersonEmail" jdbcType="VARCHAR" />
     <result column="remind_status" property="remindStatus" jdbcType="INTEGER" />
+    <result column="remind_from" property="remindFrom" jdbcType="VARCHAR" />
+    <result column="remind_from_pass" property="remindFromPass" jdbcType="VARCHAR" />
     <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
     <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, remind_name, remind_content_time, remind_task_type, remind_cycle, remind_date_time, 
-    template_id, remind_person, remind_person_tel, remind_person_email, remind_status, 
+    template_id, remind_person, remind_person_tel, remind_person_email, remind_status, remind_from, remind_from_pass,  
     gmt_create, gmt_modified
   </sql>
   
@@ -64,12 +66,12 @@
     insert into aiinfo_remind_task_info (id, remind_name, remind_content_time, 
       remind_task_type, remind_cycle, remind_date_time, 
       template_id, remind_person, remind_person_tel, 
-      remind_person_email, remind_status, gmt_create, 
+      remind_person_email, remind_status, remind_from, remind_from_pass, gmt_create, 
       gmt_modified)
     values (#{id,jdbcType=BIGINT}, #{remindName,jdbcType=VARCHAR}, #{remindContentTime,jdbcType=TIMESTAMP}, 
       #{remindTaskType,jdbcType=INTEGER}, #{remindCycle,jdbcType=INTEGER}, #{remindDateTime,jdbcType=TIMESTAMP}, 
       #{templateId,jdbcType=BIGINT}, #{remindPerson,jdbcType=VARCHAR}, #{remindPersonTel,jdbcType=VARCHAR}, 
-      #{remindPersonEmail,jdbcType=VARCHAR}, #{remindStatus,jdbcType=INTEGER}, NOW(), NOW())
+      #{remindPersonEmail,jdbcType=VARCHAR}, #{remindStatus,jdbcType=INTEGER}, #{remindFrom,jdbcType=VARCHAR}, #{remindFromPass,jdbcType=VARCHAR}, NOW(), NOW())
   </insert>
   <insert id="insertSelective" parameterType="xiaozhuo.info.persist.base.RemindTaskInfo" >
     insert into aiinfo_remind_task_info
@@ -106,6 +108,12 @@
       </if>
       <if test="remindStatus != null" >
         remind_status,
+      </if>
+      <if test="remindFrom != null" >
+        remind_from,
+      </if>
+      <if test="remindFromPass != null" >
+        remind_from_pass,
       </if>
         gmt_create,
         gmt_modified
@@ -144,6 +152,12 @@
       <if test="remindStatus != null" >
         #{remindStatus,jdbcType=INTEGER},
       </if>
+      <if test="remindFrom != null" >
+        #{remindFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="remindFromPass != null" >
+        #{remindFromPass,jdbcType=VARCHAR},
+      </if>
         NOW(),
         NOW()
     </trim>
@@ -181,6 +195,12 @@
       <if test="remindStatus != null" >
         remind_status = #{remindStatus,jdbcType=INTEGER},
       </if>
+      <if test="remindFrom != null" >
+        remind_from = #{remindFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="remindFromPass != null" >
+        remind_from_pass = #{remindFromPass,jdbcType=VARCHAR},
+      </if>
         gmt_modified = NOW()
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -197,6 +217,8 @@
       remind_person_tel = #{remindPersonTel,jdbcType=VARCHAR},
       remind_person_email = #{remindPersonEmail,jdbcType=VARCHAR},
       remind_status = #{remindStatus,jdbcType=INTEGER},
+      remind_from = #{remindFrom,jdbcType=VARCHAR},
+      remind_from_pass = #{remindFromPass,jdbcType=VARCHAR},
       gmt_modified = NOW()
     where id = #{id,jdbcType=BIGINT}
   </update>
