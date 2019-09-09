@@ -33,6 +33,8 @@ public class SendMessage {
 	@Autowired
 	private TemplateInfoMapper templateInfoMapper;
 	
+	private static String sqm = "";
+	
 	@Scheduled(cron = "0 27 7 * * ?")
 	public void sendAnniversary() {
 		try {
@@ -63,12 +65,6 @@ public class SendMessage {
 	public static void main(String[] args) {
 		LocalDate localDate = LocalDate.now();
 		System.out.println(localDate.getYear() + "/" + localDate.getMonthValue() + "/" + localDate.getDayOfMonth());
-		String s = "123456";
-		String md5s = MD5Util.md5(s);
-		System.out.println(md5s);
-		System.out.println(MD5Util.md5(md5s));
-		String[] params = {"陈卓", "3"};
-		String content = "亲爱的%s,今天是你结婚%s周年纪念日";
 	}
 
 }
