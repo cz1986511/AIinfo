@@ -1,5 +1,6 @@
 package xiaozhuo.info.service.util;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,14 +23,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import xiaozhuo.info.persist.base.WeatherInfo;
-import xiaozhuo.info.service.WeatherInfoService;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-@SuppressWarnings("deprecation")
+import xiaozhuo.info.persist.base.WeatherInfo;
+import xiaozhuo.info.service.WeatherInfoService;
+
 @Component
 @Configurable
 @EnableScheduling
@@ -69,27 +69,19 @@ public class WeatherUtil {
 			List<WeatherInfo> list = weatherInfoService.getWeatherInfos(map);
 			if (CollectionUtils.isEmpty(list)) {
 				JSONArray daily = weatherInfoJsonObject.getJSONArray("daily");
-				JSONObject suggestion = weatherInfoJsonObject
-						.getJSONObject("suggestion");
+				JSONObject suggestion = weatherInfoJsonObject.getJSONObject("suggestion");
 				if (null != daily) {
 					JSONObject todayJsonObject = daily.getJSONObject(0);
 					WeatherInfo weatherInfo = new WeatherInfo();
 					weatherInfo.setCityName("chengdu");
 					weatherInfo.setDateTime(dateTime);
-					weatherInfo.setCodeDay(todayJsonObject
-							.getString("code_day"));
-					weatherInfo.setCodeNight(todayJsonObject
-							.getString("code_night"));
-					weatherInfo.setHighTemperature(todayJsonObject
-							.getInteger("high"));
-					weatherInfo.setLowTemperature(todayJsonObject
-							.getInteger("low"));
-					weatherInfo.setTextDay(todayJsonObject
-							.getString("text_day"));
-					weatherInfo.setTextNight(todayJsonObject
-							.getString("text_night"));
-					weatherInfo.setWindDirection(todayJsonObject
-							.getString("wind_direction"));
+					weatherInfo.setCodeDay(todayJsonObject.getString("code_day"));
+					weatherInfo.setCodeNight(todayJsonObject.getString("code_night"));
+					weatherInfo.setHighTemperature(todayJsonObject.getInteger("high"));
+					weatherInfo.setLowTemperature(todayJsonObject.getInteger("low"));
+					weatherInfo.setTextDay(todayJsonObject.getString("text_day"));
+					weatherInfo.setTextNight(todayJsonObject.getString("text_night"));
+					weatherInfo.setWindDirection(todayJsonObject.getString("wind_direction"));
 					weatherInfo.setStatus("01");
 					weatherInfo.setSuggestion(suggestion.toJSONString());
 					weatherInfoService.addWeatherInfo(weatherInfo);
@@ -100,9 +92,8 @@ public class WeatherUtil {
 		}
 	}
 
-	@SuppressWarnings({ "resource" })
-	private JSONObject getWeatherNow(String city) {
-		HttpClient httpClient = new DefaultHttpClient();
+	private static JSONObject getWeatherNow(String city) {
+		CloseableHttpClient httpClient = HttpClients.createDefault();
 		try {
 			String restUrl = "https://api.seniverse.com/v3/weather/now.json?key=tl9ml0o784jsrc4h&language=zh-Hans&unit=c&location=";
 			HttpGet getMethod = new HttpGet(restUrl + city);
@@ -110,25 +101,26 @@ public class WeatherUtil {
 			if (null != response) {
 				int statusCode = response.getStatusLine().getStatusCode();
 				if (statusCode < 300) {
-					String responseBody = EntityUtils.toString(
-							response.getEntity(), "UTF-8");
-					JSONArray array = (JSONArray) JSON
-							.parseObject(responseBody).get("results");
+					String responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
+					JSONArray array = (JSONArray) JSON.parseObject(responseBody).get("results");
 					return array.getJSONObject(0).getJSONObject("now");
 				}
 			}
 		} catch (Exception e) {
-			log.error("getSuggestion is exception:" + e.toString());
+			log.error("getWeatherNow is exception:" + e.toString());
 		} finally {
-			httpClient.getConnectionManager().shutdown();
+			try {
+				httpClient.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		log.error("getSuggestion is null");
 		return null;
 	}
 
-	@SuppressWarnings({ "resource" })
 	private JSONObject getWeatherNext(String city) {
-		HttpClient httpClient = new DefaultHttpClient();
+		CloseableHttpClient httpClient = HttpClients.createDefault();
 		try {
 			String restUrl = "https://api.seniverse.com/v3/weather/daily.json?key=tl9ml0o784jsrc4h&language=zh-Hans&unit=c&start=0&days=5&location=";
 			HttpGet getMethod = new HttpGet(restUrl + city);
@@ -136,25 +128,26 @@ public class WeatherUtil {
 			if (null != response) {
 				int statusCode = response.getStatusLine().getStatusCode();
 				if (statusCode < 300) {
-					String responseBody = EntityUtils.toString(
-							response.getEntity(), "UTF-8");
-					JSONArray array = (JSONArray) JSON
-							.parseObject(responseBody).get("results");
+					String responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
+					JSONArray array = (JSONArray) JSON.parseObject(responseBody).get("results");
 					return array.getJSONObject(0);
 				}
 			}
 		} catch (Exception e) {
 			log.error("getSuggestion is exception:" + e.toString());
 		} finally {
-			httpClient.getConnectionManager().shutdown();
+			try {
+				httpClient.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		log.error("getSuggestion is null");
 		return null;
 	}
 
-	@SuppressWarnings({ "resource" })
 	private JSONObject getSuggestion(String city) {
-		HttpClient httpClient = new DefaultHttpClient();
+		CloseableHttpClient httpClient = HttpClients.createDefault();
 		try {
 			String restUrl = "https://api.seniverse.com/v3/life/suggestion.json?key=tl9ml0o784jsrc4h&language=zh-Hans&location=";
 			HttpGet getMethod = new HttpGet(restUrl + city);
@@ -162,17 +155,19 @@ public class WeatherUtil {
 			if (null != response) {
 				int statusCode = response.getStatusLine().getStatusCode();
 				if (statusCode < 300) {
-					String responseBody = EntityUtils.toString(
-							response.getEntity(), "UTF-8");
-					JSONArray array = (JSONArray) JSON
-							.parseObject(responseBody).get("results");
+					String responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
+					JSONArray array = (JSONArray) JSON.parseObject(responseBody).get("results");
 					return array.getJSONObject(0).getJSONObject("suggestion");
 				}
 			}
 		} catch (Exception e) {
 			log.error("getSuggestion is exception:" + e.toString());
 		} finally {
-			httpClient.getConnectionManager().shutdown();
+			try {
+				httpClient.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		log.error("getSuggestion is null");
 		return null;

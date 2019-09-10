@@ -25,46 +25,49 @@ import xiaozhuo.info.persist.mapper.TemplateInfoMapper;
 @EnableScheduling
 @Service
 public class SendMessage {
-	
+
 	private static Logger logger = LoggerFactory.getLogger(SendMessage.class);
-	
+
 	@Autowired
 	private RemindTaskInfoMapper remindTaskInfoMapper;
 	@Autowired
 	private TemplateInfoMapper templateInfoMapper;
-	
-	private static String sqm = "";
-	
+
 	@Scheduled(cron = "0 27 7 * * ?")
 	public void sendAnniversary() {
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("remindTaskType", 1);
 			List<RemindTaskInfo> remindTasks = remindTaskInfoMapper.selectRemindTasksByParams(map);
-			if(!CollectionUtils.isEmpty(remindTasks)) {
-				remindTasks.forEach(remindTaskInfo ->{
+			if (!CollectionUtils.isEmpty(remindTasks)) {
+				remindTasks.forEach(remindTaskInfo -> {
 					LocalDate localDate = LocalDate.now();
 					LocalDate remindContentDate = remindTaskInfo.getRemindContentTime();
-					if(localDate.getMonthValue() == remindContentDate.getMonthValue() && localDate.getDayOfMonth() == remindContentDate.getDayOfMonth()) {
-						TemplateInfo templateInfo = templateInfoMapper.selectByPrimaryKey(remindTaskInfo.getTemplateId());
+					if (localDate.getMonthValue() == remindContentDate.getMonthValue()
+							&& localDate.getDayOfMonth() == remindContentDate.getDayOfMonth()) {
+						TemplateInfo templateInfo = templateInfoMapper
+								.selectByPrimaryKey(remindTaskInfo.getTemplateId());
 						if (null != templateInfo) {
 							int number = localDate.getYear() - remindContentDate.getYear();
-							String[] params = {remindTaskInfo.getRemindPerson(), number+""};
-							MailUtil.sendMail(remindTaskInfo.getRemindFrom(), remindTaskInfo.getRemindFromPass(), remindTaskInfo.getRemindPersonEmail(),
-									templateInfo.getTemplateContent(), templateInfo.getTemplateTitle(), params);
+							String[] params = { remindTaskInfo.getRemindPerson(), number + "" };
+							MailUtil.sendMail(remindTaskInfo.getRemindFrom(), remindTaskInfo.getRemindFromPass(),
+									remindTaskInfo.getRemindPersonEmail(), templateInfo.getTemplateContent(),
+									templateInfo.getTemplateTitle(), params);
 						}
 					}
-					
+
 				});
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			logger.error("sendAnniversary is Exception:" + e.toString());
 		}
 	}
-	
+
 	public static void main(String[] args) {
-		LocalDate localDate = LocalDate.now();
-		System.out.println(localDate.getYear() + "/" + localDate.getMonthValue() + "/" + localDate.getDayOfMonth());
+		if (LimitUtil.getRate()) {
+			LocalDate localDate = LocalDate.now();
+			System.out.println(localDate.getYear() + "/" + localDate.getMonthValue() + "/" + localDate.getDayOfMonth());
+		}
 	}
 
 }
