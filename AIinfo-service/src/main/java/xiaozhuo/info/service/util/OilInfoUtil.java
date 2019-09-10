@@ -1,13 +1,11 @@
 package xiaozhuo.info.service.util;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.IOException;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,13 +16,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import xiaozhuo.info.persist.base.OilInfo;
-import xiaozhuo.info.service.OilInfoService;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
-@SuppressWarnings("deprecation")
+import xiaozhuo.info.persist.base.OilInfo;
+import xiaozhuo.info.service.OilInfoService;
+
 @Component
 @Configurable
 @EnableScheduling
@@ -35,10 +32,9 @@ public class OilInfoUtil {
 	@Autowired
 	private OilInfoService oilInfoService;
 
-	@SuppressWarnings({ "resource" })
 	@Scheduled(cron = "0 17 7 * * ?")
 	public void getTodayOilInfo() {
-		HttpClient httpClient = new DefaultHttpClient();
+		CloseableHttpClient httpClient = HttpClients.createDefault();
 		try {
 			String restUrl = "http://api.jisuapi.com/oil/query?appkey=a6a2ebcd0ed0a899&province=四川";
 			HttpGet getMethod = new HttpGet(restUrl);
@@ -46,15 +42,12 @@ public class OilInfoUtil {
 			if (null != response) {
 				int statusCode = response.getStatusLine().getStatusCode();
 				if (statusCode == 200) {
-					String responseBody = EntityUtils.toString(
-							response.getEntity(), "UTF-8");
-					JSONObject jsonObject = (JSONObject) JSON.parseObject(
-							responseBody).get("result");
+					String responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
+					JSONObject jsonObject = (JSONObject) JSON.parseObject(responseBody).get("result");
 
 					String dateString = jsonObject.getString("updatetime");
 					if (null != dateString) {
-						jsonObject.put("updatetime",
-								dateString.substring(0, 10));
+						jsonObject.put("updatetime", dateString.substring(0, 10));
 					}
 					String oilKey = "oilKey";
 					RedisClient.set(oilKey, jsonObject, 86400);
@@ -67,28 +60,20 @@ public class OilInfoUtil {
 					oilInfo.setOil95(jsonObject.getString("oil95"));
 					oilInfo.setOil97(jsonObject.getString("oil97"));
 					oilInfo.setProvince("四川");
-					oilInfo.setUpdateTime(getDateString(dateString));
+					oilInfo.setUpdateTime(CommonTools.getDateString(dateString));
 					oilInfoService.addOilInfo(oilInfo);
 				}
 			}
 		} catch (Exception e) {
 			logger.error("getTodayOilInfo is exception:" + e.toString());
 		} finally {
-			httpClient.getConnectionManager().shutdown();
+			try {
+				httpClient.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		logger.error("getTodayOilInfo is null");
-	}
-
-	private Date getDateString(String dateString) {
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		try {
-			if (null != dateString) {
-				return formatter.parse(dateString);
-			}
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 }

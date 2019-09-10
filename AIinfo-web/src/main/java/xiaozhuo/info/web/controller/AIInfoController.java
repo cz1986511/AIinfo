@@ -44,7 +44,8 @@ public class AIInfoController {
 	private static String ART_KEY = "dKey";
 	private static String WEATHER_KEY = "weather";
 	private static String OIL_KEY = "oilKey";
-	@Value("${data.token}") private String dataToken;
+	@Value("${data.token}")
+	private String dataToken;
 
 	@RequestMapping(value = "/art/list", method = RequestMethod.POST)
 	@ResponseBody

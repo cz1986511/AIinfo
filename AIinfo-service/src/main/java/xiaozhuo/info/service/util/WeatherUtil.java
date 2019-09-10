@@ -40,7 +40,6 @@ public class WeatherUtil {
 
 	@Autowired
 	private WeatherInfoService weatherInfoService;
-
 	private static String DEFAULTCITY = "chengdu";
 
 	@Scheduled(cron = "0 5 0 * * ?")
@@ -64,7 +63,7 @@ public class WeatherUtil {
 			SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
 			String dateTime = ft.format(new Date());
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("cityName", "chengdu");
+			map.put("cityName", DEFAULTCITY);
 			map.put("dateTime", dateTime);
 			List<WeatherInfo> list = weatherInfoService.getWeatherInfos(map);
 			if (CollectionUtils.isEmpty(list)) {
@@ -73,7 +72,7 @@ public class WeatherUtil {
 				if (null != daily) {
 					JSONObject todayJsonObject = daily.getJSONObject(0);
 					WeatherInfo weatherInfo = new WeatherInfo();
-					weatherInfo.setCityName("chengdu");
+					weatherInfo.setCityName(DEFAULTCITY);
 					weatherInfo.setDateTime(dateTime);
 					weatherInfo.setCodeDay(todayJsonObject.getString("code_day"));
 					weatherInfo.setCodeNight(todayJsonObject.getString("code_night"));
@@ -115,7 +114,7 @@ public class WeatherUtil {
 				e.printStackTrace();
 			}
 		}
-		log.error("getSuggestion is null");
+		log.error("getWeatherNow is null");
 		return null;
 	}
 
@@ -134,7 +133,7 @@ public class WeatherUtil {
 				}
 			}
 		} catch (Exception e) {
-			log.error("getSuggestion is exception:" + e.toString());
+			log.error("getWeatherNext is exception:" + e.toString());
 		} finally {
 			try {
 				httpClient.close();
@@ -142,7 +141,7 @@ public class WeatherUtil {
 				e.printStackTrace();
 			}
 		}
-		log.error("getSuggestion is null");
+		log.error("getWeatherNext is null");
 		return null;
 	}
 

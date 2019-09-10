@@ -52,7 +52,7 @@ public class ThirtySixKrCrawler implements Runnable {
 					articleInfo.setSource(TSKR);
 					HtmlDivision division = (HtmlDivision) ite.next();
 					List<Object> titleAnchorList = (List<Object>) division
-							.getByXPath(".//div[@class='kr-shadow-wrapper']/div[@class='kr-shadow-content']/div[@class='article-item-info clearfloat']/a[@class='article-item-title ellipsis-2 weight-bold']");
+							.getByXPath(".//div[@class='kr-shadow-wrapper']/div[@class='kr-shadow-content']/div[@class='article-item-info clearfloat']/p[@class='title-wrapper ellipsis-2']/a[@class='article-item-title weight-bold']");
 					if (!CollectionUtils.isEmpty(titleAnchorList)) {
 						HtmlAnchor titleAnchor = (HtmlAnchor) titleAnchorList
 								.get(0);
@@ -61,7 +61,7 @@ public class ThirtySixKrCrawler implements Runnable {
 						articleInfo.setTitle(titleAnchor.asText());
 					}
 					List<Object> tagAnchorList = (List<Object>) division
-							.getByXPath(".//div[@class='kr-shadow-wrapper']/div[@class='kr-shadow-content']/div[@class='article-item-info clearfloat']/a[@class='article-item-channel']");
+							.getByXPath(".//div[@class='kr-shadow-wrapper']/div[@class='kr-shadow-content']/div[@class='article-item-info clearfloat']/div[@class='kr-flow-bar']/span[@class='kr-flow-bar-motif']/a");
 					if (!CollectionUtils.isEmpty(tagAnchorList)) {
 						HtmlAnchor tagAnchor = (HtmlAnchor) tagAnchorList
 								.get(0);
@@ -100,14 +100,14 @@ public class ThirtySixKrCrawler implements Runnable {
 						}
 					}
 					List<Object> descDivisionList = (List<Object>) division
-							.getByXPath(".//div[@class='kr-shadow-wrapper']/div[@class='kr-shadow-content']/div[@class='article-item-info clearfloat']/div[@class='article-item-description ellipsis-2']");
+							.getByXPath(".//div[@class='kr-shadow-wrapper']/div[@class='kr-shadow-content']/div[@class='article-item-info clearfloat']/a[@class='article-item-description ellipsis-2']");
 					if (!CollectionUtils.isEmpty(descDivisionList)) {
-						HtmlDivision descDivision = (HtmlDivision) descDivisionList
+						HtmlAnchor descAnchor = (HtmlAnchor) descDivisionList
 								.get(0);
-						articleInfo.setIntroduction(descDivision.asText());
+						articleInfo.setIntroduction(descAnchor.asText());
 					}
 					List<Object> picImageList = (List<Object>) division
-							.getByXPath(".//div[@class='kr-shadow-wrapper']/div[@class='kr-shadow-content']/a[@class='article-item-pic']/img");
+							.getByXPath(".//div[@class='kr-shadow-wrapper']/div[@class='kr-shadow-content']/div[@class='article-item-pic-wrapper']/a[@class='article-item-pic']/img");
 					if (!CollectionUtils.isEmpty(picImageList)) {
 						HtmlImage picImage = (HtmlImage) picImageList.get(0);
 						articleInfo.setPicUrl(picImage.getAttribute("src"));
@@ -151,5 +151,5 @@ public class ThirtySixKrCrawler implements Runnable {
 		webClient.getOptions().setTimeout(timeout * 10);
 		return webClient;
 	}
-
+	
 }
