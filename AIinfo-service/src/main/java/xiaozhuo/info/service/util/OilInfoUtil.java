@@ -39,30 +39,27 @@ public class OilInfoUtil {
 			String restUrl = "http://api.jisuapi.com/oil/query?appkey=a6a2ebcd0ed0a899&province=四川";
 			HttpGet getMethod = new HttpGet(restUrl);
 			HttpResponse response = httpClient.execute(getMethod);
-			if (null != response) {
-				int statusCode = response.getStatusLine().getStatusCode();
-				if (statusCode == 200) {
-					String responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
-					JSONObject jsonObject = (JSONObject) JSON.parseObject(responseBody).get("result");
+			if (null != response && response.getStatusLine().getStatusCode() == 200) {
+				String responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
+				JSONObject jsonObject = (JSONObject) JSON.parseObject(responseBody).get("result");
 
-					String dateString = jsonObject.getString("updatetime");
-					if (null != dateString) {
-						jsonObject.put("updatetime", dateString.substring(0, 10));
-					}
-					String oilKey = "oilKey";
-					RedisClient.set(oilKey, jsonObject, 86400);
-					OilInfo oilInfo = new OilInfo();
-					oilInfo.setOil0(jsonObject.getString("oil0"));
-					oilInfo.setOil89(jsonObject.getString("oil89"));
-					oilInfo.setOil90(jsonObject.getString("oil90"));
-					oilInfo.setOil92(jsonObject.getString("oil92"));
-					oilInfo.setOil93(jsonObject.getString("oil93"));
-					oilInfo.setOil95(jsonObject.getString("oil95"));
-					oilInfo.setOil97(jsonObject.getString("oil97"));
-					oilInfo.setProvince("四川");
-					oilInfo.setUpdateTime(CommonTools.getDateString(dateString));
-					oilInfoService.addOilInfo(oilInfo);
+				String dateString = jsonObject.getString("updatetime");
+				if (null != dateString) {
+					jsonObject.put("updatetime", dateString.substring(0, 10));
 				}
+				String oilKey = "oilKey";
+				RedisClient.set(oilKey, jsonObject, 86400);
+				OilInfo oilInfo = new OilInfo();
+				oilInfo.setOil0(jsonObject.getString("oil0"));
+				oilInfo.setOil89(jsonObject.getString("oil89"));
+				oilInfo.setOil90(jsonObject.getString("oil90"));
+				oilInfo.setOil92(jsonObject.getString("oil92"));
+				oilInfo.setOil93(jsonObject.getString("oil93"));
+				oilInfo.setOil95(jsonObject.getString("oil95"));
+				oilInfo.setOil97(jsonObject.getString("oil97"));
+				oilInfo.setProvince("四川");
+				oilInfo.setUpdateTime(CommonTools.getDateString(dateString));
+				oilInfoService.addOilInfo(oilInfo);
 			}
 		} catch (Exception e) {
 			logger.error("getTodayOilInfo is exception:" + e.toString());
