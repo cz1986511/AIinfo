@@ -26,6 +26,7 @@ import xiaozhuo.info.service.util.Crawler;
 import xiaozhuo.info.service.util.LimitUtil;
 import xiaozhuo.info.service.util.OilInfoUtil;
 import xiaozhuo.info.service.util.RedisClient;
+import xiaozhuo.info.service.util.SsqInfoUtil;
 import xiaozhuo.info.service.util.WeatherUtil;
 
 @Controller
@@ -33,6 +34,8 @@ import xiaozhuo.info.service.util.WeatherUtil;
 public class AIInfoController {
 
 	private static Logger logger = LoggerFactory.getLogger(AIInfoController.class);
+	@Autowired
+	private SsqInfoUtil ssqInfoUtil;
 	@Autowired
 	private ArticleInfoService articleInfoService;
 	@Autowired
@@ -160,6 +163,40 @@ public class AIInfoController {
 				result.put("status", Constant.ERRORCODE1);
 				result.put("msg", Constant.ERRORMSG1);
 				logger.error("makeData is exception:" + e.toString());
+			}
+		} else {
+			result.put("status", Constant.ERRORCODE1);
+			result.put("msg", Constant.ERRORMSG1);
+		}
+		return json.toJSONString();
+	}
+	
+	@RequestMapping(value = "/data/cp", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String makeCPData(HttpServletRequest request) {
+		String token = request.getParameter("token");
+		Map<String, Object> result = new HashMap<String, Object>();
+		JSONObject json = new JSONObject(result);
+		if (!LimitUtil.getRate()) {
+			result.put("status", Constant.ERRORCODE2);
+			result.put("msg", Constant.ERRORMSG2);
+			return json.toJSONString();
+		}
+		if (dataToken.equals(token)) {
+			try {
+				String tempString = "2019";
+				int j = 123;
+				for(int i = 0; i < 50; i++) {
+					j -= i;
+					tempString += j;
+				}
+				ssqInfoUtil.getTodaySsqInfo(tempString);
+				result.put("status", Constant.SUCESSCODE);
+				result.put("msg", Constant.SUCESSMSG);
+			} catch (Exception e) {
+				result.put("status", Constant.ERRORCODE1);
+				result.put("msg", Constant.ERRORMSG1);
+				logger.error("makeCPData is exception:" + e.toString());
 			}
 		} else {
 			result.put("status", Constant.ERRORCODE1);

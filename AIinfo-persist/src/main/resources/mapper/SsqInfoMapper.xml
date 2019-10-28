@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xiaozhuo.info.persist.mapper.SsqInfoMapper" >
+  <resultMap id="BaseResultMap" type="xiaozhuo.info.persist.base.SsqInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="qid" property="qid" jdbcType="INTEGER" />
+    <result column="cpid" property="cpid" jdbcType="INTEGER" />
+    <result column="open_date" property="openDate" jdbcType="TIMESTAMP" />
+    <result column="dead_line" property="deadLine" jdbcType="TIMESTAMP" />
+    <result column="sale_amount" property="saleAmount" jdbcType="VARCHAR" />
+    <result column="total_money" property="totalMoney" jdbcType="VARCHAR" />
+    <result column="h1_num" property="h1Num" jdbcType="INTEGER" />
+    <result column="h2_num" property="h2Num" jdbcType="INTEGER" />
+    <result column="h3_num" property="h3Num" jdbcType="INTEGER" />
+    <result column="h4_num" property="h4Num" jdbcType="INTEGER" />
+    <result column="h5_num" property="h5Num" jdbcType="INTEGER" />
+    <result column="h6_num" property="h6Num" jdbcType="INTEGER" />
+    <result column="l_num" property="lNum" jdbcType="INTEGER" />
+    <result column="p1_num" property="p1Num" jdbcType="INTEGER" />
+    <result column="p1_bonus" property="p1Bonus" jdbcType="VARCHAR" />
+    <result column="p2_num" property="p2Num" jdbcType="INTEGER" />
+    <result column="p2_bonus" property="p2Bonus" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modify" property="gmtModify" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, qid, cpid, open_date, dead_line, sale_amount, total_money, h1_num, h2_num, h3_num, 
+    h4_num, h5_num, h6_num, l_num, p1_num, p1_bonus, p2_num, p2_bonus, status, gmt_create, 
+    gmt_modify
+  </sql>
+  <sql id="selectByParamsWhere">
+    <where>
+	  <if test="qid != null">
+	    qid = #{qid,jdbcType=INTEGER} and
+	  </if>
+      <if test="cpid != null">
+        cpid = #{cpid,jdbcType=INTEGER} and
+      </if>
+        status = 0
+    </where>
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from aiinfo_ssq_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByQid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from aiinfo_ssq_info
+    where qid = #{qid,jdbcType=INTEGER}
+  </select>
+  <select id="selectByParams" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from aiinfo_ssq_info
+    <include refid="selectByParamsWhere" />
+    order by qid desc
+    <if test=" offset != null and limit != null">
+	  limit ${offset},${limit}
+	</if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from aiinfo_ssq_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="xiaozhuo.info.persist.base.SsqInfo" >
+    insert into aiinfo_ssq_info (id, qid, cpid, 
+      open_date, dead_line, sale_amount, 
+      total_money, h1_num, h2_num, 
+      h3_num, h4_num, h5_num, 
+      h6_num, l_num, p1_num, 
+      p1_bonus, p2_num, p2_bonus, 
+      status, gmt_create, gmt_modify
+      )
+    values (#{id,jdbcType=BIGINT}, #{qid,jdbcType=INTEGER}, #{cpid,jdbcType=INTEGER}, 
+      #{openDate,jdbcType=TIMESTAMP}, #{deadLine,jdbcType=TIMESTAMP}, #{saleAmount,jdbcType=VARCHAR}, 
+      #{totalMoney,jdbcType=VARCHAR}, #{h1Num,jdbcType=INTEGER}, #{h2Num,jdbcType=INTEGER}, 
+      #{h3Num,jdbcType=INTEGER}, #{h4Num,jdbcType=INTEGER}, #{h5Num,jdbcType=INTEGER}, 
+      #{h6Num,jdbcType=INTEGER}, #{lNum,jdbcType=INTEGER}, #{p1Num,jdbcType=INTEGER}, 
+      #{p1Bonus,jdbcType=VARCHAR}, #{p2Num,jdbcType=INTEGER}, #{p2Bonus,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, NOW(), NOW())
+  </insert>
+  <insert id="insertSelective" parameterType="xiaozhuo.info.persist.base.SsqInfo" >
+    insert into aiinfo_ssq_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="qid != null" >
+        qid,
+      </if>
+      <if test="cpid != null" >
+        cpid,
+      </if>
+      <if test="openDate != null" >
+        open_date,
+      </if>
+      <if test="deadLine != null" >
+        dead_line,
+      </if>
+      <if test="saleAmount != null" >
+        sale_amount,
+      </if>
+      <if test="totalMoney != null" >
+        total_money,
+      </if>
+      <if test="h1Num != null" >
+        h1_num,
+      </if>
+      <if test="h2Num != null" >
+        h2_num,
+      </if>
+      <if test="h3Num != null" >
+        h3_num,
+      </if>
+      <if test="h4Num != null" >
+        h4_num,
+      </if>
+      <if test="h5Num != null" >
+        h5_num,
+      </if>
+      <if test="h6Num != null" >
+        h6_num,
+      </if>
+      <if test="lNum != null" >
+        l_num,
+      </if>
+      <if test="p1Num != null" >
+        p1_num,
+      </if>
+      <if test="p1Bonus != null" >
+        p1_bonus,
+      </if>
+      <if test="p2Num != null" >
+        p2_num,
+      </if>
+      <if test="p2Bonus != null" >
+        p2_bonus,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+        gmt_create,
+        gmt_modify
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="qid != null" >
+        #{qid,jdbcType=INTEGER},
+      </if>
+      <if test="cpid != null" >
+        #{cpid,jdbcType=INTEGER},
+      </if>
+      <if test="openDate != null" >
+        #{openDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deadLine != null" >
+        #{deadLine,jdbcType=TIMESTAMP},
+      </if>
+      <if test="saleAmount != null" >
+        #{saleAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="totalMoney != null" >
+        #{totalMoney,jdbcType=VARCHAR},
+      </if>
+      <if test="h1Num != null" >
+        #{h1Num,jdbcType=INTEGER},
+      </if>
+      <if test="h2Num != null" >
+        #{h2Num,jdbcType=INTEGER},
+      </if>
+      <if test="h3Num != null" >
+        #{h3Num,jdbcType=INTEGER},
+      </if>
+      <if test="h4Num != null" >
+        #{h4Num,jdbcType=INTEGER},
+      </if>
+      <if test="h5Num != null" >
+        #{h5Num,jdbcType=INTEGER},
+      </if>
+      <if test="h6Num != null" >
+        #{h6Num,jdbcType=INTEGER},
+      </if>
+      <if test="lNum != null" >
+        #{lNum,jdbcType=INTEGER},
+      </if>
+      <if test="p1Num != null" >
+        #{p1Num,jdbcType=INTEGER},
+      </if>
+      <if test="p1Bonus != null" >
+        #{p1Bonus,jdbcType=VARCHAR},
+      </if>
+      <if test="p2Num != null" >
+        #{p2Num,jdbcType=INTEGER},
+      </if>
+      <if test="p2Bonus != null" >
+        #{p2Bonus,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+        NOW(),
+        NOW()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="xiaozhuo.info.persist.base.SsqInfo" >
+    update aiinfo_ssq_info
+    <set >
+      <if test="qid != null" >
+        qid = #{qid,jdbcType=INTEGER},
+      </if>
+      <if test="cpid != null" >
+        cpid = #{cpid,jdbcType=INTEGER},
+      </if>
+      <if test="openDate != null" >
+        open_date = #{openDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deadLine != null" >
+        dead_line = #{deadLine,jdbcType=TIMESTAMP},
+      </if>
+      <if test="saleAmount != null" >
+        sale_amount = #{saleAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="totalMoney != null" >
+        total_money = #{totalMoney,jdbcType=VARCHAR},
+      </if>
+      <if test="h1Num != null" >
+        h1_num = #{h1Num,jdbcType=INTEGER},
+      </if>
+      <if test="h2Num != null" >
+        h2_num = #{h2Num,jdbcType=INTEGER},
+      </if>
+      <if test="h3Num != null" >
+        h3_num = #{h3Num,jdbcType=INTEGER},
+      </if>
+      <if test="h4Num != null" >
+        h4_num = #{h4Num,jdbcType=INTEGER},
+      </if>
+      <if test="h5Num != null" >
+        h5_num = #{h5Num,jdbcType=INTEGER},
+      </if>
+      <if test="h6Num != null" >
+        h6_num = #{h6Num,jdbcType=INTEGER},
+      </if>
+      <if test="lNum != null" >
+        l_num = #{lNum,jdbcType=INTEGER},
+      </if>
+      <if test="p1Num != null" >
+        p1_num = #{p1Num,jdbcType=INTEGER},
+      </if>
+      <if test="p1Bonus != null" >
+        p1_bonus = #{p1Bonus,jdbcType=VARCHAR},
+      </if>
+      <if test="p2Num != null" >
+        p2_num = #{p2Num,jdbcType=INTEGER},
+      </if>
+      <if test="p2Bonus != null" >
+        p2_bonus = #{p2Bonus,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+        gmt_modify = NOW()
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="xiaozhuo.info.persist.base.SsqInfo" >
+    update aiinfo_ssq_info
+    set qid = #{qid,jdbcType=INTEGER},
+      cpid = #{cpid,jdbcType=INTEGER},
+      open_date = #{openDate,jdbcType=TIMESTAMP},
+      dead_line = #{deadLine,jdbcType=TIMESTAMP},
+      sale_amount = #{saleAmount,jdbcType=VARCHAR},
+      total_money = #{totalMoney,jdbcType=VARCHAR},
+      h1_num = #{h1Num,jdbcType=INTEGER},
+      h2_num = #{h2Num,jdbcType=INTEGER},
+      h3_num = #{h3Num,jdbcType=INTEGER},
+      h4_num = #{h4Num,jdbcType=INTEGER},
+      h5_num = #{h5Num,jdbcType=INTEGER},
+      h6_num = #{h6Num,jdbcType=INTEGER},
+      l_num = #{lNum,jdbcType=INTEGER},
+      p1_num = #{p1Num,jdbcType=INTEGER},
+      p1_bonus = #{p1Bonus,jdbcType=VARCHAR},
+      p2_num = #{p2Num,jdbcType=INTEGER},
+      p2_bonus = #{p2Bonus,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      gmt_modify = NOW()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

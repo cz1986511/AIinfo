@@ -10,6 +10,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import com.alibaba.fastjson.JSONObject;
 
+import lombok.extern.slf4j.Slf4j;
+
 public class IPUtil {
 
 	private static String URL = "http://ip.taobao.com/service/getIpInfo.php?ip=";
@@ -106,7 +108,7 @@ public class IPUtil {
 	
 	public static void main(String[] args) {
 		String ip = "140.243.100.209";
-		//getCityCodeByIP(ip);
+		getCityCodeByIP(ip);
 		getTXCityCodeByIp(ip);
 	}
 
