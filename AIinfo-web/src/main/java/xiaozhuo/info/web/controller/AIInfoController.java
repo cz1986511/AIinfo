@@ -170,11 +170,12 @@ public class AIInfoController {
 		}
 		return json.toJSONString();
 	}
-	
+
 	@RequestMapping(value = "/data/cp", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String makeCPData(HttpServletRequest request) {
 		String token = request.getParameter("token");
+		String qid = request.getParameter("qid");
 		Map<String, Object> result = new HashMap<String, Object>();
 		JSONObject json = new JSONObject(result);
 		if (!LimitUtil.getRate()) {
@@ -184,14 +185,7 @@ public class AIInfoController {
 		}
 		if (dataToken.equals(token)) {
 			try {
-				String tempString = "2019";
-				int j = 122;
-				for(int i = 0; i < 70; i++) {
-					j -= i;
-					tempString += j;
-					ssqInfoUtil.getTodaySsqInfo(tempString);
-					Thread.sleep(5000);
-				}
+				ssqInfoUtil.getTodaySsqInfo(qid);
 				result.put("status", Constant.SUCESSCODE);
 				result.put("msg", Constant.SUCESSMSG);
 			} catch (Exception e) {
