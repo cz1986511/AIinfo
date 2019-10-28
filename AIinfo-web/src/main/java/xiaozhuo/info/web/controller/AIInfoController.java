@@ -185,11 +185,12 @@ public class AIInfoController {
 		if (dataToken.equals(token)) {
 			try {
 				String tempString = "2019";
-				int j = 123;
-				for(int i = 0; i < 50; i++) {
+				int j = 122;
+				for(int i = 0; i < 70; i++) {
 					j -= i;
 					tempString += j;
 					ssqInfoUtil.getTodaySsqInfo(tempString);
+					Thread.sleep(5000);
 				}
 				result.put("status", Constant.SUCESSCODE);
 				result.put("msg", Constant.SUCESSMSG);

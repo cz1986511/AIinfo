@@ -103,7 +103,7 @@ public class SsqInfoUtil {
 	
 	public static void main(String[] args) {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
-		String issueno = "2019123";
+		String issueno = "2019100";
 		try {
 			String restUrl = "https://api.jisuapi.com/caipiao/query?appkey=a6a2ebcd0ed0a899&caipiaoid=11&issueno=";
 			if (null != issueno) {
