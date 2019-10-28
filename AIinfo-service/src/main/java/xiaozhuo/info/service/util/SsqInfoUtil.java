@@ -99,7 +99,6 @@ public class SsqInfoUtil {
 				e.printStackTrace();
 			}
 		}
-		logger.error("getTodaySsqInfo is null");
 	}
 	
 	public static void main(String[] args) {
