@@ -189,8 +189,8 @@ public class AIInfoController {
 				for(int i = 0; i < 50; i++) {
 					j -= i;
 					tempString += j;
+					ssqInfoUtil.getTodaySsqInfo(tempString);
 				}
-				ssqInfoUtil.getTodaySsqInfo(tempString);
 				result.put("status", Constant.SUCESSCODE);
 				result.put("msg", Constant.SUCESSMSG);
 			} catch (Exception e) {
