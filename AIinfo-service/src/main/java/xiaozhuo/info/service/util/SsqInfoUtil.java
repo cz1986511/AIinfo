@@ -36,7 +36,6 @@ public class SsqInfoUtil {
 	@Autowired
 	private SsqInfoMapper ssqInfoMapper;
 
-	@Scheduled(cron = "0 17 6 * * ?")
 	public void getTodaySsqInfo(String issueno) {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		try {
