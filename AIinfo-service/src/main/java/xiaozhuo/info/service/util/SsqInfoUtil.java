@@ -79,21 +79,28 @@ public class SsqInfoUtil {
 				ssqInfo.setH4Num(Integer.valueOf(array[3]));
 				ssqInfo.setH5Num(Integer.valueOf(array[4]));
 				ssqInfo.setH6Num(Integer.valueOf(array[5]));
-				JSONArray prizeArray = jsonObject.getJSONArray("prize");
-				for (int j = 0; j < prizeArray.size(); j++) {
-					JSONObject prizeObject = (JSONObject) prizeArray.get(j);
-					if ("一等奖".equals(prizeObject.getString("prizename"))) {
-						ssqInfo.setP1Num(prizeObject.getIntValue("num"));
-						ssqInfo.setP1Bonus(String.valueOf(prizeObject.getIntValue("singlebonus")));
+				try {
+					JSONArray prizeArray = jsonObject.getJSONArray("prize");
+					for (int j = 0; j < prizeArray.size(); j++) {
+						JSONObject prizeObject = (JSONObject) prizeArray.get(j);
+						if ("一等奖".equals(prizeObject.getString("prizename"))) {
+							ssqInfo.setP1Num(prizeObject.getIntValue("num"));
+							ssqInfo.setP1Bonus(String.valueOf(prizeObject.getIntValue("singlebonus")));
+						}
+						if ("二等奖".equals(prizeObject.getString("prizename"))) {
+							ssqInfo.setP2Num(prizeObject.getIntValue("num"));
+							ssqInfo.setP2Bonus(String.valueOf(prizeObject.getIntValue("singlebonus")));
+						}
 					}
-					if ("二等奖".equals(prizeObject.getString("prizename"))) {
-						ssqInfo.setP2Num(prizeObject.getIntValue("num"));
-						ssqInfo.setP2Bonus(String.valueOf(prizeObject.getIntValue("singlebonus")));
-					}
+				} catch (Exception e) {
+					logger.error("prize is false");
 				}
 				SsqInfo tempInfo = ssqInfoMapper.selectByQid(qid);
 				if (null == tempInfo) {
 					ssqInfoMapper.insertSelective(ssqInfo);
+				} else {
+					ssqInfo.setId(tempInfo.getId());
+					ssqInfoMapper.updateByPrimaryKeySelective(ssqInfo);
 				}
 			}
 		} catch (Exception e) {
