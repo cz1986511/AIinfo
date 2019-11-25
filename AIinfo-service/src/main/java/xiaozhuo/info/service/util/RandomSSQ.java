@@ -1,7 +1,7 @@
 package xiaozhuo.info.service.util;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -12,8 +12,6 @@ import java.util.stream.Collectors;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class RandomSSQ {
 
@@ -59,36 +57,6 @@ public class RandomSSQ {
 		System.out.println();
 	}
 
-	public static void main(String[] args) {
-		Map<Integer, Integer> map2 = new HashMap<Integer, Integer>();
-		Map<Integer, Integer> mapL = new HashMap<Integer, Integer>();
-		Map<Integer, Integer> map3 = new HashMap<Integer, Integer>();
-		try {
-			String filePath = "d:\\ssq.xlsx";
-			File excel = new File(filePath);
-			Workbook wb;
-			wb = new XSSFWorkbook(excel);
-			Sheet sheet2 = wb.getSheetAt(2);
-			List<Integer> list100 = makeLast100(sheet2, map2);
-			Sheet sheet3 = wb.getSheetAt(3);
-			List<Integer> listALL = makeALL(sheet3, map3);
-			List<Integer> listL = makeLANQ(sheet3, mapL);
-			listL.forEach(n -> {
-				list100.forEach(a -> {
-					System.out.print(a + " ");
-				});
-				System.out.print(n);
-				System.out.println();
-				listALL.forEach(b -> {
-					System.out.print(b + " ");
-				});
-				System.out.print(n);
-				System.out.println();
-			});
-		} catch (Exception e) {
-			e.toString();
-		}
-	}
 
 	public static void makeMapL(Map<Integer, Integer> map, int temp) {
 		Integer k = Integer.valueOf(temp);
@@ -149,8 +117,8 @@ public class RandomSSQ {
 			makeAddMap(map, cell.getStringCellValue(), num);
 			num--;
 		}
-		Map<Integer, Integer> resultMap = map.entrySet().stream().sorted(Map.Entry.comparingByValue()).limit(5).
-				collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+		Map<Integer, Integer> resultMap = map.entrySet().stream().sorted(Map.Entry.comparingByValue()).limit(5)
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 		List<Integer> listResult = resultMap.keySet().stream().collect(Collectors.toList());
 		return listResult;
 	}
@@ -169,8 +137,8 @@ public class RandomSSQ {
 			makeAddMap(map, cell.getStringCellValue(), num);
 			num = num - 4;
 		}
-		Map<Integer, Integer> resultMap = map.entrySet().stream().sorted(Map.Entry.comparingByValue()).limit(5).
-				collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+		Map<Integer, Integer> resultMap = map.entrySet().stream().sorted(Map.Entry.comparingByValue()).limit(5)
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 		List<Integer> listResult = resultMap.keySet().stream().collect(Collectors.toList());
 		return listResult;
 	}
@@ -189,10 +157,59 @@ public class RandomSSQ {
 			makeAddLMap(map, (int) cell.getNumericCellValue(), num);
 			num--;
 		}
-		Map<Integer, Integer> resultMap = map.entrySet().stream().sorted(Map.Entry.comparingByValue()).limit(5).
-				collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+		Map<Integer, Integer> resultMap = map.entrySet().stream().sorted(Map.Entry.comparingByValue()).limit(5)
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 		List<Integer> listResult = resultMap.keySet().stream().collect(Collectors.toList());
 		return listResult;
+	}
+
+	public static void makeRandomSsq2(Sheet sheet) {
+		Map<Integer, Map<Integer, Integer>> map = new HashMap<Integer, Map<Integer, Integer>>();
+		int lastRowIndex = sheet.getLastRowNum();
+		for (int i = 1; i < lastRowIndex + 1; i++) {
+			Row row = sheet.getRow(i);
+			Cell cell = row.getCell(1);
+			String temp = cell.getStringCellValue();
+			String[] array = temp.split(" ");
+			for (int j = 0; j < array.length; j++) {
+				Integer k = Integer.valueOf(array[j]);
+				Map<Integer, Integer> tempMap = map.get(j);
+				if (null != tempMap) {
+					if (tempMap.get(k) != null) {
+						int n = tempMap.get(k);
+						tempMap.put(k, n + 1);
+					} else {
+						tempMap.put(k, 1);
+					}
+				} else {
+					tempMap = new HashMap<Integer, Integer>();
+					tempMap.put(k, 1);
+				}
+				map.put(j, tempMap);
+			}
+		}
+//		Map<Integer, Integer> resultMap1 = 
+		map.get(0).entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).limit(3)
+				.forEach(System.out::println);
+		System.out.println("=====");
+		map.get(1).entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).limit(3)
+				.forEach(System.out::println);
+		System.out.println("=====");
+		map.get(2).entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).limit(3)
+				.forEach(System.out::println);
+		System.out.println("=====");
+		map.get(3).entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).limit(3)
+				.forEach(System.out::println);
+		System.out.println("=====");
+		map.get(4).entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).limit(3)
+				.forEach(System.out::println);
+		System.out.println("=====");
+		map.get(5).entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).limit(3)
+				.forEach(System.out::println);
+
+//				collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+//		List<Integer> listResult1 = resultMap1.keySet().stream().collect(Collectors.toList());
+//		listResult1.forEach(n -> System.out.print(n + " "));
 	}
 
 }

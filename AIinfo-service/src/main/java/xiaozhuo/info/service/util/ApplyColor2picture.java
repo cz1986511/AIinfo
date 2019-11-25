@@ -9,10 +9,10 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 //import org.apache.tomcat.jni.OS;

@@ -1,16 +1,17 @@
 package xiaozhuo.info.service.util;
 
 import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import com.alibaba.fastjson.JSONObject;
 
-import lombok.extern.slf4j.Slf4j;
+import com.alibaba.fastjson.JSONObject;
 
 public class IPUtil {
 
@@ -108,8 +109,8 @@ public class IPUtil {
 	
 	public static void main(String[] args) {
 		String ip = "140.243.100.209";
-		getCityCodeByIP(ip);
-		getTXCityCodeByIp(ip);
+		System.out.println(getCityCodeByIP(ip));
+		//System.out.println(getTXCityCodeByIp(ip));
 	}
 
 }

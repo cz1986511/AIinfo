@@ -35,7 +35,7 @@ public class StringDesc {
 			List<Integer> list = new ArrayList<Integer>();
 			while (list.size() < 6) {
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(500);
 					sysTime = System.currentTimeMillis() + (System.currentTimeMillis() % 34) + (System.currentTimeMillis() / 34);
 					index = Long.valueOf(sysTime % 34).intValue();
 					Integer temp = map.get(index);
