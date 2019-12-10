@@ -9,6 +9,14 @@ public class StringTest {
 	public static void main(String[] args) {
 		Scanner in = new Scanner(System.in);
 		String str = in.next();
+		StringHandle1(str);
+	}
+	
+	/**
+	 * input:  string=aaabbbaccc
+	 * output: a3b3ac3
+	*/
+	public static void StringHandle1(String str) {
 		if (null != str && str.length() > 0) {
 			char[] strArray = str.toCharArray();
 			char temp;
