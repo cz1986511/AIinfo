@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.alibaba.excel.util.CollectionUtils;
 
@@ -11,6 +12,7 @@ import xiaozhuo.info.persist.base.Idea;
 import xiaozhuo.info.persist.mapper.IdeaMapper;
 import xiaozhuo.info.service.IdeaService;
 
+@Service
 public class IdeaServiceImpl implements IdeaService {
 	
 	@Autowired
