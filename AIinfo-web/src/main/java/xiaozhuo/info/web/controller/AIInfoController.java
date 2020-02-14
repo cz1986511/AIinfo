@@ -20,7 +20,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 
 import xiaozhuo.info.persist.base.ArticleInfo;
+import xiaozhuo.info.persist.base.Idea;
 import xiaozhuo.info.service.ArticleInfoService;
+import xiaozhuo.info.service.IdeaService;
 import xiaozhuo.info.service.util.Constant;
 import xiaozhuo.info.service.util.Crawler;
 import xiaozhuo.info.service.util.LimitUtil;
@@ -44,9 +46,13 @@ public class AIInfoController {
 	private OilInfoUtil oilInfoUtil;
 	@Autowired
 	private WeatherUtil weatherUtil;
+	@Autowired
+	private IdeaService ideaService;
+	
 	private static String ART_KEY = "dKey";
 	private static String WEATHER_KEY = "weather";
 	private static String OIL_KEY = "oilKey";
+	private static String IDEA_KEY = "ideaKey";
 	@Value("${data.token}")
 	private String dataToken;
 
@@ -79,6 +85,42 @@ public class AIInfoController {
 			result.put("status", Constant.SUCESSCODE);
 		} catch (Exception e) {
 			logger.error("getArticleList is exception:" + e.toString());
+			result.put("status", Constant.ERRORCODE1);
+			result.put("msg", Constant.ERRORMSG1);
+		}
+		return json.toJSONString();
+	}
+	
+	@RequestMapping(value = "/idea/list", method = RequestMethod.POST)
+	@ResponseBody
+	public String getIdeaList(HttpServletRequest request) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		JSONObject json = new JSONObject(result);
+		if (!LimitUtil.getRate()) {
+			result.put("status", Constant.ERRORCODE2);
+			result.put("msg", Constant.ERRORMSG2);
+			return json.toJSONString();
+		}
+		try {
+			
+			List<Idea> resultList = (List<Idea>) RedisClient.get(IDEA_KEY,
+					new TypeReference<List<Idea>>() {
+					});
+			if (!CollectionUtils.isEmpty(resultList)) {
+				result.put("data", resultList);
+			} else {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("offset", 0);
+				map.put("limit", 200);
+				List<Idea> ideaList = ideaService.getIdeas(map);
+				if (!CollectionUtils.isEmpty(ideaList)) {
+					result.put("data", ideaList);
+					RedisClient.set(IDEA_KEY, ideaList, 120);
+				}
+			}
+			result.put("status", Constant.SUCESSCODE);
+		} catch (Exception e) {
+			logger.error("getIdeaList is exception:" + e.toString());
 			result.put("status", Constant.ERRORCODE1);
 			result.put("msg", Constant.ERRORMSG1);
 		}

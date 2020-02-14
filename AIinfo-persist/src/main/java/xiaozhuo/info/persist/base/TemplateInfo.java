@@ -2,9 +2,7 @@ package xiaozhuo.info.persist.base;
 
 import java.time.LocalDate;
 
-import lombok.Data;
 
-@Data
 public class TemplateInfo {
     private Long id;
 
