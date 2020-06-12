@@ -10,4 +10,6 @@ target/
 .project
 .classpath
 log*
-.eclipse
+.DS_Store
+*.iml
+.idea
