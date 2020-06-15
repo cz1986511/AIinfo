@@ -27,6 +27,9 @@ import xiaozhuo.info.service.util.RedisClient;
 import xiaozhuo.info.service.util.SsqInfoUtil;
 import xiaozhuo.info.service.util.WeatherUtil;
 
+/**
+ * @author zhuochen
+ */
 @Controller
 @RequestMapping("/api")
 @Slf4j

@@ -262,7 +262,7 @@ public final class Lunar {
 	/**
 	 * 中文日期
 	 * 
-	 * @param d
+	 * @param day
 	 * @return
 	 */
 	private static String chineseDay(int day) {
@@ -304,10 +304,7 @@ public final class Lunar {
 
 	/**
 	 * 输出格式：2015.07.04 周六 乙未[羊]年 壬午月 辛巳日
-	 * 
-	 * @param year
-	 * @param month
-	 * @param day
+	 *
 	 * @return
 	 */
 	public String getLunarDate() {
@@ -320,10 +317,7 @@ public final class Lunar {
 
 	/**
 	 * 输出格式：五月十九
-	 * 
-	 * @param year
-	 * @param month
-	 * @param day
+	 *
 	 * @return
 	 */
 	public String getLunarDay() {
@@ -449,7 +443,7 @@ public final class Lunar {
 	}
 
 	public static void main(String[] args) {
-		Lunar lauar = new Lunar(2019,2,19);
+		Lunar lauar = new Lunar(2020,6,12);
 		System.out.println(lauar.getLunarDate());
 		System.out.println("农历:" + lauar.getLunarDay());
 		System.out.println("农历节日:" + lauar.getLunarHoliday());
