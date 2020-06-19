@@ -1,10 +1,6 @@
 package xiaozhuo.info.service.test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +10,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.alibaba.excel.util.CollectionUtils;
-
 import xiaozhuo.info.persist.base.SsqInfo;
 import xiaozhuo.info.persist.mapper.SsqInfoMapper;
 
@@ -43,43 +38,43 @@ public class SsqServiceTest {
 		for (SsqInfo ssqInfo : allSsq) {
 			key = ssqInfo.getH1Num();
 			if (null != map1.get(key)) {
-				map1.put(key, map1.get(key)+1);
+				map1.put(key, map1.get(key) + 1);
 			} else {
 				map1.put(key, 1);
 			}
 			key = ssqInfo.getH2Num();
 			if (null != map2.get(key)) {
-				map2.put(key, map2.get(key)+1);
+				map2.put(key, map2.get(key) + 1);
 			} else {
 				map2.put(key, 1);
 			}
 			key = ssqInfo.getH3Num();
 			if (null != map3.get(key)) {
-				map3.put(key, map3.get(key)+1);
+				map3.put(key, map3.get(key) + 1);
 			} else {
 				map3.put(key, 1);
 			}
 			key = ssqInfo.getH4Num();
 			if (null != map4.get(key)) {
-				map4.put(key, map4.get(key)+1);
+				map4.put(key, map4.get(key) + 1);
 			} else {
 				map4.put(key, 1);
 			}
 			key = ssqInfo.getH5Num();
 			if (null != map5.get(key)) {
-				map5.put(key, map5.get(key)+1);
+				map5.put(key, map5.get(key) + 1);
 			} else {
 				map5.put(key, 1);
 			}
 			key = ssqInfo.getH6Num();
 			if (null != map6.get(key)) {
-				map6.put(key, map6.get(key)+1);
+				map6.put(key, map6.get(key) + 1);
 			} else {
 				map6.put(key, 1);
 			}
 			key = ssqInfo.getlNum();
 			if (null != mapL.get(key)) {
-				mapL.put(key, mapL.get(key)+1);
+				mapL.put(key, mapL.get(key) + 1);
 			} else {
 				mapL.put(key, 1);
 			}
@@ -279,12 +274,25 @@ public class SsqServiceTest {
 	}
 	
 	public static void main(String[] args) {
-		Map<Integer, Integer> map1 = new HashMap<Integer, Integer>();
-		Map<Integer, Integer> map2 = new HashMap<Integer, Integer>();
-		map1.put(1, 5);
-		map2.put(1,10);
-		map2.put(2, 3);
-		map1.forEach((key,value) -> map2.merge(key, value, (v1,v2) -> (v1 + v2)));
-		System.out.println(1);
+		for(int k = 0; k < 5; k++) {
+		    int count = 0;
+		    int result = 0;
+            Set<Integer> set = new TreeSet<>();
+            while(count < 6) {
+                result = (int) (Math.random() * 33);
+                if (result == 0) {
+                    result = 7;
+                }
+                set.add(result);
+                count = set.size();
+            }
+            int lnum = (int)(Math.random() * 15);
+            if(lnum == 0) {
+                lnum = 8;
+            }
+            set.forEach(e -> System.out.print(e + ","));
+            System.out.println(lnum);
+        }
+
 	}
 }

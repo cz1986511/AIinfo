@@ -443,13 +443,13 @@ public final class Lunar {
 	}
 
 	public static void main(String[] args) {
-		Lunar lauar = new Lunar(2020,6,12);
+		Lunar lauar = new Lunar();
 		System.out.println(lauar.getLunarDate());
 		System.out.println("农历:" + lauar.getLunarDay());
 		System.out.println("农历节日:" + lauar.getLunarHoliday());
 		System.out.println("公立节日:" + lauar.getHoliday());
 		System.out.println("农历节气:" + lauar.getSoralTerm());
 		
-		System.out.println(sTermM(2019,3));
+		System.out.println(sTermM(2020,3));
 	}
 }

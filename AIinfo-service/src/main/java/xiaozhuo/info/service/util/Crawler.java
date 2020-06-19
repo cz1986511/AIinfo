@@ -28,6 +28,10 @@ import xiaozhuo.info.service.util.crawler.ThirtySixKrCrawler;
 import xiaozhuo.info.service.util.crawler.TmtPostCrawler;
 import xiaozhuo.info.service.util.crawler.YiCaiCrawler;
 
+/**
+ * @author zhuochen
+ */
+
 @Component
 @Configurable
 @EnableScheduling
