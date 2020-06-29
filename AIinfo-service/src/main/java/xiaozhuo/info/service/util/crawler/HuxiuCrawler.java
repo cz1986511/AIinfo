@@ -31,12 +31,12 @@ public class HuxiuCrawler implements Runnable {
 	private static final String DEFAULT_PIC = "http://chenzhuo.info/default.png";
 
 	private WebClient webClient;
-	private ArticleInfoService articleInfoManager;
+	private ArticleInfoService articleInfoService;
 
-	public HuxiuCrawler(ArticleInfoService articleInfoManager) {
+	public HuxiuCrawler(ArticleInfoService articleInfoService) {
 		super();
 		this.webClient = initWebClient();
-		this.articleInfoManager = articleInfoManager;
+		this.articleInfoService = articleInfoService;
 	}
 
 	@Override
@@ -123,9 +123,9 @@ public class HuxiuCrawler implements Runnable {
 		map.put("source", articleInfo.getSource());
 		map.put("offset", 0);
 		map.put("limit", 200);
-		List<ArticleInfo> result = articleInfoManager.getArticleInfosByParams(map);
+		List<ArticleInfo> result = articleInfoService.getArticleInfosByParams(map);
 		if (CollectionUtils.isEmpty(result)) {
-			articleInfoManager.addArticleInfo(articleInfo);
+			articleInfoService.addArticleInfo(articleInfo);
 		} else {
 			logger.error("huxiu art is exsit | title:{}", articleInfo.getTitle());
 		}
@@ -217,8 +217,9 @@ public class HuxiuCrawler implements Runnable {
 						HtmlParagraph descdescHtmlParagraphList = (HtmlParagraph) descHtmlParagraphList.get(0);
 						articleInfo.setIntroduction(descdescHtmlParagraphList.asText());
 					}
-					System.out.println(articleInfo.getTitle() + articleInfo.getSource());
-					//saveArticle(articleInfo);
+					if(null != articleInfo.getSource() && null != articleInfo.getTitle()) {
+						System.out.println("保存成功:" + articleInfo.getTitle() + articleInfo.getSource());
+					}
 				} catch (Exception e) {
 					logger.error("huxiuCrawler is exception:{}", e.toString());
 				}
