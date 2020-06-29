@@ -23,15 +23,17 @@ public class MailUtil
 
     public static void sendMail(String from, String paw, String to, String emailTemp, String title, String... strings) {
         // 指定发送邮件的主机为 smtp.qq.com
-        String host = "smtp.qq.com"; // QQ 邮件服务器
+        String host = "smtp.qq.com";
         // 获取系统属性
         Properties properties = System.getProperties();
         // 设置邮件服务器
         properties.setProperty("mail.smtp.host", host);
         properties.put("mail.smtp.auth", "true");
 
-        properties.put("mail.transport.protocol", "smtp");// 协议名称
-        properties.put("mail.smtp.socketFactory.port", 465); // 服务器端口
+        // 协议名称
+        properties.put("mail.transport.protocol", "smtp");
+        // 服务器端口
+        properties.put("mail.smtp.socketFactory.port", 465);
         properties.put("mail.smtp.starttls.enable", "true");
         // 获取默认session对象
         Session session = Session.getDefaultInstance(properties, new Authenticator() {
@@ -53,13 +55,9 @@ public class MailUtil
             // 设置消息体
             MimeBodyPart text = new MimeBodyPart();
             text.setContent("<img src='cid:a'>" + content, "text/html;charset=utf-8");
-            //MimeBodyPart img = new MimeBodyPart();
-            //DataHandler dh = new DataHandler(new FileDataSource("/data/dleye/img/rz.png"));
-            //img.setDataHandler(dh);
-            //img.setContentID("a");
+
             MimeMultipart mm = new MimeMultipart();
             mm.addBodyPart(text);
-            //mm.addBodyPart(img);
             mm.setSubType("related");
             MimeBodyPart all = new MimeBodyPart();
             all.setContent(mm);
@@ -69,10 +67,10 @@ public class MailUtil
             message.setContent(mm2);
             message.saveChanges();
             Transport.send(message);
-            logger.info("Sent message:(" + content + ")successfully");
+            logger.info("Sent message:{} successfully", content);
         }
         catch (MessagingException mex) {
-            logger.error("sendMail is exception:" + mex.toString());
+            logger.error("sendMail is exception:{}", mex.toString());
         }
     }
 

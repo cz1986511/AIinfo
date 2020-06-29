@@ -274,25 +274,40 @@ public class SsqServiceTest {
 	}
 	
 	public static void main(String[] args) {
-		for(int k = 0; k < 5; k++) {
+		Map<Integer, Integer> mapH = new HashMap<>();
+		Map<Integer, Integer> mapL = new HashMap<>();
+		long time = System.currentTimeMillis();
+        int result = 0;
+        int lnum = 0;
+		for(int k = 0; k < 188888888; k++) {
 		    int count = 0;
-		    int result = 0;
-            Set<Integer> set = new TreeSet<>();
             while(count < 6) {
-                result = (int) (Math.random() * 33);
-                if (result == 0) {
-                    result = 7;
-                }
-                set.add(result);
-                count = set.size();
+                result = (int) (Math.random() * 32) + 1;
+                if(null != mapH.get(result)) {
+                	mapH.put(result, mapH.get(result) + 1);
+				} else {
+                	mapH.put(result, 1);
+				}
+                count++;
             }
-            int lnum = (int)(Math.random() * 15);
-            if(lnum == 0) {
-                lnum = 8;
-            }
-            set.forEach(e -> System.out.print(e + ","));
-            System.out.println(lnum);
+            lnum = (int)(Math.random() * 14) + 1;
+			if(null != mapL.get(lnum)) {
+				mapL.put(lnum, mapL.get(lnum) + 1);
+			} else {
+				mapL.put(lnum, 1);
+			}
         }
+		Map<Integer, Integer> sortMapH = new LinkedHashMap<Integer, Integer>();
+		mapH.entrySet().stream().sorted(Map.Entry.<Integer,Integer>comparingByValue().reversed()).forEachOrdered(x -> sortMapH.put(x.getKey(), x.getValue()));
+
+		Map<Integer, Integer> sortMapL = new LinkedHashMap<Integer, Integer>();
+		mapL.entrySet().stream().sorted(Map.Entry.<Integer,Integer>comparingByValue().reversed()).forEachOrdered(x -> sortMapL.put(x.getKey(), x.getValue()));
+
+		System.out.print("红球:");
+		System.out.println(sortMapH);
+		System.out.print("蓝球:");
+		System.out.println(sortMapL);
+		System.out.println("time:" + (System.currentTimeMillis()-time));
 
 	}
 }

@@ -89,12 +89,11 @@ public class NetTechnologyCrawler implements Runnable {
 					}
 					saveArticle(articleInfo);
 				} catch (Exception e) {
-					logger.error("netTechnologyCrawler is exception:"
-							+ e.toString());
+					logger.error("netTechnologyCrawler is exception:{}", e.toString());
 				}
 			}
 		} catch (Exception e) {
-			logger.error("netTechnologyCrawler is exception:" + e.toString());
+			logger.error("netTechnologyCrawler is exception:{}", e.toString());
 		}
 		webClient.close();
 	}

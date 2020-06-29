@@ -15,7 +15,6 @@ import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-//import org.apache.tomcat.jni.OS;
 
 public class ApplyColor2picture {
 
@@ -38,8 +37,7 @@ public class ApplyColor2picture {
 		ApplyColor2picture.markImageByIcon(iconPath, srcImgPath, targerPath);
 		// 给图片添加水印,水印旋转-45 
 		ApplyColor2picture.markImageByIcon(iconPath, srcImgPath, targerPath2, -45);
-
-		printCert2Picture(srcImgPath, targerPath3, "杨子豪");
+		printCert2Picture(srcImgPath, targerPath3, "Vin");
 	}
 
 	/**
@@ -63,41 +61,34 @@ public class ApplyColor2picture {
 	private static void markImageByIcon(String iconPath, String srcImgPath, String targerPath, Integer degree) {
 
 		OutputStream os = null; // 输出流
-
 		try {
 			Image srcImg = ImageIO.read(new File(srcImgPath));
-
 			BufferedImage buffImg = new BufferedImage(srcImg.getWidth(null), srcImg.getHeight(null),
 					BufferedImage.TYPE_INT_RGB);
-
-// 得到画笔对象   
-// Graphics g= buffImg.getGraphics();   
+			// 得到画笔对象  
 			Graphics2D g = buffImg.createGraphics();
-
-// 设置对线段的锯齿状边缘处理   
+			// 设置对线段的锯齿状边缘处理   
 			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-
 			g.drawImage(srcImg.getScaledInstance(srcImg.getWidth(null), srcImg.getHeight(null), Image.SCALE_SMOOTH), 0,
 					0, null);
 
 			if (null != degree) {
-// 设置水印旋转   
+				// 设置水印旋转   
 				g.rotate(Math.toRadians(degree), (double) buffImg.getWidth() / 2, (double) buffImg.getHeight() / 2);
-//rotate() 方法  第一个参数是将旋转角度转为弧度  
-//第二个 第三个 参数是 以哪个点旋转 即旋转中心点相对于图片的坐标
 			}
-//缩小图片
+
+			//缩小图片
 			BufferedImage imgIconSuoXiao = smallerImge(iconPath, 3);
 			ImageIO.write(imgIconSuoXiao, "JPG", new File(iconPath));
 
-//放大图片
+			//放大图片
 			BufferedImage imgIconFangDa = biggerImage(iconPath, 2);
 			ImageIO.write(imgIconFangDa, "JPG", new File(iconPath));
 
-// 水印图象的路径 水印一般为gif或者png的，这样可设置透明度   
+			// 水印图象的路径 水印一般为gif或者png的，这样可设置透明度
 			ImageIcon imgIcon = new ImageIcon(iconPath);
 
-// 得到Image对象。   
+			// 得到Image对象。   
 			Image img = imgIcon.getImage();
 			float alpha = 0.5f; // 透明度   0.0是完全透明  1.0是完全不透明
 			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha)); // 画笔对象的上下文设置
@@ -114,8 +105,9 @@ public class ApplyColor2picture {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (null != os)
+				if(null != os) {
 					os.close();
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -169,8 +161,8 @@ public class ApplyColor2picture {
 	/**
 	 * 对图片进行缩小
 	 * 
-	 * @param originalImage 原始图片
-	 * @param times缩小倍数
+	 * @param srcImgPath 原始图片
+	 * @param times 缩小倍数
 	 * @return 缩小后的Image
 	 */
 	public static BufferedImage smallerImge(String srcImgPath, Integer times) {
@@ -193,7 +185,7 @@ public class ApplyColor2picture {
 	/**
 	 * 对图片进行放大
 	 * 
-	 * @param originalImage 原始图片
+	 * @param srcImgPath 原始图片
 	 * @param times         放大倍数
 	 * @return 缩小后的Image
 	 */

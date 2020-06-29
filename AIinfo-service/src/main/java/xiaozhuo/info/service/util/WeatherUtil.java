@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -34,9 +35,8 @@ import xiaozhuo.info.service.WeatherInfoService;
 @Configurable
 @EnableScheduling
 @Service
+@Slf4j
 public class WeatherUtil {
-
-	private static Logger log = LoggerFactory.getLogger(WeatherUtil.class);
 
 	@Autowired
 	private WeatherInfoService weatherInfoService;
@@ -53,7 +53,7 @@ public class WeatherUtil {
 			RedisClient.set("weather", list, 4200);
 			saveWeatherInfo(jsonObject);
 		} catch (Exception e) {
-			log.error("getTodayWeatherInfo is exception:" + e.toString());
+			log.error("getTodayWeatherInfo is exception:{}", e.toString());
 		}
 		return list;
 	}
@@ -87,7 +87,7 @@ public class WeatherUtil {
 				}
 			}
 		} catch (Exception e) {
-			log.error("saveWeatherInfo is exception:" + e.toString());
+			log.error("saveWeatherInfo is exception:{}", e.toString());
 		}
 	}
 
@@ -106,12 +106,12 @@ public class WeatherUtil {
 				}
 			}
 		} catch (Exception e) {
-			log.error("getWeatherNow is exception:" + e.toString());
+			log.error("getWeatherNow is exception:{}", e.toString());
 		} finally {
 			try {
 				httpClient.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.error(e.toString());
 			}
 		}
 		log.error("getWeatherNow is null");
@@ -133,12 +133,12 @@ public class WeatherUtil {
 				}
 			}
 		} catch (Exception e) {
-			log.error("getWeatherNext is exception:" + e.toString());
+			log.error("getWeatherNext is exception:{}", e.toString());
 		} finally {
 			try {
 				httpClient.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.error(e.toString());
 			}
 		}
 		log.error("getWeatherNext is null");
@@ -160,12 +160,12 @@ public class WeatherUtil {
 				}
 			}
 		} catch (Exception e) {
-			log.error("getSuggestion is exception:" + e.toString());
+			log.error("getSuggestion is exception:{}", e.toString());
 		} finally {
 			try {
 				httpClient.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.error(e.toString());
 			}
 		}
 		log.error("getSuggestion is null");

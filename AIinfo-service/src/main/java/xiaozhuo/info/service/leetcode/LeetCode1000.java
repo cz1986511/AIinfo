@@ -1,15 +1,9 @@
 package xiaozhuo.info.service.leetcode;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class LeetCode1000 {
-	
-	public static void main(String[] args) {
-		 String[] products = {};
-	}
-	
+
 	/**
 	 * 1051
 	 * Date:2019-11-28 17:51

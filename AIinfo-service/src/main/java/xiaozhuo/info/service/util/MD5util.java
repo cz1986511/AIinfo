@@ -1,8 +1,11 @@
 package xiaozhuo.info.service.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.security.MessageDigest;
 
-public class MD5Util {
+@Slf4j
+public class MD5util {
 	public final static String md5(final String s) {
 		char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 				'a', 'b', 'c', 'd', 'e', 'f' };
@@ -21,7 +24,7 @@ public class MD5Util {
 			}
 			return new String(str);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.toString());
 			return null;
 		}
 	}

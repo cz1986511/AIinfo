@@ -107,11 +107,11 @@ public class PintuCrawler implements Runnable {
 					}
 					saveArticle(articleInfo);
 				} catch (Exception e) {
-					logger.error("pintuCrawler is exception:" + e.toString());
+					logger.error("pintuCrawler is exception:{}", e.toString());
 				}
 			}
 		} catch (Exception e) {
-			logger.error("pintuCrawler is exception:" + e.toString());
+			logger.error("pintuCrawler is exception:{}", e.toString());
 		}
 		webClient.close();
 	}

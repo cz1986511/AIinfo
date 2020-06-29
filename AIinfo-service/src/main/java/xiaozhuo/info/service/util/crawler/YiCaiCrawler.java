@@ -86,11 +86,11 @@ public class YiCaiCrawler implements Runnable {
 					}
 					saveArticle(articleInfo);
 				} catch (Exception e) {
-					logger.error("yiCaiCrawler is exception:" + e.toString());
+					logger.error("yiCaiCrawler is exception:{}", e.toString());
 				}
 			}
 		} catch (Exception e) {
-			logger.error("yiCaiCrawler is exception:" + e.toString());
+			logger.error("yiCaiCrawler is exception:{}", e.toString());
 		}
 		webClient.close();
 	}

@@ -3,6 +3,7 @@ package xiaozhuo.info.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -38,7 +39,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 		if (!CollectionUtils.isEmpty(map)) {
 			return articleInfoMapper.selectArticlesByParams(map);
 		}
-		return null;
+		return Lists.newArrayList();
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 		if (!CollectionUtils.isEmpty(map)) {
 			return articleInfoMapper.selectArticlesByGmtCreate(map);
 		}
-		return null;
+		return Lists.newArrayList();
 	}
 
 }

@@ -90,11 +90,11 @@ public class QdailyCrawler implements Runnable {
 					}
 					saveArticle(articleInfo);
 				} catch (Exception e) {
-					logger.error("qdailyCrawler is exception:" + e.toString());
+					logger.error("qdailyCrawler is exception:{}", e.toString());
 				}
 			}
 		} catch (Exception e) {
-			logger.error("qdailyCrawler is exception:" + e.toString());
+			logger.error("qdailyCrawler is exception:{}", e.toString());
 		}
 		webClient.close();
 	}

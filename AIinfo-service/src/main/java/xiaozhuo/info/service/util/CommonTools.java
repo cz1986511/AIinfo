@@ -1,12 +1,19 @@
 package xiaozhuo.info.service.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
+@Slf4j
 public class CommonTools {
+
+	private CommonTools() {
+		throw new IllegalStateException("Utility class");
+	}
 
 	public static String getDateString() {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -30,7 +37,7 @@ public class CommonTools {
 		try {
 			return formatter.parse(dateString);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			log.error(e.toString());
 		}
 		return null;
 	}
@@ -40,7 +47,7 @@ public class CommonTools {
 		try {
 			return formatter.parse(dateString);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			log.error(e.toString());
 		}
 		return null;
 	}
@@ -52,7 +59,7 @@ public class CommonTools {
 				return formatter.parse(dateString);
 			}
 		} catch (ParseException e) {
-			e.printStackTrace();
+			log.error(e.toString());
 		}
 		return null;
 	}

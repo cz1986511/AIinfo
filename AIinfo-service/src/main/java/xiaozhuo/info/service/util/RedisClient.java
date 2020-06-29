@@ -1,5 +1,6 @@
 package xiaozhuo.info.service.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +20,9 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 @Component
 @Order(value = 1)
 @ConfigurationProperties(prefix = "redis")
+@Slf4j
 public class RedisClient implements CommandLineRunner {
 
-	private static Logger logger = LoggerFactory.getLogger(RedisClient.class);
 	private static JedisPool jedisPool;
 	private static String ip = "localhost";
 	private static int port = 6379;
@@ -60,7 +61,7 @@ public class RedisClient implements CommandLineRunner {
 				init();
 			}
 		} catch (Exception e) {
-			logger.error("set key:" + key + " is exception:" + e.toString());
+			log.error("set key:{} is exception:{}", key, e.toString());
 			isOK = false;
 		} finally {
 			if (null != jedis) {
@@ -88,7 +89,7 @@ public class RedisClient implements CommandLineRunner {
 				init();
 			}
 		} catch (Exception e) {
-			logger.error("set key:" + key + " is exception:" + e.toString());
+			log.error("set key:{} is exception:{}", key, e.toString());
 			isOK = false;
 		} finally {
 			if (null != jedis) {
@@ -119,7 +120,7 @@ public class RedisClient implements CommandLineRunner {
 				return null;
 			}
 		} catch (Exception e) {
-			logger.error("get key:" + key + " is exception:" + e.toString());
+			log.error("get key:{} is exception:{}", key, e.toString());
 			isOK = false;
 			return null;
 		} finally {

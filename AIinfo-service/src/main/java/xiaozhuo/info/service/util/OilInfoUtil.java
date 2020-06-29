@@ -2,6 +2,7 @@ package xiaozhuo.info.service.util;
 
 import java.io.IOException;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -22,13 +23,16 @@ import com.alibaba.fastjson.JSONObject;
 import xiaozhuo.info.persist.base.OilInfo;
 import xiaozhuo.info.service.OilInfoService;
 
+/**
+ * @author Vin
+ */
 @Component
 @Configurable
 @EnableScheduling
 @Service
+@Slf4j
 public class OilInfoUtil {
 
-	private static Logger logger = LoggerFactory.getLogger(OilInfoUtil.class);
 	@Autowired
 	private OilInfoService oilInfoService;
 
@@ -62,15 +66,13 @@ public class OilInfoUtil {
 				oilInfoService.addOilInfo(oilInfo);
 			}
 		} catch (Exception e) {
-			logger.error("getTodayOilInfo is exception:" + e.toString());
+			log.error("getTodayOilInfo is exception:{}", e.toString());
 		} finally {
 			try {
 				httpClient.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.error(e.toString());
 			}
 		}
-		logger.error("getTodayOilInfo is null");
 	}
-
 }

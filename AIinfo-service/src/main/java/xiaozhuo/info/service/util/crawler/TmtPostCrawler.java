@@ -95,11 +95,11 @@ public class TmtPostCrawler implements Runnable {
 					}
 					saveArticle(articleInfo);
 				} catch (Exception e) {
-					logger.error("tmtPostCrawler is exception:" + e.toString());
+					logger.error("tmtPostCrawler is exception:{}", e.toString());
 				}
 			}
 		} catch (Exception e) {
-			logger.error("tmtPostCrawler is exception:" + e.toString());
+			logger.error("tmtPostCrawler is exception:{}", e.toString());
 		}
 		webClient.close();
 	}

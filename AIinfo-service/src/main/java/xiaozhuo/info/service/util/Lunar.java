@@ -183,24 +183,31 @@ public final class Lunar {
 	/**
 	 * 将传入的日期转换为农历
 	 * 
-	 * @param date 公历日期
+	 * @param  公历日期
 	 */
 	private void convert() {
 		// 基准时间 1900-01-31是农历1900年正月初一
 		Calendar baseCalendar = Calendar.getInstance();
-		baseCalendar.set(1900, 0, 31, 0, 0, 0); // 1900-01-31是农历1900年正月初一
+		// 1900-01-31是农历1900年正月初一
+		baseCalendar.set(1900, 0, 31, 0, 0, 0);
+
 		Date baseDate = baseCalendar.getTime();
 		// 偏移量（天）
-		int offset = (int) ((calendar.getTimeInMillis() - baseDate.getTime()) / 86400000); // 天数(86400000=24*60*60*1000)
+		// 天数(86400000=24*60*60*1000)
+		int offset = (int) ((calendar.getTimeInMillis() - baseDate.getTime()) / 86400000);
+
 		// 基准时间在天干地支纪年法中的位置
-		int monCyl = 14; // 1898-10-01是农历甲子月
-		int dayCyl = offset + 40; // 1899-12-21是农历1899年腊月甲子日
+		// 1898-10-01是农历甲子月
+		int monCyl = 14;
+		// 1899-12-21是农历1899年腊月甲子日
+		int dayCyl = offset + 40;
 
 		// 得到年数
 		int i;
 		int temp = 0;
 		for (i = 1900; i < 2050 && offset > 0; i++) {
-			temp = totalDaysOfYear(i); // 农历每年天数
+			// 农历每年天数
+			temp = totalDaysOfYear(i);
 			offset -= temp;
 			monCyl += 12;
 		}
@@ -209,11 +216,14 @@ public final class Lunar {
 			i--;
 			monCyl -= 12;
 		}
-		int year = i; // 农历年份
-		int yearCyl = i - 1864; // 1864年是甲子年
+		// 农历年份
+		int year = i;
+		// 1864年是甲子年
+		int yearCyl = i - 1864;
 
-		int leap = leapMonth(i); // 闰哪个月
+		// 闰哪个月
 		boolean isLeap = false;
+		int leap = leapMonth(i);
 		int j;
 		for (j = 1; j < 13 && offset > 0; j++) {
 			// 闰月
@@ -244,8 +254,10 @@ public final class Lunar {
 			--j;
 			--monCyl;
 		}
-		int month = j; // 农历月份
-		int day = offset + 1; // 农历天
+		// 农历月份
+		int month = j;
+		// 农历天
+		int day = offset + 1;
 		result = new int[] { year, month, day, isLeap ? 1 : 0, yearCyl, monCyl, dayCyl };
 	}
 
@@ -278,8 +290,8 @@ public final class Lunar {
 			result = "三十";
 			break;
 		default:
-			result = nStr2[(int) (day / 10)];// 取商
-			result += nStr1[day % 10];// 取余
+			result = nStr2[(int) (day / 10)];
+			result += nStr1[day % 10];
 		}
 		return (result);
 	}
@@ -391,7 +403,8 @@ public final class Lunar {
 	 */
 	public String getLunarHoliday() {
 		int temp;
-		if (result[2] == 29 && !isBigMonth(result[0], result[1])) {// 如果是小月，29日为最后一天，将其加为30日算
+		if (result[2] == 29 && !isBigMonth(result[0], result[1])) {
+			// 如果是小月，29日为最后一天，将其加为30日算
 			temp = (result[1] << 8) + 30;
 		} else {
 			temp = (result[1] << 8) + result[2];

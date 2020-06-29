@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -13,7 +14,8 @@ import org.apache.http.util.EntityUtils;
 
 import com.alibaba.fastjson.JSONObject;
 
-public class IPUtil {
+@Slf4j
+public class IPutil {
 
 	private static String URL = "http://ip.taobao.com/service/getIpInfo.php?ip=";
 
@@ -38,12 +40,12 @@ public class IPUtil {
 				return jsonObject.getJSONObject("data").toJSONString();
 			}
 		} catch (Exception e) {
-			// log.error("getCityCodeByIP ip:[{}] is Exception:{}", ip, e.toString());
+			log.error("getCityCodeByIP ip:[{}] is Exception:{}", ip, e.toString());
 		} finally {
 			try {
 				httpClient.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.error(e.toString());
 			}
 		}
 		return null;
@@ -81,7 +83,7 @@ public class IPUtil {
 				ip = request.getRemoteAddr();
 			}
 		} catch (Exception e) {
-			// log.info("getIPFromHttpServlet is Exception:{}", e.toString());
+			log.error("getIPFromHttpServlet is Exception:{}", e.toString());
 		}
 		return ip;
 	}
@@ -96,12 +98,12 @@ public class IPUtil {
 				return EntityUtils.toString(response.getEntity(), "UTF-8");
 			}
 		} catch (Exception e) {
-			// log.error("getTXCityCodeByIp ip:[{}] is Exception:{}", ip, e.toString());
+			log.error("getTXCityCodeByIp ip:[{}] is Exception:{}", ip, e.toString());
 		} finally {
 			try {
 				httpClient.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.error(e.toString());
 			}
 		}
 		return null;
@@ -109,8 +111,8 @@ public class IPUtil {
 	
 	public static void main(String[] args) {
 		String ip = "140.243.100.209";
-		System.out.println(getCityCodeByIP(ip));
-		//System.out.println(getTXCityCodeByIp(ip));
+		//System.out.println(getCityCodeByIP(ip));
+		System.out.println(getTXCityCodeByIp(ip));
 	}
 
 }

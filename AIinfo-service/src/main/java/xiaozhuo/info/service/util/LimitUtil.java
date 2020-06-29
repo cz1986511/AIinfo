@@ -4,6 +4,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.common.util.concurrent.RateLimiter;
 
+/**
+ * @author Chen
+ */
 public class LimitUtil {
 
 	public static ConcurrentHashMap<String, RateLimiter> limiters = new ConcurrentHashMap<String, RateLimiter>();
@@ -21,7 +24,7 @@ public class LimitUtil {
 		}
 	}
 
-	/*
+	/**
 	 * 获取令牌
 	 */
 	public static boolean getRate() {

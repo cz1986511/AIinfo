@@ -116,11 +116,11 @@ public class LeiPhoneCrawler implements Runnable {
 					}
 					saveArticle(articleInfo);
 				} catch (Exception e) {
-					logger.error("leiPhoneCrawler is exception:" + e.toString());
+					logger.error("leiPhoneCrawler is exception:{}", e.toString());
 				}
 			}
 		} catch (Exception e) {
-			logger.error("leiPhoneCrawler is exception:" + e.toString());
+			logger.error("leiPhoneCrawler is exception:{}", e.toString());
 		}
 		webClient.close();
 	}

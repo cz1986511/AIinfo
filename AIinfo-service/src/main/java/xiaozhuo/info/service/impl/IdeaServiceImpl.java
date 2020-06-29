@@ -3,6 +3,7 @@ package xiaozhuo.info.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class IdeaServiceImpl implements IdeaService {
 	@Override
 	public List<Idea> getIdeas(Map<String, Object> map) {
 		if (CollectionUtils.isEmpty(map)) {
-			return null;
+			return Lists.newArrayList();
 		} else {
 			return ideaMapper.selectIdeasByParams(map);
 		}

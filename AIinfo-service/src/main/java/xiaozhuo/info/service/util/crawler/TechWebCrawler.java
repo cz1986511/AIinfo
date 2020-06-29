@@ -102,11 +102,11 @@ public class TechWebCrawler implements Runnable {
 					}
 					saveArticle(articleInfo);
 				} catch (Exception e) {
-					logger.error("techwebCrawler is exception:" + e.toString());
+					logger.error("techwebCrawler is exception:{}", e.toString());
 				}
 			}
 		} catch (Exception e) {
-			logger.error("techwebCrawler is exception:" + e.toString());
+			logger.error("techwebCrawler is exception:{}", e.toString());
 		}
 		webClient.close();
 	}

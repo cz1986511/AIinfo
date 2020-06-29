@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -29,9 +30,8 @@ import xiaozhuo.info.persist.mapper.SsqInfoMapper;
 @Configurable
 @EnableScheduling
 @Service
+@Slf4j
 public class SsqInfoUtil {
-
-	private static Logger logger = LoggerFactory.getLogger(SsqInfoUtil.class);
 	
 	@Autowired
 	private SsqInfoMapper ssqInfoMapper;
@@ -42,7 +42,7 @@ public class SsqInfoUtil {
 	}
 
 	public void getTodaySsqInfo(String issueno) {
-		logger.info("getTodaySsqInfo start:======[{}]", LocalDate.now());
+		log.info("getTodaySsqInfo start:======[{}]", LocalDate.now());
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		try {
 			String restUrl = "https://api.jisuapi.com/caipiao/query?appkey=a6a2ebcd0ed0a899&caipiaoid=11&issueno=";
@@ -93,7 +93,7 @@ public class SsqInfoUtil {
 						}
 					}
 				} catch (Exception e) {
-					logger.error("prize is false");
+					log.error("prize is false");
 				}
 				SsqInfo tempInfo = ssqInfoMapper.selectByQid(qid);
 				if (null == tempInfo) {
@@ -104,7 +104,7 @@ public class SsqInfoUtil {
 				}
 			}
 		} catch (Exception e) {
-			logger.error("getTodaySsqInfo is exception:[{}]",e.toString());
+			log.error("getTodaySsqInfo is exception:[{}]",e.toString());
 		} finally {
 			try {
 				httpClient.close();
@@ -112,7 +112,7 @@ public class SsqInfoUtil {
 				e.printStackTrace();
 			}
 		}
-		logger.info("getTodaySsqInfo end:======");
+		log.info("getTodaySsqInfo end:======");
 	}
 	
 	public static void main(String[] args) {
@@ -167,17 +167,16 @@ public class SsqInfoUtil {
 						}
 					}
 				} catch (Exception e) {
-					logger.error("prize is false");
+					log.error("prize is false");
 				}
-				System.out.println();
 			}
 		} catch (Exception e) {
-			logger.error("getTodaySsqInfo is exception:[{}]",e.toString());
+			log.error("getTodaySsqInfo is exception:[{}]", e.toString());
 		} finally {
 			try {
 				httpClient.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.error(e.toString());
 			}
 		}
 	}

@@ -106,11 +106,11 @@ public class HuxiuCrawler implements Runnable {
 					}
 					saveArticle(articleInfo);
 				} catch (Exception e) {
-					logger.error("huxiuCrawler is exception:" + e.toString());
+					logger.error("huxiuCrawler is exception:{}", e.toString());
 				}
 			}
 		} catch (Exception e) {
-			logger.error("huxiuCrawler is exception:" + e.toString());
+			logger.error("huxiuCrawler is exception:{}", e.toString());
 		}
 		webClient.close();
 	}

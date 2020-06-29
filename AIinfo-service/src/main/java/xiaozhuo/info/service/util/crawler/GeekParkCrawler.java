@@ -112,11 +112,11 @@ public class GeekParkCrawler implements Runnable {
 					}
 					saveArticle(articleInfo);
 				} catch (Exception e) {
-					logger.error("GeekParkCrawler is exception:" + e.toString());
+					logger.error("GeekParkCrawler is exception:{}", e.toString());
 				}
 			}
 		} catch (Exception e) {
-			logger.error("GeekParkCrawler is exception:" + e.toString());
+			logger.error("GeekParkCrawler is exception:{}", e.toString());
 		}
 		webClient.close();
 	}

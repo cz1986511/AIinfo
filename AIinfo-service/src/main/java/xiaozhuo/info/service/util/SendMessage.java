@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,8 @@ import xiaozhuo.info.persist.mapper.TemplateInfoMapper;
 @Configurable
 @EnableScheduling
 @Service
+@Slf4j
 public class SendMessage {
-
-	private static Logger logger = LoggerFactory.getLogger(SendMessage.class);
 
 	@Autowired
 	private RemindTaskInfoMapper remindTaskInfoMapper;
@@ -59,7 +59,7 @@ public class SendMessage {
 				});
 			}
 		} catch (Exception e) {
-			logger.error("sendAnniversary is Exception:" + e.toString());
+			log.error("sendAnniversary is Exception:{}", e.toString());
 		}
 	}
 

@@ -116,12 +116,11 @@ public class ThirtySixKrCrawler implements Runnable {
 					}
 					saveArticle(articleInfo);
 				} catch (Exception e) {
-					logger.error("thirtySixKrCrawler is exception:"
-							+ e.toString());
+					logger.error("thirtySixKrCrawler is exception:{}", e.toString());
 				}
 			}
 		} catch (Exception e) {
-			logger.error("thirtySixKrCrawler is exception:" + e.toString());
+			logger.error("thirtySixKrCrawler is exception:{}", e.toString());
 		}
 		webClient.close();
 	}

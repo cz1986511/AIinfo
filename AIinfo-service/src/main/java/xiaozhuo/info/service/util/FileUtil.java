@@ -7,6 +7,10 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+/**
+ * @author Chen
+ */
+
 public class FileUtil {
 	
 	private static final int BUFFER_SIZE = 65536;

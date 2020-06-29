@@ -87,11 +87,11 @@ public class IheimaCrawler implements Runnable {
 					}
 					saveArticle(articleInfo);
 				} catch (Exception e) {
-					logger.error("iheimaCrawler is exception:" + e.toString());
+					logger.error("iheimaCrawler is exception:{}", e.toString());
 				}
 			}
 		} catch (Exception e) {
-			logger.error("iheimaCrawler is exception:" + e.toString());
+			logger.error("iheimaCrawler is exception:{}", e.toString());
 		}
 		webClient.close();
 	}

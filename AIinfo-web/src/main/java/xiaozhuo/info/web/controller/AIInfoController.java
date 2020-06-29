@@ -52,40 +52,45 @@ public class AIInfoController {
 	private static String WEATHER_KEY = "weather";
 	private static String OIL_KEY = "oilKey";
 	private static String IDEA_KEY = "ideaKey";
+
+	private static String STATUS = "status";
+	private static String MSG = "msg";
+	private static String DATA = "data";
+
 	@Value("${data.token}")
 	private String dataToken;
 
 	@RequestMapping(value = "/art/list", method = RequestMethod.POST)
 	@ResponseBody
 	public String getArticleList(HttpServletRequest request) {
-		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<>();
 		JSONObject json = new JSONObject(result);
 		if (!LimitUtil.getRate()) {
-			result.put("status", Constant.ERRORCODE2);
-			result.put("msg", Constant.ERRORMSG2);
+			result.put(STATUS, Constant.ERRORCODE2);
+			result.put(MSG, Constant.ERRORMSG2);
 			return json.toJSONString();
 		}
 		try {
-			Map<String, Object> map = new HashMap<String, Object>();
+			Map<String, Object> map = new HashMap<>();
 			map.put("offset", 0);
 			map.put("limit", 200);
 			List<ArticleInfo> resultList = (List<ArticleInfo>) RedisClient.get(ART_KEY,
 					new TypeReference<List<ArticleInfo>>() {
 					});
 			if (!CollectionUtils.isEmpty(resultList)) {
-				result.put("data", resultList);
+				result.put(DATA, resultList);
 			} else {
 				List<ArticleInfo> articleInfoList = articleInfoService.getArticleInfosByParams(map);
 				if (!CollectionUtils.isEmpty(articleInfoList)) {
-					result.put("data", articleInfoList);
+					result.put(DATA, articleInfoList);
 					RedisClient.set(ART_KEY, articleInfoList, 3600);
 				}
 			}
-			result.put("status", Constant.SUCESSCODE);
+			result.put(STATUS, Constant.SUCESSCODE);
 		} catch (Exception e) {
 			log.error("getArticleList is exception:{}", e.toString());
-			result.put("status", Constant.ERRORCODE1);
-			result.put("msg", Constant.ERRORMSG1);
+			result.put(STATUS, Constant.ERRORCODE1);
+			result.put(MSG, Constant.ERRORMSG1);
 		}
 		return json.toJSONString();
 	}
@@ -96,8 +101,8 @@ public class AIInfoController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		JSONObject json = new JSONObject(result);
 		if (!LimitUtil.getRate()) {
-			result.put("status", Constant.ERRORCODE2);
-			result.put("msg", Constant.ERRORMSG2);
+			result.put(STATUS, Constant.ERRORCODE2);
+			result.put(MSG, Constant.ERRORMSG2);
 			return json.toJSONString();
 		}
 		try {
@@ -106,34 +111,34 @@ public class AIInfoController {
 					new TypeReference<List<Idea>>() {
 					});
 			if (!CollectionUtils.isEmpty(resultList)) {
-				result.put("data", resultList);
+				result.put(DATA, resultList);
 			} else {
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("offset", 0);
 				map.put("limit", 200);
 				List<Idea> ideaList = ideaService.getIdeas(map);
 				if (!CollectionUtils.isEmpty(ideaList)) {
-					result.put("data", ideaList);
+					result.put(DATA, ideaList);
 					RedisClient.set(IDEA_KEY, ideaList, 120);
 				}
 			}
-			result.put("status", Constant.SUCESSCODE);
+			result.put(STATUS, Constant.SUCESSCODE);
 		} catch (Exception e) {
 			log.error("getIdeaList is exception:{}", e.toString());
-			result.put("status", Constant.ERRORCODE1);
-			result.put("msg", Constant.ERRORMSG1);
+			result.put(STATUS, Constant.ERRORCODE1);
+			result.put(MSG, Constant.ERRORMSG1);
 		}
 		return json.toJSONString();
 	}
 
-	@RequestMapping(value = "/weather", produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/weather", produces = "text/html;charset=UTF-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getWeather(HttpServletRequest request) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		JSONObject json = new JSONObject(result);
 		if (!LimitUtil.getRate()) {
-			result.put("status", Constant.ERRORCODE2);
-			result.put("msg", Constant.ERRORMSG2);
+			result.put(STATUS, Constant.ERRORCODE2);
+			result.put(MSG, Constant.ERRORMSG2);
 			return json.toJSONString();
 		}
 		List<JSONObject> list = null;
@@ -141,56 +146,56 @@ public class AIInfoController {
 			list = (List<JSONObject>) RedisClient.get(WEATHER_KEY, new TypeReference<List<JSONObject>>() {
 			});
 			if (!CollectionUtils.isEmpty(list)) {
-				result.put("data", list);
+				result.put(DATA, list);
 			} else {
-				result.put("data", weatherUtil.getTodayWeatherInfo());
+				result.put(DATA, weatherUtil.getTodayWeatherInfo());
 			}
-			result.put("status", Constant.SUCESSCODE);
+			result.put(STATUS, Constant.SUCESSCODE);
 		} catch (Exception e) {
-			result.put("status", Constant.ERRORCODE1);
-			result.put("msg", Constant.ERRORMSG1);
+			result.put(STATUS, Constant.ERRORCODE1);
+			result.put(MSG, Constant.ERRORMSG1);
 			log.error("getWeather is exception:{}", e.toString());
 		}
 		return json.toJSONString();
 	}
 
-	@RequestMapping(value = "/oilinfo", produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/oilinfo", produces = "text/html;charset=UTF-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getOilInfo(HttpServletRequest request) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		JSONObject json = new JSONObject(result);
 		if (!LimitUtil.getRate()) {
-			result.put("status", Constant.ERRORCODE2);
-			result.put("msg", Constant.ERRORMSG2);
+			result.put(STATUS, Constant.ERRORCODE2);
+			result.put(MSG, Constant.ERRORMSG2);
 			return json.toJSONString();
 		}
 		try {
 			JSONObject oilJson = (JSONObject) RedisClient.get(OIL_KEY, new TypeReference<JSONObject>() {
 			});
 			if (null != oilJson) {
-				result.put("status", Constant.SUCESSCODE);
-				result.put("data", oilJson);
+				result.put(STATUS, Constant.SUCESSCODE);
+				result.put(DATA, oilJson);
 			} else {
-				result.put("status", Constant.ERRORCODE1);
-				result.put("msg", Constant.ERRORMSG1);
+				result.put(STATUS, Constant.ERRORCODE1);
+				result.put(MSG, Constant.ERRORMSG1);
 			}
 		} catch (Exception e) {
-			result.put("status", Constant.ERRORCODE1);
-			result.put("msg", Constant.ERRORMSG1);
+			result.put(STATUS, Constant.ERRORCODE1);
+			result.put(MSG, Constant.ERRORMSG1);
 			log.error("getOilInfo is exception:{}", e.toString());
 		}
 		return json.toJSONString();
 	}
 
-	@RequestMapping(value = "/data", produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/data", produces = "text/html;charset=UTF-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String makeData(HttpServletRequest request) {
 		String token = request.getParameter("token");
 		Map<String, Object> result = new HashMap<String, Object>();
 		JSONObject json = new JSONObject(result);
 		if (!LimitUtil.getRate()) {
-			result.put("status", Constant.ERRORCODE2);
-			result.put("msg", Constant.ERRORMSG2);
+			result.put(STATUS, Constant.ERRORCODE2);
+			result.put(MSG, Constant.ERRORMSG2);
 			return json.toJSONString();
 		}
 		if (dataToken.equals(token)) {
@@ -198,21 +203,21 @@ public class AIInfoController {
 				crawler.crawlerInfo();
 				oilInfoUtil.getTodayOilInfo();
 				weatherUtil.getTodayWeatherInfo();
-				result.put("status", Constant.SUCESSCODE);
-				result.put("msg", Constant.SUCESSMSG);
+				result.put(STATUS, Constant.SUCESSCODE);
+				result.put(MSG, Constant.SUCESSMSG);
 			} catch (Exception e) {
-				result.put("status", Constant.ERRORCODE1);
-				result.put("msg", Constant.ERRORMSG1);
+				result.put(STATUS, Constant.ERRORCODE1);
+				result.put(MSG, Constant.ERRORMSG1);
 				log.error("makeData is exception:{}", e.toString());
 			}
 		} else {
-			result.put("status", Constant.ERRORCODE1);
-			result.put("msg", Constant.ERRORMSG1);
+			result.put(STATUS, Constant.ERRORCODE1);
+			result.put(MSG, Constant.ERRORMSG1);
 		}
 		return json.toJSONString();
 	}
 
-	@RequestMapping(value = "/data/cp", produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/data/cp", produces = "text/html;charset=UTF-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String makeCPData(HttpServletRequest request) {
 		String token = request.getParameter("token");
@@ -220,23 +225,23 @@ public class AIInfoController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		JSONObject json = new JSONObject(result);
 		if (!LimitUtil.getRate()) {
-			result.put("status", Constant.ERRORCODE2);
-			result.put("msg", Constant.ERRORMSG2);
+			result.put(STATUS, Constant.ERRORCODE2);
+			result.put(MSG, Constant.ERRORMSG2);
 			return json.toJSONString();
 		}
 		if (dataToken.equals(token)) {
 			try {
 				ssqInfoUtil.getTodaySsqInfo(qid);
-				result.put("status", Constant.SUCESSCODE);
-				result.put("msg", Constant.SUCESSMSG);
+				result.put(STATUS, Constant.SUCESSCODE);
+				result.put(MSG, Constant.SUCESSMSG);
 			} catch (Exception e) {
-				result.put("status", Constant.ERRORCODE1);
-				result.put("msg", Constant.ERRORMSG1);
+				result.put(STATUS, Constant.ERRORCODE1);
+				result.put(MSG, Constant.ERRORMSG1);
 				log.error("makeCPData is exception:{}", e.toString());
 			}
 		} else {
-			result.put("status", Constant.ERRORCODE1);
-			result.put("msg", Constant.ERRORMSG1);
+			result.put(STATUS, Constant.ERRORCODE1);
+			result.put(MSG, Constant.ERRORMSG1);
 		}
 		return json.toJSONString();
 	}

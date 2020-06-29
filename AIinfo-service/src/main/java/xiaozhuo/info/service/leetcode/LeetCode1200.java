@@ -7,10 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public class LeetCode1200 {
-	
-	public static void main(String[] args) {
-	}
-	
+
 	/**
 	 * 1200
 	 * Date:2019-11-27 10:40

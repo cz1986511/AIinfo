@@ -3,6 +3,7 @@ package xiaozhuo.info.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -30,7 +31,7 @@ public class WeatherInfoServiceImpl implements WeatherInfoService {
 		if (!CollectionUtils.isEmpty(map)) {
 			return weatherInfoMapper.selectWeathersByParams(map);
 		}
-		return null;
+		return Lists.newArrayList();
 	}
 
 }

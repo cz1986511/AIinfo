@@ -93,11 +93,11 @@ public class GuoKrCrawler implements Runnable {
 					}
 					saveArticle(articleInfo);
 				} catch (Exception e) {
-					logger.error("guoKrCrawler is exception:" + e.toString());
+					logger.error("guoKrCrawler is exception:{}", e.toString());
 				}
 			}
 		} catch (Exception e) {
-			logger.error("guoKrCrawler is exception:" + e.toString());
+			logger.error("guoKrCrawler is exception:{}", e.toString());
 		}
 		webClient.close();
 	}

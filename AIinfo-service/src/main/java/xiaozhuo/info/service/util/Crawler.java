@@ -102,7 +102,7 @@ public class Crawler {
 					articleInfoService);
 			executor.execute(tmtPostCrawler);
 		} catch (Exception e) {
-			logger.error("crawlerInfo is exception:" + e.toString());
+			logger.error("crawlerInfo is exception:{}", e.toString());
 		}
 	}
 

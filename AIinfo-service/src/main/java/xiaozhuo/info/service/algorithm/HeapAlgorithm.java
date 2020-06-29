@@ -69,7 +69,7 @@ public class HeapAlgorithm {
 	}
 	
 	public static void main(String[] args) {
-		for (int i = 0; i <LEN; i++) {
+		for (int i = 0; i < LEN; i++) {
 			arrs[i] = new Random().nextInt(99999999);
 			
 		}

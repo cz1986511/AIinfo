@@ -23,13 +23,11 @@ public class OilInfoServiceImpl implements OilInfoService {
 
 	@Override
 	public int updateOilInfo(OilInfo oilInfo) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public OilInfo getOilInfoById(Long id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
