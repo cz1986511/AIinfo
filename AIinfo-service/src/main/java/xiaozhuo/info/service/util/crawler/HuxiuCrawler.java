@@ -126,6 +126,8 @@ public class HuxiuCrawler implements Runnable {
 		List<ArticleInfo> result = articleInfoManager.getArticleInfosByParams(map);
 		if (CollectionUtils.isEmpty(result)) {
 			articleInfoManager.addArticleInfo(articleInfo);
+		} else {
+			logger.error("huxiu art is exsit | title:{}", articleInfo.getTitle());
 		}
 	}
 
