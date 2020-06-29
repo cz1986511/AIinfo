@@ -53,33 +53,33 @@ public class HuxiuCrawler implements Runnable {
 					articleInfo.setSource(HUXIU);
 					HtmlDivision division = (HtmlDivision) ite.next();
 					List<Object> linkAnchorList = (List<Object>) division
-							.getByXPath(".//div[@class='article-item article-item--normal']/a");
+							.getByXPath(".//div[@class='article-item  article-item--normal']/a");
 					if (!CollectionUtils.isEmpty(linkAnchorList)) {
 						HtmlAnchor linkAnchor = (HtmlAnchor) linkAnchorList.get(0);
 						articleInfo.setLinkUrl(URL_STRING + (linkAnchor.getAttribute("href")));
 					}
 					List<Object> titleAnchorList = (List<Object>) division.getByXPath(
-							".//div[@class='article-item article-item--normal']/div[@class='article-item__content']/a/h5");
+							".//div[@class='article-item  article-item--normal']/a/div[@class='article-item__content']/h5");
 					if (!CollectionUtils.isEmpty(titleAnchorList)) {
 						HtmlHeading5 titleH5 = (HtmlHeading5) titleAnchorList.get(0);
 						articleInfo.setTitle(titleH5.asText());
 					}
 					List<Object> picImageList = (List<Object>) division.getByXPath(
-							".//div[@class='article-item article-item--normal']/a/div[@class='article-item__img']/img");
+							".//div[@class='article-item  article-item--normal']/a/div[@class='article-item__img']/img");
 					if (!CollectionUtils.isEmpty(picImageList)) {
 						HtmlImage picImage = (HtmlImage) picImageList.get(0);
 						articleInfo.setPicUrl(picImage.getAttribute("src"));
 					} else {
 						articleInfo.setPicUrl(DEFAULT_PIC);
 					}
-					List<Object> authorAnchorList = (List<Object>) division.getByXPath(
-							".//div[@class='article-item article-item--normal']/div[@class='article-item__content']/div[@class='article-item__content__user-info pointer']/a[@class='article-item__content__user-info__nickname single-line-overflow']");
-					if (!CollectionUtils.isEmpty(authorAnchorList)) {
-						HtmlAnchor authorAnchor = (HtmlAnchor) authorAnchorList.get(0);
-						articleInfo.setAuthor(authorAnchor.asText());
+					List<Object> authorSpanList = (List<Object>) division.getByXPath(
+							".//div[@class='article-item  article-item--normal']/div[@class='article-item__content__user-info ']/a/span");
+					if (!CollectionUtils.isEmpty(authorSpanList)) {
+						HtmlSpan authorSpan = (HtmlSpan) authorSpanList.get(0);
+						articleInfo.setAuthor(authorSpan.asText());
 					}
 					List<Object> timeSpanList = (List<Object>) division.getByXPath(
-							".//div[@class='article-item article-item--normal']/div[@class='article-item__content']/a/div[@class='article-item__content__status']/span[@class='article-item__content__status__date']");
+							".//div[@class='article-item  article-item--normal']/a/div[@class='article-item__content']/div[@class='article-item__content__status']/span[@class='article-item__content__status__date']");
 					if (!CollectionUtils.isEmpty(timeSpanList)) {
 						HtmlSpan timeSpan = (HtmlSpan) timeSpanList.get(0);
 						String time = timeSpan.asText();
@@ -99,7 +99,7 @@ public class HuxiuCrawler implements Runnable {
 						articleInfo.setDate(date);
 					}
 					List<Object> descHtmlParagraphList = (List<Object>) division.getByXPath(
-							".//div[@class='article-item article-item--normal']/div[@class='article-item__content']/a/p");
+							".//div[@class='article-item  article-item--normal']/div[@class='article-item__content']/a/p");
 					if (!CollectionUtils.isEmpty(descHtmlParagraphList)) {
 						HtmlParagraph descdescHtmlParagraphList = (HtmlParagraph) descHtmlParagraphList.get(0);
 						articleInfo.setIntroduction(descdescHtmlParagraphList.asText());
