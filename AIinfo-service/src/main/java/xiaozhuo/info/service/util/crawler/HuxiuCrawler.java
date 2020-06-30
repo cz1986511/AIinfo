@@ -43,7 +43,7 @@ public class HuxiuCrawler implements Runnable {
 	public void run() {
 		try {
 			Calendar calendar = Calendar.getInstance();
-			String xPath = "//div[@class='article-item']";
+			String xPath = "//div[@class='article-items']";
 			HtmlPage page = webClient.getPage(URL_STRING);
 			List<Object> list = (List<Object>) page.getByXPath(xPath);
 			Iterator<Object> ite = list.iterator();
