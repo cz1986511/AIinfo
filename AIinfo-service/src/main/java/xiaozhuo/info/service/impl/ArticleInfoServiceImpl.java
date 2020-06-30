@@ -1,5 +1,6 @@
 package xiaozhuo.info.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,6 +57,20 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 			return articleInfoMapper.selectArticlesByGmtCreate(map);
 		}
 		return Lists.newArrayList();
+	}
+
+	@Override
+	public int addNewArticle(ArticleInfo articleInfo) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", articleInfo.getTitle());
+		map.put("source", articleInfo.getSource());
+		map.put("offset", 0);
+		map.put("limit", 200);
+		List<ArticleInfo> result = getArticleInfosByParams(map);
+		if (CollectionUtils.isEmpty(result)) {
+			return addArticleInfo(articleInfo);
+		}
+		return 0;
 	}
 
 }

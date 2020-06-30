@@ -1,18 +1,14 @@
 package xiaozhuo.info.service.util.crawler;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
 import xiaozhuo.info.persist.base.ArticleInfo;
 import xiaozhuo.info.service.ArticleInfoService;
 
-import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
@@ -21,22 +17,25 @@ import com.gargoylesoftware.htmlunit.html.HtmlListItem;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlParagraph;
 import com.gargoylesoftware.htmlunit.html.HtmlSpan;
+import xiaozhuo.info.service.util.CommonTools;
+import xiaozhuo.info.service.util.Constant;
 
+/**
+ * @author Chen
+ */
+@Slf4j
 public class TmtPostCrawler implements Runnable {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(TmtPostCrawler.class);
 	private static final String TMTPOST = "钛媒体";
 	private static final String URL_STRING = "http://www.tmtpost.com";
-	private static final String DEFAULT_PIC = "http://chenzhuo.info/default.png";
 
 	private WebClient webClient;
-	private ArticleInfoService articleInfoManager;
+	private ArticleInfoService articleInfoService;
 
-	public TmtPostCrawler(ArticleInfoService articleInfoManager) {
+	public TmtPostCrawler(ArticleInfoService articleInfoService) {
 		super();
-		this.webClient = initWebClient();
-		this.articleInfoManager = articleInfoManager;
+		this.webClient = CommonTools.initWebClient();
+		this.articleInfoService = articleInfoService;
 	}
 
 	@Override
@@ -58,7 +57,7 @@ public class TmtPostCrawler implements Runnable {
 						articleInfo.setPicUrl(picImage
 								.getAttribute("data-original"));
 					} else {
-						articleInfo.setPicUrl(DEFAULT_PIC);
+						articleInfo.setPicUrl(Constant.PIC_URL);
 					}
 					List<Object> titleAnchorList = (List<Object>) listItem
 							.getByXPath(".//div[@class='cont']/h3/a[@class='title']");
@@ -93,41 +92,15 @@ public class TmtPostCrawler implements Runnable {
 						articleInfo.setTag(tagDivision.asText().replace("，",
 								" "));
 					}
-					saveArticle(articleInfo);
+					articleInfoService.addNewArticle(articleInfo);
 				} catch (Exception e) {
-					logger.error("tmtPostCrawler is exception:{}", e.toString());
+					log.error("tmtPostCrawler is exception:{}", e.toString());
 				}
 			}
 		} catch (Exception e) {
-			logger.error("tmtPostCrawler is exception:{}", e.toString());
+			log.error("tmtPostCrawler is exception:{}", e.toString());
 		}
 		webClient.close();
-	}
-
-	private void saveArticle(ArticleInfo articleInfo) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("title", articleInfo.getTitle());
-		map.put("source", articleInfo.getSource());
-		map.put("offset", 0);
-		map.put("limit", 200);
-		List<ArticleInfo> result = articleInfoManager
-				.getArticleInfosByParams(map);
-		if (CollectionUtils.isEmpty(result)) {
-			articleInfoManager.addArticleInfo(articleInfo);
-		}
-	}
-
-	private WebClient initWebClient() {
-		WebClient webClient = new WebClient(BrowserVersion.CHROME);
-		webClient.getOptions().setUseInsecureSSL(true);
-		webClient.getOptions().setCssEnabled(false);
-		webClient.getOptions().setAppletEnabled(false);
-		webClient.getOptions().setJavaScriptEnabled(true);
-		webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
-		webClient.getOptions().setThrowExceptionOnScriptError(false);
-		int timeout = webClient.getOptions().getTimeout();
-		webClient.getOptions().setTimeout(timeout * 10);
-		return webClient;
 	}
 
 }

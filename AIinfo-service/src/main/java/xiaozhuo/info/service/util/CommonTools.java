@@ -1,5 +1,7 @@
 package xiaozhuo.info.service.util;
 
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.WebClient;
 import lombok.extern.slf4j.Slf4j;
 
 import java.text.ParseException;
@@ -62,6 +64,19 @@ public class CommonTools {
 			log.error(e.toString());
 		}
 		return null;
+	}
+
+	public static WebClient initWebClient() {
+		WebClient webClient = new WebClient(BrowserVersion.CHROME);
+		webClient.getOptions().setUseInsecureSSL(true);
+		webClient.getOptions().setCssEnabled(false);
+		webClient.getOptions().setAppletEnabled(false);
+		webClient.getOptions().setJavaScriptEnabled(true);
+		webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
+		webClient.getOptions().setThrowExceptionOnScriptError(false);
+		int timeout = webClient.getOptions().getTimeout();
+		webClient.getOptions().setTimeout(timeout * 10);
+		return webClient;
 	}
 
 }

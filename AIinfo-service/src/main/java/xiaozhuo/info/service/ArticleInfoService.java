@@ -5,6 +5,9 @@ import java.util.Map;
 
 import xiaozhuo.info.persist.base.ArticleInfo;
 
+/**
+ * @author Chen
+ */
 public interface ArticleInfoService {
 
     int addArticleInfo(ArticleInfo articleInfo);
@@ -16,5 +19,10 @@ public interface ArticleInfoService {
     int deleteArticleInfoById(Long id);
 
     List<ArticleInfo> getArticleInfosByGmtCreate(Map<String, Object> map);
+
+    /**
+     * 新增文章,如果已经存在就不新增
+     */
+    int addNewArticle(ArticleInfo articleInfo);
 
 }

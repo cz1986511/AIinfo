@@ -4,8 +4,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -36,9 +35,8 @@ import xiaozhuo.info.service.util.crawler.YiCaiCrawler;
 @Configurable
 @EnableScheduling
 @Service
+@Slf4j
 public class Crawler {
-
-	private static Logger logger = LoggerFactory.getLogger(Crawler.class);
 
 	@Autowired
 	private ArticleInfoService articleInfoService;
@@ -102,7 +100,7 @@ public class Crawler {
 					articleInfoService);
 			executor.execute(tmtPostCrawler);
 		} catch (Exception e) {
-			logger.error("crawlerInfo is exception:{}", e.toString());
+			log.error("crawlerInfo is exception:{}", e.toString());
 		}
 	}
 
