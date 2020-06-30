@@ -27,6 +27,7 @@ public class HuxiuCrawler implements Runnable {
 
 	private static final String HUXIU = "虎嗅";
 	private static final String URL_STRING = "https://www.huxiu.com/article/";
+	private static final String ART_URL = "https://www.huxiu.com";
 
 	private WebClient webClient;
 	private ArticleInfoService articleInfoService;
@@ -54,7 +55,7 @@ public class HuxiuCrawler implements Runnable {
 							.getByXPath(".//div[@class='article-item  article-item--normal']/a");
 					if (!CollectionUtils.isEmpty(linkAnchorList)) {
 						HtmlAnchor linkAnchor = (HtmlAnchor) linkAnchorList.get(0);
-						articleInfo.setLinkUrl(URL_STRING + (linkAnchor.getAttribute("href")));
+						articleInfo.setLinkUrl(ART_URL + (linkAnchor.getAttribute("href")));
 					}
 					List<Object> titleAnchorList = (List<Object>) division.getByXPath(
 							".//div[@class='article-item  article-item--normal']/a/div[@class='article-item__content']/h5");
