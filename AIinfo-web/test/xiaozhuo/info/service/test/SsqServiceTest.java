@@ -1,7 +1,19 @@
 package xiaozhuo.info.service.test;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.util.*;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +22,10 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.alibaba.excel.util.CollectionUtils;
+import xiaozhuo.info.persist.base.ConsumeAmount;
 import xiaozhuo.info.persist.base.SsqInfo;
 import xiaozhuo.info.persist.mapper.SsqInfoMapper;
+import xiaozhuo.info.service.ConsumeAmountService;
 
 @RunWith(SpringRunner.class)
 @TestPropertySource("classpath:application-test.properties")
@@ -20,6 +34,25 @@ public class SsqServiceTest {
 	
 	@Autowired
 	private SsqInfoMapper ssqInfoMapper;
+
+	@Autowired
+	private ConsumeAmountService consumeAmountService;
+
+	@Test
+	public void testSaveConsumeAmount() {
+		ConsumeAmount amount = new ConsumeAmount();
+		amount.setAmount(1188L);
+		amount.setYear(2020);
+		amount.setMonth(8);
+		amount.setDay(11);
+		amount.setType(1);
+		amount.setName("淘宝购物-万能遥控板");
+		//consumeAmountService.saveConsumeAmount(amount);
+		Map<String, Object> map = consumeAmountService.getAmountData(new HashMap<>());
+		System.out.println(map.get("yearData"));
+		System.out.println(map.get("monthData"));
+		System.out.println(map.get("dayData"));
+	}
 	
 	@Test
 	public void testList() {
@@ -108,7 +141,7 @@ public class SsqServiceTest {
 		System.out.print("蓝球总数:");
 		System.out.println(sortMapL);
 		for (int i = 1; i < 6; i++) {
-			System.out.print("第"+i+"组:");
+			System.out.print("第" + i + "组:");
 			System.out.print(getResultNum(allSsq, 1, i) + ",");
 			System.out.print(getResultNum(allSsq, 2, i) + ",");
 			System.out.print(getResultNum(allSsq, 3, i) + ",");
@@ -274,40 +307,112 @@ public class SsqServiceTest {
 	}
 	
 	public static void main(String[] args) {
-		Map<Integer, Integer> mapH = new HashMap<>();
-		Map<Integer, Integer> mapL = new HashMap<>();
-		long time = System.currentTimeMillis();
-        int result = 0;
-        int lnum = 0;
-		for(int k = 0; k < 188888888; k++) {
-		    int count = 0;
-            while(count < 6) {
-                result = (int) (Math.random() * 32) + 1;
-                if(null != mapH.get(result)) {
-                	mapH.put(result, mapH.get(result) + 1);
-				} else {
-                	mapH.put(result, 1);
+		//createExcel();
+		for(int i = 1; i < 6; i++) {
+			Map<Integer, Integer> mapH = new HashMap<>();
+			Map<Integer, Integer> mapL = new HashMap<>();
+			long time = System.currentTimeMillis();
+			int result = 0;
+			int lnum = 0;
+			for(long k = 0; k < 10000000L; k++) {
+				int count = 0;
+				while(count < 6) {
+					result = (int) (Math.random() * 32) + 1;
+					if(null != mapH.get(result)) {
+						mapH.put(result, mapH.get(result) + 1);
+					} else {
+						mapH.put(result, 1);
+					}
+					count++;
 				}
-                count++;
-            }
-            lnum = (int)(Math.random() * 14) + 1;
-			if(null != mapL.get(lnum)) {
-				mapL.put(lnum, mapL.get(lnum) + 1);
-			} else {
-				mapL.put(lnum, 1);
+				lnum = (int)(Math.random() * 14) + 1;
+				if(null != mapL.get(lnum)) {
+					mapL.put(lnum, mapL.get(lnum) + 1);
+				} else {
+					mapL.put(lnum, 1);
+				}
 			}
-        }
-		Map<Integer, Integer> sortMapH = new LinkedHashMap<Integer, Integer>();
-		mapH.entrySet().stream().sorted(Map.Entry.<Integer,Integer>comparingByValue().reversed()).forEachOrdered(x -> sortMapH.put(x.getKey(), x.getValue()));
+			Map<Integer, Integer> sortMapH = new LinkedHashMap<Integer, Integer>();
+			mapH.entrySet().stream().sorted(Map.Entry.<Integer,Integer>comparingByValue().reversed()).forEachOrdered(x -> sortMapH.put(x.getKey(), x.getValue()));
 
-		Map<Integer, Integer> sortMapL = new LinkedHashMap<Integer, Integer>();
-		mapL.entrySet().stream().sorted(Map.Entry.<Integer,Integer>comparingByValue().reversed()).forEachOrdered(x -> sortMapL.put(x.getKey(), x.getValue()));
+			Map<Integer, Integer> sortMapL = new LinkedHashMap<Integer, Integer>();
+			mapL.entrySet().stream().sorted(Map.Entry.<Integer,Integer>comparingByValue().reversed()).forEachOrdered(x -> sortMapL.put(x.getKey(), x.getValue()));
 
-		System.out.print("红球:");
-		System.out.println(sortMapH);
-		System.out.print("蓝球:");
-		System.out.println(sortMapL);
-		System.out.println("time:" + (System.currentTimeMillis()-time));
+			System.out.println("第" + i + "次:");
+			System.out.println("time:" + (System.currentTimeMillis()-time));
 
+			Iterator<Map.Entry<Integer, Integer>> iterator = sortMapH.entrySet().iterator();
+			int countH = 0;
+			System.out.print("红球:");
+			while(iterator.hasNext()) {
+				Map.Entry<Integer, Integer> entry = iterator.next();
+				System.out.print(entry.getKey() + "=" + entry.getValue() + ",");
+				countH++;
+				if(countH == 6) {
+					break;
+				}
+			}
+			System.out.println();
+			Iterator<Map.Entry<Integer, Integer>> iteratorL = sortMapL.entrySet().iterator();
+			int countL = 0;
+			System.out.print("蓝球:");
+			while(iteratorL.hasNext()) {
+				Map.Entry<Integer, Integer> entryL = iteratorL.next();
+				System.out.println(entryL.getKey() + "=" + entryL.getValue());
+				countL++;
+				if(countL == 1) {
+					break;
+				}
+			}
+		}
 	}
+
+	public static void createExcel() {
+		String fileName = "/Users/zhuochen/work/excel.xlsx";
+		File file = new File(fileName);
+		FileOutputStream fout = null;
+		try{
+			HSSFWorkbook workbook = new HSSFWorkbook();
+			HSSFSheet sheet = workbook.createSheet("多结算体系导出");
+			for(int rowNo = 0; rowNo < 5; rowNo++) {
+				HSSFRow row_ = sheet.createRow(rowNo);
+				if(null == row_) {
+					System.out.println("row is null");
+				}
+				HSSFCell cell_;
+				switch (rowNo) {
+					case 0:
+						cell_ = row_.createCell(0);
+						cell_.setCellValue("多结算体系导出");
+						sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 9));
+						break;
+					case 1:
+						cell_ = row_.createCell(0);
+						cell_.setCellValue("商户:");
+						cell_ = row_.createCell(1);
+						cell_.setCellValue("多级配送分店1");
+						cell_ = row_.createCell(3);
+						cell_.setCellValue("导出人:");
+						cell_ = row_.createCell(4);
+						cell_.setCellValue("张三");
+						break;
+				}
+			}
+			fout = new FileOutputStream(file);
+			workbook.write(fout);
+			fout.flush();
+			fout.close();
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (fout != null) {
+				try {
+					fout.close();
+				} catch (IOException e1) {
+				}
+			}
+		}
+	}
+
+
 }

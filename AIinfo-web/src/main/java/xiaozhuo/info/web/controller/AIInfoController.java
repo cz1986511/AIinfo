@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,8 +18,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 
 import xiaozhuo.info.persist.base.ArticleInfo;
+import xiaozhuo.info.persist.base.ConsumeAmount;
 import xiaozhuo.info.persist.base.Idea;
 import xiaozhuo.info.service.ArticleInfoService;
+import xiaozhuo.info.service.ConsumeAmountService;
 import xiaozhuo.info.service.IdeaService;
 import xiaozhuo.info.service.util.Constant;
 import xiaozhuo.info.service.util.Crawler;
@@ -26,6 +30,7 @@ import xiaozhuo.info.service.util.OilInfoUtil;
 import xiaozhuo.info.service.util.RedisClient;
 import xiaozhuo.info.service.util.SsqInfoUtil;
 import xiaozhuo.info.service.util.WeatherUtil;
+import xiaozhuo.info.web.common.vo.ConsumeAmountVO;
 
 /**
  * @author zhuochen
@@ -47,11 +52,14 @@ public class AIInfoController {
 	private WeatherUtil weatherUtil;
 	@Autowired
 	private IdeaService ideaService;
+	@Autowired
+	private ConsumeAmountService consumeAmountService;
 	
 	private static String ART_KEY = "dKey";
 	private static String WEATHER_KEY = "weather";
 	private static String OIL_KEY = "oilKey";
 	private static String IDEA_KEY = "ideaKey";
+	private static String CONSUME_KEY = "consumeKey";
 
 	private static String STATUS = "status";
 	private static String MSG = "msg";
@@ -183,6 +191,62 @@ public class AIInfoController {
 			result.put(STATUS, Constant.ERRORCODE1);
 			result.put(MSG, Constant.ERRORMSG1);
 			log.error("getOilInfo is exception:{}", e.toString());
+		}
+		return json.toJSONString();
+	}
+
+	@RequestMapping(value = "/consume/data", produces = "text/html;charset=UTF-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String getConsumeAmount(HttpServletRequest request) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		JSONObject json = new JSONObject(result);
+		if (!LimitUtil.getRate()) {
+			result.put(STATUS, Constant.ERRORCODE2);
+			result.put(MSG, Constant.ERRORMSG2);
+			return json.toJSONString();
+		}
+		try {
+			Map<String, Object> dataMap = (Map<String, Object>) RedisClient.get(CONSUME_KEY, new TypeReference<Map<String, Object>>() {
+			});
+			if (null == dataMap) {
+				dataMap = consumeAmountService.getAmountData(new HashMap<>());
+				RedisClient.set(CONSUME_KEY, dataMap, 60);
+			}
+			result.put(STATUS, Constant.SUCESSCODE);
+			result.put(DATA, dataMap);
+		} catch (Exception e) {
+			result.put(STATUS, Constant.ERRORCODE1);
+			result.put(MSG, Constant.ERRORMSG1);
+			log.error("getConsumeAmount is exception:{}", e.toString());
+		}
+		return json.toJSONString();
+	}
+	@RequestMapping(value = "/consume/save", produces = "text/html;charset=UTF-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String saveConsumeAmount(@RequestBody ConsumeAmountVO consumeAmountVO) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		JSONObject json = new JSONObject(result);
+		if (!LimitUtil.getRate()) {
+			result.put(STATUS, Constant.ERRORCODE2);
+			result.put(MSG, Constant.ERRORMSG2);
+			return json.toJSONString();
+		}
+		if(null == consumeAmountVO) {
+			result.put(STATUS, Constant.ERRORCODE1);
+			result.put(MSG, Constant.ERRORMSG1);
+			return json.toJSONString();
+		}
+		try {
+			ConsumeAmount amount = new ConsumeAmount();
+			BeanUtils.copyProperties(consumeAmountVO, amount);
+			amount.setCreaterName("chenzhuo");
+			consumeAmountService.saveConsumeAmount(amount);
+			result.put(STATUS, Constant.SUCESSCODE);
+			result.put(MSG, Constant.SUCESSMSG);
+		} catch (Exception e) {
+			result.put(STATUS, Constant.ERRORCODE1);
+			result.put(MSG, Constant.ERRORMSG1);
+			log.error("saveConsumeAmount is exception:{}", e.toString());
 		}
 		return json.toJSONString();
 	}
