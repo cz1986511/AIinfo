@@ -46,12 +46,8 @@ public class SsqServiceTest {
 		amount.setMonth(8);
 		amount.setDay(11);
 		amount.setType(1);
-		amount.setName("淘宝购物-万能遥控板");
 		//consumeAmountService.saveConsumeAmount(amount);
 		Map<String, Object> map = consumeAmountService.getAmountData(new HashMap<>());
-		System.out.println(map.get("yearData"));
-		System.out.println(map.get("monthData"));
-		System.out.println(map.get("dayData"));
 	}
 	
 	@Test

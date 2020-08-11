@@ -15,4 +15,7 @@ public class ConsumeAmountVO implements Serializable {
     private String name;
     private Integer type;
     private Long amount;
+    private Integer year;
+    private Integer month;
+    private Integer day;
 }
