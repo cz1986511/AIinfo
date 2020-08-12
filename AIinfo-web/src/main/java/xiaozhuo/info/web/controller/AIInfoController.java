@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 
@@ -209,7 +206,7 @@ public class AIInfoController {
 			Map<String, Object> dataMap = (Map<String, Object>) RedisClient.get(CONSUME_KEY, new TypeReference<Map<String, Object>>() {
 			});
 			if (null == dataMap) {
-				dataMap = consumeAmountService.getAmountData(new HashMap<>());
+				dataMap = consumeAmountService.searchAmountData(new HashMap<>());
 				RedisClient.set(CONSUME_KEY, dataMap, 60);
 			}
 			result.put(STATUS, Constant.SUCESSCODE);
@@ -223,7 +220,7 @@ public class AIInfoController {
 	}
 	@RequestMapping(value = "/consume/save", produces = "text/html;charset=UTF-8", method = RequestMethod.POST)
 	@ResponseBody
-	public String saveConsumeAmount(@RequestBody ConsumeAmountVO consumeAmountVO) {
+	public String saveConsumeAmount(@RequestBody ConsumeAmountVO consumeAmountVO, @RequestParam("token") Integer token) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		JSONObject json = new JSONObject(result);
 		if (!LimitUtil.getRate()) {
@@ -231,6 +228,11 @@ public class AIInfoController {
 			result.put(MSG, Constant.ERRORMSG2);
 			return json.toJSONString();
 		}
+		if(!dataToken.equals(token)) {
+            result.put(STATUS, Constant.ERRORCODE1);
+            result.put(MSG, Constant.ERRORMSG1);
+            return json.toJSONString();
+        }
 		if(null == consumeAmountVO) {
 			result.put(STATUS, Constant.ERRORCODE1);
 			result.put(MSG, Constant.ERRORMSG1);

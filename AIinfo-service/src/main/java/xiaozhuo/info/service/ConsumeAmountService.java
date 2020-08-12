@@ -30,4 +30,6 @@ public interface ConsumeAmountService {
      * @return
      */
     Map<String, Object> getAmountData(Map<String, Object> map);
+
+    Map<String, Object> searchAmountData(Map<String, Object> map);
 }
