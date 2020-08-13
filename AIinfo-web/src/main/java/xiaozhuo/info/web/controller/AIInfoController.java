@@ -220,7 +220,8 @@ public class AIInfoController {
 	}
 	@RequestMapping(value = "/consume/save", produces = "text/html;charset=UTF-8", method = RequestMethod.POST)
 	@ResponseBody
-	public String saveConsumeAmount(@RequestBody ConsumeAmountVO consumeAmountVO, @RequestParam("token") Integer token) {
+	public String saveConsumeAmount(@RequestBody ConsumeAmountVO consumeAmountVO, HttpServletRequest request) {
+		String token = request.getParameter("token");
 		Map<String, Object> result = new HashMap<String, Object>();
 		JSONObject json = new JSONObject(result);
 		if (!LimitUtil.getRate()) {
