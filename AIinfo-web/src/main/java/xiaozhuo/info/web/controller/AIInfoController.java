@@ -220,8 +220,7 @@ public class AIInfoController {
 	}
 	@RequestMapping(value = "/consume/save", produces = "text/html;charset=UTF-8", method = RequestMethod.POST)
 	@ResponseBody
-	public String saveConsumeAmount(@RequestBody ConsumeAmountVO consumeAmountVO, HttpServletRequest request) {
-		String token = request.getParameter("token");
+	public String saveConsumeAmount(@RequestBody ConsumeAmountVO consumeAmountVO) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		JSONObject json = new JSONObject(result);
 		if (!LimitUtil.getRate()) {
@@ -229,11 +228,6 @@ public class AIInfoController {
 			result.put(MSG, Constant.ERRORMSG2);
 			return json.toJSONString();
 		}
-		if(!dataToken.equals(token)) {
-            result.put(STATUS, Constant.ERRORCODE1);
-            result.put(MSG, Constant.ERRORMSG1);
-            return json.toJSONString();
-        }
 		if(null == consumeAmountVO) {
 			result.put(STATUS, Constant.ERRORCODE1);
 			result.put(MSG, Constant.ERRORMSG1);
