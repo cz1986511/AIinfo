@@ -218,7 +218,7 @@ public class AIInfoController {
 		}
 		return json.toJSONString();
 	}
-	@RequestMapping(value = "/consume/save", produces = "text/html;charset=UTF-8", method = RequestMethod.POST)
+	@RequestMapping(value = "/consume/save", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveConsumeAmount(@RequestBody ConsumeAmountVO consumeAmountVO, HttpServletRequest request) {
 		String token = request.getParameter("token");
