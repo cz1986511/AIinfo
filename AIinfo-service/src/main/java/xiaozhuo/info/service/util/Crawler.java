@@ -48,7 +48,7 @@ public class Crawler {
 				TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
 	}
 
-	@Scheduled(cron = "0 7 0/2 * * ?")
+	@Scheduled(cron = "0 7 0/1 * * ?")
 	public void crawlerInfo() {
 		try {
 			if (null == executor) {
