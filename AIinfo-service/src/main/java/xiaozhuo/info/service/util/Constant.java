@@ -16,6 +16,6 @@ public class Constant {
 	public static String ERRORMSG2 = "你是机器人么";
 	public static String ERRORMSG3 = "参数错误";
 
-	public static final String PIC_URL = "http://chenzhuo.info/default.png";
+	public static final String PIC_URL = "http://xiaozhuo.info/default.png";
 
 }
