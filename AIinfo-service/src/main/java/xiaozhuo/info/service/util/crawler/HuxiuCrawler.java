@@ -67,7 +67,7 @@ public class HuxiuCrawler implements Runnable {
 							".//div[@class='article-item  article-item--normal']/a/div[@class='article-item__img']/img");
 					if (!CollectionUtils.isEmpty(picImageList)) {
 						HtmlImage picImage = (HtmlImage) picImageList.get(0);
-						articleInfo.setPicUrl(picImage.getAttribute("src"));
+						articleInfo.setPicUrl(picImage.getAttribute("data-src"));
 					} else {
 						articleInfo.setPicUrl(Constant.PIC_URL);
 					}
