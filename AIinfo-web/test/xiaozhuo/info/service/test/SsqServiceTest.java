@@ -310,7 +310,7 @@ public class SsqServiceTest {
 			long time = System.currentTimeMillis();
 			int result = 0;
 			int lnum = 0;
-			for(long k = 0; k < 10000000L; k++) {
+			for(long k = 0; k < 88888888L; k++) {
 				int count = 0;
 				while(count < 6) {
 					result = (int) (Math.random() * 32) + 1;
