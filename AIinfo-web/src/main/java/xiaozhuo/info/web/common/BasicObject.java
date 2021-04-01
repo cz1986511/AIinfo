@@ -1,4 +1,4 @@
-package com.idmaker.oa.server.model.vo.common;
+package xiaozhuo.info.web.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;

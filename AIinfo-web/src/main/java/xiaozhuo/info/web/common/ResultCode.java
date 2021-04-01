@@ -1,4 +1,4 @@
-package com.idmaker.oa.server.model.vo.common;
+package xiaozhuo.info.web.common;
 
 import lombok.Getter;
 
@@ -11,14 +11,14 @@ import lombok.Getter;
  *  200-299是定义  认证和权限验证异常；
  *  如有新的类型 300+  400+  以此类推；
  * @author chenzhuo
- * @date   2021-02-06 16:40
+ * @date   2021-04-01
  */
 public enum ResultCode {
     /**
      * 执行结果的返回值
      */
-    SUCCESS                     (ResultCode.APP_ID +       0,          "成功"),
-    FAIL_UNKNOWN                (ResultCode.APP_ID +       3000,          "未知错误"),
+    SUCCESS                     (ResultCode.APP_ID +       0,           "成功"),
+    FAIL_UNKNOWN                (ResultCode.APP_ID +       3000,        "未知错误"),
     FAIL_ILLEGAL_ARGUMENT       (ResultCode.APP_ID +       3101,        "参数强验证失败"),
     FAIL_DEPENDENCY_CHECK       (ResultCode.APP_ID +       3102,        "依赖信息检查失败"),
     FAIL_TARGET_NOT_EXIST       (ResultCode.APP_ID +       3103,        "目标对象不存在或者已经被删除"),
@@ -36,7 +36,7 @@ public enum ResultCode {
     FAIL_AUTH_FAIL              (ResultCode.APP_ID +       3201,        "身份校验失败"),
     FAIL_LACK_OF_PERMISSION     (ResultCode.APP_ID +       3202,        "缺少操作所需的权限"),
     FAIL_ADDRESS_CREATE         (ResultCode.APP_ID +       3301,        "通讯录创建失败"),
-    FAIL_APPLY_CREATE           (ResultCode.APP_ID +       3302,        "创建申请失败"),
+    FAIL_IDEA_CREATE            (ResultCode.APP_ID +       3302,        "创建Idea失败"),
     FAIL_CONTRACT_CREATE        (ResultCode.APP_ID +       3303,        "创建合同会签失败"),
     FAIL_FILE_CIRCULATE_CREATE  (ResultCode.APP_ID +       3304,        "创建文件传阅失败"),
     FAIL_SIGNATURE_CREATE       (ResultCode.APP_ID +       3305,        "上传电子签名失败"),

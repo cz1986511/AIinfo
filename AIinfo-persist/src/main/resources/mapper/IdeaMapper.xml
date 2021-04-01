@@ -3,29 +3,26 @@
 <mapper namespace="xiaozhuo.info.persist.mapper.IdeaMapper" >
   <resultMap id="BaseResultMap" type="xiaozhuo.info.persist.base.Idea" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="title" property="title" jdbcType="VARCHAR" />
-    <result column="author" property="author" jdbcType="VARCHAR" />
-    <result column="tag" property="tag" jdbcType="VARCHAR" />
+    <result column="time" property="time" jdbcType="VARCHAR" />
     <result column="content" property="content" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="VARCHAR" />
     <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
     <result column="gmt_modify" property="gmtModify" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, title, author, tag, content, status, gmt_create, gmt_modify
+    id, time, content, gmt_create, gmt_modify
   </sql>
   <sql id="selectByParamsWhere">
     <where>
-	  <if test="title != null">
-        title like CONCAT(CONCAT('%', #{title,jdbcType=VARCHAR}), '%') and
+      <if test="id != null">
+        id = #{id,jdbcType=BIGINT} and
       </if>
-      <if test="author != null">
-        author like CONCAT(CONCAT('%', #{author,jdbcType=VARCHAR}), '%') and
+	  <if test="time != null">
+        `time` like CONCAT(CONCAT('%', #{time,jdbcType=VARCHAR}), '%') and
       </if>
-      <if test="tag != null">
-        tag like CONCAT(CONCAT('%', #{tag,jdbcType=VARCHAR}), '%') and
+      <if test="content != null">
+        content like CONCAT(CONCAT('%', #{content,jdbcType=VARCHAR}), '%') and
       </if>
-        1 = 1
+      1 = 1
     </where>
   </sql>
   
@@ -51,34 +48,17 @@
     delete from aiinfo_idea
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="xiaozhuo.info.persist.base.Idea" >
-    insert into aiinfo_idea (id, title, author, 
-      tag, content, status, 
-      gmt_create, gmt_modify)
-    values (#{id,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, 
-      #{tag,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
-      NOW(), NOW())
-  </insert>
-  <insert id="insertSelective" parameterType="xiaozhuo.info.persist.base.Idea" >
+  <insert id="insertSelective" parameterType="xiaozhuo.info.persist.base.Idea" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
     insert into aiinfo_idea
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
       </if>
-      <if test="title != null" >
-        title,
-      </if>
-      <if test="author != null" >
-        author,
-      </if>
-      <if test="tag != null" >
-        tag,
+      <if test="time != null" >
+        `time`,
       </if>
       <if test="content != null" >
         content,
-      </if>
-      <if test="status != null" >
-        status,
       </if>
         gmt_create,
         gmt_modify
@@ -87,20 +67,11 @@
       <if test="id != null" >
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="title != null" >
-        #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="author != null" >
-        #{author,jdbcType=VARCHAR},
-      </if>
-      <if test="tag != null" >
-        #{tag,jdbcType=VARCHAR},
+      <if test="time != null" >
+        #{time,jdbcType=VARCHAR},
       </if>
       <if test="content != null" >
         #{content,jdbcType=VARCHAR},
-      </if>
-      <if test="status != null" >
-        #{status,jdbcType=VARCHAR},
       </if>
         NOW(),
         NOW()
@@ -109,33 +80,14 @@
   <update id="updateByPrimaryKeySelective" parameterType="xiaozhuo.info.persist.base.Idea" >
     update aiinfo_idea
     <set >
-      <if test="title != null" >
-        title = #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="author != null" >
-        author = #{author,jdbcType=VARCHAR},
-      </if>
-      <if test="tag != null" >
-        tag = #{tag,jdbcType=VARCHAR},
+      <if test="time != null" >
+        `time` = #{time,jdbcType=VARCHAR},
       </if>
       <if test="content != null" >
         content = #{content,jdbcType=VARCHAR},
       </if>
-      <if test="status != null" >
-        status = #{status,jdbcType=VARCHAR},
-      </if>
         gmt_modify = NOW()
     </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="xiaozhuo.info.persist.base.Idea" >
-    update aiinfo_idea
-    set title = #{title,jdbcType=VARCHAR},
-      author = #{author,jdbcType=VARCHAR},
-      tag = #{tag,jdbcType=VARCHAR},
-      content = #{content,jdbcType=VARCHAR},
-      status = #{status,jdbcType=VARCHAR},
-      gmt_modify = NOW()
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

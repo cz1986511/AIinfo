@@ -2,6 +2,7 @@ package xiaozhuo.info.service.util.crawler;
 
 import java.util.*;
 
+import com.gargoylesoftware.htmlunit.BrowserVersion;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
@@ -44,6 +45,7 @@ public class HuxiuCrawler implements Runnable {
 			Calendar calendar = Calendar.getInstance();
 			String xPath = "//div[@class='article-items']";
 			HtmlPage page = webClient.getPage(URL_STRING);
+			webClient.waitForBackgroundJavaScript(5000);
 			List<Object> list = (List<Object>) page.getByXPath(xPath);
 			Iterator<Object> ite = list.iterator();
 			while (ite.hasNext()) {
@@ -63,14 +65,7 @@ public class HuxiuCrawler implements Runnable {
 						HtmlHeading5 titleH5 = (HtmlHeading5) titleAnchorList.get(0);
 						articleInfo.setTitle(titleH5.asText());
 					}
-					List<Object> picImageList = (List<Object>) division.getByXPath(
-							".//div[@class='article-item  article-item--normal']/a/div[@class='article-item__img']/img");
-					if (!CollectionUtils.isEmpty(picImageList)) {
-						HtmlImage picImage = (HtmlImage) picImageList.get(0);
-						articleInfo.setPicUrl(picImage.getAttribute("data-src"));
-					} else {
-						articleInfo.setPicUrl(Constant.PIC_URL);
-					}
+					articleInfo.setPicUrl(Constant.PIC_URL);
 					List<Object> authorSpanList = (List<Object>) division.getByXPath(
 							".//div[@class='article-item  article-item--normal']/div[@class='article-item__content__user-info ']/a/span");
 					if (!CollectionUtils.isEmpty(authorSpanList)) {

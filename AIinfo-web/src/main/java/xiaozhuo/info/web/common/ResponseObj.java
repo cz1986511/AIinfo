@@ -1,8 +1,6 @@
-package com.idmaker.oa.server.model.vo.common;
+package xiaozhuo.info.web.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.idmaker.oa.server.exception.BaseException;
-import com.idmaker.oa.server.model.vo.ApplyBaseVO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,10 +12,12 @@ public class ResponseObj<T> {
     @Setter
     @Getter
     private ResponseStatus status;
-    @Setter @Getter
+    @Setter
+    @Getter
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Page page;
-    @Setter @Getter
+    @Setter
+    @Getter
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
@@ -45,7 +45,7 @@ public class ResponseObj<T> {
         responseObj.setStatus(responseStatus);
         return responseObj;
     }
-    public static ResponseObj setException(BaseException e){
+    public static ResponseObj setException(Exception e){
         ResponseObj responseObj= new ResponseObj();
         responseObj.setStatus(new ResponseStatus(e));
         return responseObj;

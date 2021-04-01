@@ -1,9 +1,6 @@
-package com.idmaker.oa.server.model.vo.common;
+package xiaozhuo.info.web.common;
 
-import com.idmaker.oa.server.exception.BaseException;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * @author chenzhuo
@@ -21,8 +18,7 @@ public class ResponseStatus {
         this.message = ResultCode.SUCCESS.getDesc();
     }
 
-    public ResponseStatus(BaseException e) {
-        this.code = e.getCode();
+    public ResponseStatus(Exception e) {
         this.message = e.getMessage();
     }
 
