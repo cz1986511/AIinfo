@@ -7,6 +7,7 @@ import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import xiaozhuo.info.persist.base.Idea;
 import xiaozhuo.info.service.IdeaService;
@@ -16,6 +17,7 @@ import xiaozhuo.info.web.common.ResultCode;
 import xiaozhuo.info.web.common.vo.IdeaVO;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,8 +57,9 @@ public class IdeaController {
 	//@RequireLoginAuth
 	public ResponseObj<List<IdeaVO>> getIdeaList(@RequestParam("time")String time, HttpServletRequest request) {
 		ResponseObj<List<IdeaVO>> result = new ResponseObj<>();
-		if (null == time) {
-			time = "2021";
+		if (StringUtils.isEmpty(time)) {
+			LocalDate now = LocalDate.now();
+			time = "" + now.getYear();
 		}
 		if (!LimitUtil.getRate()) {
 			return ResponseObj.setResultCode(ResultCode.FAIL_COMMIT_LOCK);
