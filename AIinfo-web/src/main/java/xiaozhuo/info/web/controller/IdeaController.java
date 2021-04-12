@@ -56,6 +56,7 @@ public class IdeaController {
 	@ResponseBody
 	//@RequireLoginAuth
 	public ResponseObj<List<IdeaVO>> getIdeaList(@RequestParam("time")String time, HttpServletRequest request) {
+		log.info("getIdeaList param:{}", time);
 		ResponseObj<List<IdeaVO>> result = new ResponseObj<>();
 		if (StringUtils.isEmpty(time)) {
 			LocalDate now = LocalDate.now();
@@ -102,6 +103,7 @@ public class IdeaController {
 			log.error("getIdeaList is exception:{}", e.toString());
 			return ResponseObj.setResultCode(ResultCode.FAIL_DATA_WRONG);
 		}
+		log.info("getIdeaList result:{}", result.getData());
 		return result;
 	}
 
